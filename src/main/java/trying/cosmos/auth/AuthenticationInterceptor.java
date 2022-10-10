@@ -22,7 +22,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        AuthorizedBy annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthorizedBy.class);
+        AuthorityOf annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthorityOf.class);
         if (annotation == null) {
             return true;
         }
