@@ -43,7 +43,8 @@ public class Member {
     }
 
     // Convenient Method
-    public void login() {
+    public void login(String deviceToken) {
         this.status = MemberStatus.LOGIN;
+        this.deviceToken = deviceToken;
     }
 }

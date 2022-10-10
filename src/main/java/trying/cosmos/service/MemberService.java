@@ -8,6 +8,7 @@ import trying.cosmos.entity.Member;
 import trying.cosmos.repository.MemberRepository;
 import trying.cosmos.service.request.MemberJoinRequest;
 import trying.cosmos.service.request.MemberLoginRequest;
+import trying.cosmos.utils.BCryptUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,19 +18,28 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
+    @Transactional
     public Member join(MemberJoinRequest request) {
         return memberRepository.save(
                 Member.builder()
                         .email(request.getEmail())
-                        .password(request.getPassword())
+                        .password(BCryptUtils.encrypt(request.getPassword()))
                         .name(request.getName())
                         .build()
         );
     }
 
+    @Transactional
     public String login(MemberLoginRequest request) {
         Member member = memberRepository.findByEmail(request.getEmail()).orElseThrow();
-        member.login();
+        checkPassword(request, member);
+        member.login(request.getDeviceToken());
         return tokenProvider.getAccessToken(member);
+    }
+
+    private static void checkPassword(MemberLoginRequest request, Member member) {
+        if (!BCryptUtils.isMatch(request.getPassword(), member.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

@@ -7,10 +7,12 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import trying.cosmos.entity.Member;
 
 import java.security.Key;
 
+@Component
 public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
