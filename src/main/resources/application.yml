@@ -1,0 +1,49 @@
+spring:
+  config:
+    import: application-secret.yml
+  profiles:
+    active: local
+  jpa:
+    open-in-view: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+logging:
+  level:
+    trying.cosmos: debug
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+logging:
+  level:
+    trying.cosmos: debug
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+logging:
+  level:
+    trying.cosmos: debug
