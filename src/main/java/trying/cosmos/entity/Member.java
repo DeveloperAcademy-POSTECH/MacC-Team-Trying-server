@@ -9,6 +9,9 @@ import trying.cosmos.entity.component.MemberStatus;
 
 import javax.persistence.*;
 
+import static trying.cosmos.entity.component.MemberStatus.LOGIN;
+import static trying.cosmos.entity.component.MemberStatus.LOGOUT;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,14 +40,28 @@ public class Member {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.status = MemberStatus.LOGOUT;
+        this.status = LOGOUT;
         this.authority = Authority.USER;
+        this.deviceToken = "";
+    }
+
+    @Builder
+    public Member(String email, String password, String name, Authority authority) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.status = LOGOUT;
+        this.authority = authority;
         this.deviceToken = "";
     }
 
     // Convenient Method
     public void login(String deviceToken) {
-        this.status = MemberStatus.LOGIN;
+        this.status = LOGIN;
         this.deviceToken = deviceToken;
+    }
+
+    public boolean isAccessibleUser() {
+        return this.status.equals(LOGIN) || this.status.equals(LOGOUT);
     }
 }

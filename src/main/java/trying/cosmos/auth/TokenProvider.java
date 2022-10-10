@@ -9,13 +9,15 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import trying.cosmos.entity.Member;
+import trying.cosmos.exception.CustomException;
+import trying.cosmos.exception.ExceptionType;
 
 import java.security.Key;
 
 @Component
 public class TokenProvider {
 
-    private static final String AUTHORITIES_KEY = "auth";
+    private static final String SUBJECT_KEY = "sub";
 
     private final Key key;
 
@@ -27,16 +29,15 @@ public class TokenProvider {
     public String getAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getEmail())
-                .claim(AUTHORITIES_KEY, member.getAuthority().toString())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public String getClaims(String accessToken) {
+    public String getSubject(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new RuntimeException("잘못된 토큰입니다.");
+        if (claims.get(SUBJECT_KEY) == null) {
+            throw new CustomException(ExceptionType.INVALID_TOKEN);
         }
 
         return claims.getSubject();

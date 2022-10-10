@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
 import trying.cosmos.entity.Member;
+import trying.cosmos.exception.CustomException;
+import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.repository.MemberRepository;
 import trying.cosmos.service.request.MemberJoinRequest;
 import trying.cosmos.service.request.MemberLoginRequest;
@@ -39,7 +41,7 @@ public class MemberService {
 
     private static void checkPassword(MemberLoginRequest request, Member member) {
         if (!BCryptUtils.isMatch(request.getPassword(), member.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ExceptionType.INVALID_PASSWORD);
         }
     }
 }
