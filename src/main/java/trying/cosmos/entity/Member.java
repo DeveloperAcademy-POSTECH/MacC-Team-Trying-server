@@ -41,4 +41,9 @@ public class Member {
         this.authority = Authority.USER;
         this.deviceToken = "";
     }
+
+    // Convenient Method
+    public void login() {
+        this.status = MemberStatus.LOGIN;
+    }
 }
