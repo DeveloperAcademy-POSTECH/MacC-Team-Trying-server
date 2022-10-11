@@ -9,12 +9,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.entity.Member;
-import trying.cosmos.repository.MemberRepository;
-import trying.cosmos.service.MemberService;
-import trying.cosmos.service.request.MemberJoinRequest;
-import trying.cosmos.service.request.MemberLoginRequest;
-import trying.cosmos.utils.BCryptUtils;
+import trying.cosmos.entity.User;
+import trying.cosmos.repository.UserRepository;
+import trying.cosmos.service.UserService;
+import trying.cosmos.service.request.UserJoinRequest;
+import trying.cosmos.service.request.UserLoginRequest;
+import trying.cosmos.utils.cipher.BCryptUtils;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,8 +26,10 @@ import static trying.cosmos.entity.component.Authority.ADMIN;
 @ActiveProfiles("test")
 public class AuthenticationTest {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired MemberService memberService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    UserService userService;
     @Autowired MockMvc mvc;
 
     @Test
@@ -75,12 +77,12 @@ public class AuthenticationTest {
     }
 
     private String createAdmin() {
-        memberRepository.save(new Member("email", BCryptUtils.encrypt("password"), "name", ADMIN));
-        return memberService.login(new MemberLoginRequest("email", "password", "deviceToken"));
+        userRepository.save(new User("email", BCryptUtils.encrypt("password"), "name", ADMIN));
+        return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
     }
 
     private String createUser() {
-        memberService.join(new MemberJoinRequest("email", "password", "name"));
-        return memberService.login(new MemberLoginRequest("email", "password", "deviceToken"));
+        userService.join(new UserJoinRequest("email", "password", "name"));
+        return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
     }
 }

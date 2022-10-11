@@ -8,7 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import trying.cosmos.entity.Member;
+import trying.cosmos.entity.User;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 
@@ -26,9 +26,9 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String getAccessToken(Member member) {
+    public String getAccessToken(User user) {
         return Jwts.builder()
-                .setSubject(member.getEmail())
+                .setSubject(user.getEmail())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }

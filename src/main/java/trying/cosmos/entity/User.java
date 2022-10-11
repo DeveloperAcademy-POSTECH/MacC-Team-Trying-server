@@ -15,10 +15,11 @@ import static trying.cosmos.entity.component.MemberStatus.LOGOUT;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+@Table(name = "users")
+public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
+    @Column(name = "user_id")
     private Long id;
 
     private String email;
@@ -36,7 +37,7 @@ public class Member {
     private String deviceToken;
 
     @Builder
-    public Member(String email, String password, String name) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -46,7 +47,7 @@ public class Member {
     }
 
     @Builder
-    public Member(String email, String password, String name, Authority authority) {
+    public User(String email, String password, String name, Authority authority) {
         this.email = email;
         this.password = password;
         this.name = name;
