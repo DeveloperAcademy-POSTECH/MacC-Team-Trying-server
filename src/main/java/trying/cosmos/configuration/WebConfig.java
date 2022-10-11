@@ -6,17 +6,17 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import trying.cosmos.auth.AuthenticationInterceptor;
 import trying.cosmos.auth.TokenProvider;
-import trying.cosmos.repository.MemberRepository;
+import trying.cosmos.repository.UserRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthenticationInterceptor(memberRepository, tokenProvider));
+        registry.addInterceptor(new AuthenticationInterceptor(userRepository, tokenProvider));
     }
 }

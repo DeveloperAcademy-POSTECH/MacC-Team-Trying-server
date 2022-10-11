@@ -1,4 +1,4 @@
-package trying.cosmos.utils;
+package trying.cosmos.utils.cipher;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Component;

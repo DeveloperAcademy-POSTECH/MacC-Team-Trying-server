@@ -3,11 +3,11 @@ package trying.cosmos.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import trying.cosmos.entity.Member;
+import trying.cosmos.entity.User;
 import trying.cosmos.entity.component.Authority;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
-import trying.cosmos.repository.MemberRepository;
+import trying.cosmos.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN_HEADER = "access_token";
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
     @Override
@@ -32,20 +32,20 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             throw new CustomException(ExceptionType.INVALID_TOKEN);
         }
 
-        Member member = memberRepository.findByEmail(tokenProvider.getSubject(token))
+        User user = userRepository.findByEmail(tokenProvider.getSubject(token))
                 .orElseThrow(() -> new CustomException(ExceptionType.NO_DATA));
 
         Authority authority = annotation.value();
-        if (member.getAuthority().level < authority.level) {
+        if (user.getAuthority().level < authority.level) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
 
-        LoginMember.setLoginMember(member);
+        AuthKey.set(user.getId());
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        LoginMember.remove();
+        AuthKey.remove();
     }
 }
