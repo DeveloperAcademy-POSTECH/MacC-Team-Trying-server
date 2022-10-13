@@ -10,15 +10,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.entity.User;
+import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.repository.UserRepository;
 import trying.cosmos.service.UserService;
-import trying.cosmos.service.request.UserJoinRequest;
 import trying.cosmos.service.request.UserLoginRequest;
-import trying.cosmos.utils.cipher.BCryptUtils;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static trying.cosmos.entity.component.Authority.ADMIN;
+import static trying.cosmos.entity.component.Authority.USER;
 
 @SpringBootTest
 @Transactional
@@ -38,7 +38,7 @@ public class AuthenticationTest {
         String token = createUser();
 
         ResultActions actions = mvc.perform(get("/user")
-                .header("access_token", token));
+                .header("accessToken", token));
 
         actions.andExpect(status().isOk());
     }
@@ -49,7 +49,7 @@ public class AuthenticationTest {
         String token = createUser();
 
         ResultActions actions = mvc.perform(get("/admin")
-                .header("access_token", token));
+                .header("accessToken", token));
 
         actions.andExpect(status().isForbidden());
     }
@@ -60,7 +60,7 @@ public class AuthenticationTest {
         String token = createAdmin();
 
         ResultActions actions = mvc.perform(get("/user")
-                .header("access_token", token));
+                .header("accessToken", token));
 
         actions.andExpect(status().isOk());
     }
@@ -71,18 +71,18 @@ public class AuthenticationTest {
         String token = createAdmin();
 
         ResultActions actions = mvc.perform(get("/admin")
-                .header("access_token", token));
+                .header("accessToken", token));
 
         actions.andExpect(status().isOk());
     }
 
     private String createAdmin() {
-        userRepository.save(new User("email", BCryptUtils.encrypt("password"), "name", ADMIN));
+        userRepository.save(new User("email", "password", "admin", UserStatus.LOGOUT, ADMIN));
         return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
     }
 
     private String createUser() {
-        userService.join(new UserJoinRequest("email", "password", "name"));
+        userRepository.save(new User("email", "password", "admin", UserStatus.LOGOUT, USER));
         return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
     }
 }

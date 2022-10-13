@@ -5,7 +5,7 @@ public enum Authority {
 
     public final int level;
 
-    private Authority(int level) {
+    Authority(int level) {
         this.level = level;
     }
 }

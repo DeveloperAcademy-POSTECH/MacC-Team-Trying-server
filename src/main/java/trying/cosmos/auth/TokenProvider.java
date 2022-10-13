@@ -37,7 +37,7 @@ public class TokenProvider {
         Claims claims = parseClaims(accessToken);
 
         if (claims.get(SUBJECT_KEY) == null) {
-            throw new CustomException(ExceptionType.INVALID_TOKEN);
+            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
         return claims.getSubject();

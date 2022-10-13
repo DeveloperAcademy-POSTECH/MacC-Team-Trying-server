@@ -10,22 +10,32 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ExceptionType {
 
-    AUTHENTICATION_FAILED(UNAUTHORIZED, "401-1", "로그인되지 않았습니다."),
-    NO_CERTIFICATED(UNAUTHORIZED, "401-2", "이메일 인증이 완료되지 않았습니다."),
-    INVALID_PASSWORD(UNAUTHORIZED, "401-3", "잘못된 비밀번호입니다."),
+    INVALID_INPUT(BAD_REQUEST, "잘못된 입력값입니다."),
+    INVALID_TYPE(BAD_REQUEST, "입력값의 타입이 맞지 않습니다."),
+    INVALID_JSON_FORMAT(BAD_REQUEST, "입력값이 JSON 형식이 아닙니다."),
+    INVALID_PARAMETER(BAD_REQUEST, "잘못된 파라미터가 입력되었습니다."),
+    INVALID_HEADER(BAD_REQUEST, "필수 헤더가 입력되지 않았습니다."),
+    INVALID_METHOD(BAD_REQUEST, "지원하지 않는 HTTP 메서드입니다."),
 
-    NO_PERMISSION(FORBIDDEN, "403-1", "권한이 없습니다."),
-    SUSPENDED(FORBIDDEN, "403-2", "정지된 사용자입니다."),
+    AUTHENTICATION_FAILED(UNAUTHORIZED, "인증에 실패했습니다."),
 
-    NO_DATA(NOT_FOUND, "404-1", "데이터가 존재하지 않습니다."),
+    NOT_AUTHENTICATED(UNAUTHORIZED, "로그인되지 않았습니다."),
+    CERTIFICATION_FAILED(UNAUTHORIZED, "이메일 인증에 실패했습니다."),
+    NOT_CERTIFICATED(UNAUTHORIZED, "이메일 인증이 완료되지 않았습니다."),
+    USER_CREATION_FAILED(UNAUTHORIZED, "사용자 생성에 실패했습니다."),
+    INCOMPLETE_CREATE_USER(UNAUTHORIZED, "아직 사용자 생성이 완료되지 않았습니다."),
+    INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
-    DUPLICATED(CONFLICT, "409-1", "중복된 데이터가 존재합니다."),
-    INVALID_TOKEN(NOT_FOUND, "409-2", "잘못된 토큰입니다"),
+    NO_PERMISSION(FORBIDDEN, "권한이 없습니다."),
+    SUSPENDED(FORBIDDEN, "정지된 사용자입니다."),
 
-    UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "500", "알 수 없는 오류가 발생했습니다.");
+    NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
+
+    DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
+
+    UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 
     private final HttpStatus status;
-    private final String code;
     private final String message;
 }
 

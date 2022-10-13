@@ -1,14 +1,20 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.service.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserLoginResponse {
+public class UserCertificationRequest {
 
-    private String accessToken;
+    @NotBlank
+    String email;
+
+    @NotBlank
+    String code;
 }

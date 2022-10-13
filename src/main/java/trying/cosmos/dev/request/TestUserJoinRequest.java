@@ -1,4 +1,4 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.dev.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserLoginResponse {
+public class TestUserJoinRequest {
 
-    private String accessToken;
+    private String email;
+    private String password;
+    private String name;
 }
