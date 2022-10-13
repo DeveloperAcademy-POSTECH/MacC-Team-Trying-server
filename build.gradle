@@ -21,6 +21,7 @@ repositories {
 dependencies {
 	// Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// DB
@@ -42,6 +43,12 @@ dependencies {
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Random String Generator
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 
 tasks.named('test') {

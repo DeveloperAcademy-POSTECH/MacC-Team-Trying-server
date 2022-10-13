@@ -50,9 +50,10 @@ public class UserController {
         userService.resetPassword(request);
     }
 
-    @GetMapping("/{name}")
-    public UserFindResponse find(@PathVariable String name) {
-        return new UserFindResponse(userService.find(name));
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/me")
+    public UserFindResponse findMe() {
+        return new UserFindResponse(userService.find(AuthKey.get()));
     }
 
     @AuthorityOf(Authority.USER)

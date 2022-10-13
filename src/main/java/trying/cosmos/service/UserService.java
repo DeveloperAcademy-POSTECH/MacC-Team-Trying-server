@@ -107,6 +107,10 @@ public class UserService {
         return userRepository.findByName(name).orElseThrow();
     }
 
+    public User find(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
     @Transactional
     public void update(UserUpdateServiceRequest request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow();
