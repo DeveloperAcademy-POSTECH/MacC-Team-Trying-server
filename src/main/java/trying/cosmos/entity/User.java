@@ -4,12 +4,15 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.entity.component.Authority;
+import trying.cosmos.entity.component.CreatedDateEntity;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.utils.cipher.BCryptUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static trying.cosmos.entity.component.UserStatus.*;
 
@@ -17,7 +20,7 @@ import static trying.cosmos.entity.component.UserStatus.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User {
+public class User extends CreatedDateEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -38,6 +41,9 @@ public class User {
     private Authority authority;
 
     private String deviceToken;
+
+    @OneToMany(mappedBy = "planet", cascade = CascadeType.ALL)
+    private List<FollowPlanet> follows = new ArrayList<>();
 
     private static final String WITHDRAWN_USER_PREFIX = "[UNKNOWN] ";
 
