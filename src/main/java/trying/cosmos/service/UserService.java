@@ -7,13 +7,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
-import trying.cosmos.entity.component.Certification;
 import trying.cosmos.entity.User;
+import trying.cosmos.entity.component.Certification;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.repository.CertificationRepository;
 import trying.cosmos.repository.UserRepository;
-import trying.cosmos.service.request.*;
 import trying.cosmos.utils.cipher.BCryptUtils;
 import trying.cosmos.utils.email.EmailType;
 import trying.cosmos.utils.email.EmailUtils;
@@ -33,21 +32,21 @@ public class UserService {
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;
 
-    public void validateEmail(UserValidateEmailRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+    public void validateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.DUPLICATED);
         }
     }
 
     @Transactional
-    public User join(UserJoinRequest request) {
-        User user = new User(request.getEmail(), request.getPassword());
+    public User join(String email, String password) {
+        User user = new User(email, password);
         userRepository.save(user);
 
         String code = createRandomStringNumber(Certification.getLength());
         certificationRepository.save(new Certification(user, code));
 
-        sendCertificationEmail(request.getEmail(), code);
+        sendCertificationEmail(email, code);
         return user;
     }
 
@@ -60,9 +59,9 @@ public class UserService {
     }
 
     @Transactional
-    public void certificate(UserCertificationRequest request) {
-        Certification certification = certificationRepository.findByUserEmail(request.getEmail()).orElseThrow();
-        certification.certificate(request.getCode());
+    public void certificate(String email, String code) {
+        Certification certification = certificationRepository.findByUserEmail(email).orElseThrow();
+        certification.certificate(code);
         certificationRepository.delete(certification);
     }
 
@@ -74,25 +73,25 @@ public class UserService {
     }
 
     @Transactional
-    public void create(UserCreateServiceRequest request) {
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        user.create(request.getName());
+    public void create(String email, String name) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        user.create(name);
     }
 
     @Transactional
-    public String login(UserLoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        checkPassword(request.getPassword(), user);
-        user.login(request.getDeviceToken());
+    public String login(String email, String password, String deviceToken) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        checkPassword(password, user);
+        user.login(deviceToken);
         return tokenProvider.getAccessToken(user);
     }
 
     @Transactional
-    public void resetPassword(UserResetPasswordRequest request) {
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+    public void resetPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
         String password = createRandomStringNumber(10);
         user.resetPassword(BCryptUtils.encrypt(password));
-        sendResetPasswordEmail(request.getEmail(), password);
+        sendResetPasswordEmail(email, password);
     }
 
     private void sendResetPasswordEmail(String email, String password) {
@@ -112,9 +111,9 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UserUpdateServiceRequest request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow();
-        user.update(request.getName(), request.getPassword());
+    public void update(Long id, String name, String password) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.update(name, password);
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package trying.cosmos.service.request;
+package trying.cosmos.controller.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
