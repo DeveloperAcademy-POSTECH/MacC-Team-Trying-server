@@ -5,13 +5,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.auth.AuthKey;
 import trying.cosmos.auth.AuthorityOf;
-import trying.cosmos.controller.request.UserCreateControllerRequest;
-import trying.cosmos.controller.request.UserUpdateControllerRequest;
+import trying.cosmos.controller.request.*;
 import trying.cosmos.controller.response.UserFindResponse;
 import trying.cosmos.controller.response.UserLoginResponse;
 import trying.cosmos.entity.component.Authority;
 import trying.cosmos.service.UserService;
-import trying.cosmos.service.request.*;
 
 @RestController
 @RequestMapping("/users")
@@ -22,32 +20,32 @@ public class UserController {
 
     @PostMapping("/validate-email")
     public void validateEmail(@RequestBody @Validated UserValidateEmailRequest request) {
-        userService.validateEmail(request);
+        userService.validateEmail(request.getEmail());
     }
 
     @PostMapping
     public void join(@RequestBody @Validated UserJoinRequest request) {
-        userService.join(request);
+        userService.join(request.getEmail(), request.getPassword());
     }
 
     @PostMapping("/certificate")
     public void certificate(@RequestBody @Validated UserCertificationRequest request) {
-        userService.certificate(request);
+        userService.certificate(request.getEmail(), request.getCode());
     }
 
     @PostMapping("/{email}")
     public void createUser(@PathVariable String email, @RequestBody @Validated UserCreateControllerRequest request) {
-        userService.create(new UserCreateServiceRequest(email, request));
+        userService.create(email, request.getName());
     }
 
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody @Validated UserLoginRequest request) {
-        return new UserLoginResponse(userService.login(request));
+        return new UserLoginResponse(userService.login(request.getEmail(), request.getPassword(), request.getDeviceToken()));
     }
 
     @PatchMapping("/password")
     public void resetPassword(@RequestBody @Validated UserResetPasswordRequest request) {
-        userService.resetPassword(request);
+        userService.resetPassword(request.getEmail());
     }
 
     @AuthorityOf(Authority.USER)
@@ -59,7 +57,7 @@ public class UserController {
     @AuthorityOf(Authority.USER)
     @PutMapping
     public void update(@RequestBody @Validated UserUpdateControllerRequest request) {
-        userService.update(new UserUpdateServiceRequest(AuthKey.get(), request));
+        userService.update(AuthKey.get(), request.getName(), request.getPassword());
     }
 
     @AuthorityOf(Authority.USER)

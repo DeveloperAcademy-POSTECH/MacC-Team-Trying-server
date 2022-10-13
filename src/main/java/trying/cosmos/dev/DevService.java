@@ -10,7 +10,6 @@ import trying.cosmos.entity.component.Authority;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.repository.UserRepository;
 import trying.cosmos.service.UserService;
-import trying.cosmos.service.request.UserLoginRequest;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,9 +20,11 @@ public class DevService {
     private final UserRepository userRepository;
     private final UserService userService;
 
+    private static final String MOCK_DEVICE_TOKEN = "deviceToken";
+
     @Transactional
     public String createUser(TestUserJoinRequest request) {
         userRepository.save(new User(request.getEmail(), request.getPassword(), request.getName(), UserStatus.LOGOUT, Authority.USER));
-        return userService.login(new UserLoginRequest(request.getEmail(), request.getPassword(), "deviceToken"));
+        return userService.login(request.getEmail(), request.getPassword(), MOCK_DEVICE_TOKEN);
     }
 }
