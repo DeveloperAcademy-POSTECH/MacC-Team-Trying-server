@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
+import trying.cosmos.entity.component.FollowPlanet;
+import trying.cosmos.entity.Planet;
 import trying.cosmos.entity.User;
 import trying.cosmos.entity.component.Certification;
 import trying.cosmos.exception.CustomException;
@@ -19,7 +21,9 @@ import trying.cosmos.utils.email.EmailUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -136,5 +140,11 @@ public class UserService {
         if (!BCryptUtils.isMatch(password, user.getPassword())) {
             throw new CustomException(ExceptionType.INVALID_PASSWORD);
         }
+    }
+
+    public List<Planet> findFollows(Long id) {
+        return userRepository.findById(id).orElseThrow().getFollows().stream()
+                .map(FollowPlanet::getPlanet)
+                .collect(Collectors.toList());
     }
 }

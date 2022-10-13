@@ -36,4 +36,8 @@ public class Planet extends CreatedDateEntity {
     }
 
     // Convenience Method
+    public void invite(User mate) {
+        this.guest = mate;
+
+    }
 }

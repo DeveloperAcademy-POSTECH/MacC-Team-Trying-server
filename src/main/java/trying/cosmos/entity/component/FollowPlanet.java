@@ -1,8 +1,10 @@
-package trying.cosmos.entity;
+package trying.cosmos.entity.component;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import trying.cosmos.entity.Planet;
+import trying.cosmos.entity.User;
 
 import javax.persistence.*;
 

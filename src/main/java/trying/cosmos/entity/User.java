@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.entity.component.Authority;
 import trying.cosmos.entity.component.CreatedDateEntity;
+import trying.cosmos.entity.component.FollowPlanet;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
