@@ -1,4 +1,4 @@
-package trying.cosmos.authentication;
+package trying.cosmos.test.authentication;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

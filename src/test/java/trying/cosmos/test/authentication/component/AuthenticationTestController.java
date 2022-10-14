@@ -1,4 +1,4 @@
-package trying.cosmos.component;
+package trying.cosmos.test.authentication.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

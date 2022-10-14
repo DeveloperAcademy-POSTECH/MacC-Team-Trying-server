@@ -34,9 +34,9 @@ public class UserController {
         userService.certificate(request.getEmail(), request.getCode());
     }
 
-    @PostMapping("/{email}")
-    public void createUser(@PathVariable String email, @RequestBody @Validated UserCreateControllerRequest request) {
-        userService.create(email, request.getName());
+    @PostMapping("/create")
+    public void createUser(@RequestBody @Validated UserCreateRequest request) {
+        userService.create(request.getEmail(), request.getName());
     }
 
     @PostMapping("/login")
@@ -44,7 +44,7 @@ public class UserController {
         return new UserLoginResponse(userService.login(request.getEmail(), request.getPassword(), request.getDeviceToken()));
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/reset-password")
     public void resetPassword(@RequestBody @Validated UserResetPasswordRequest request) {
         userService.resetPassword(request.getEmail());
     }
@@ -57,7 +57,7 @@ public class UserController {
 
     @AuthorityOf(USER)
     @PutMapping
-    public void update(@RequestBody @Validated UserUpdateControllerRequest request) {
+    public void update(@RequestBody @Validated UserUpdateRequest request) {
         userService.update(AuthKey.get(), request.getName(), request.getPassword());
     }
 
