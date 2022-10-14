@@ -12,6 +12,7 @@ import trying.cosmos.entity.component.Certification;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.repository.CertificationRepository;
+import trying.cosmos.repository.PlanetRepository;
 import trying.cosmos.repository.UserRepository;
 import trying.cosmos.utils.cipher.BCryptUtils;
 import trying.cosmos.utils.email.EmailType;
@@ -28,6 +29,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
+    private final PlanetRepository planetRepository;
 
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;

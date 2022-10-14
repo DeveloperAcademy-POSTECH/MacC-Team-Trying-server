@@ -8,8 +8,9 @@ import trying.cosmos.auth.AuthorityOf;
 import trying.cosmos.controller.request.*;
 import trying.cosmos.controller.response.UserFindResponse;
 import trying.cosmos.controller.response.UserLoginResponse;
-import trying.cosmos.entity.component.Authority;
 import trying.cosmos.service.UserService;
+
+import static trying.cosmos.entity.component.Authority.USER;
 
 @RestController
 @RequestMapping("/users")
@@ -48,25 +49,25 @@ public class UserController {
         userService.resetPassword(request.getEmail());
     }
 
-    @AuthorityOf(Authority.USER)
+    @AuthorityOf(USER)
     @GetMapping("/me")
     public UserFindResponse findMe() {
         return new UserFindResponse(userService.find(AuthKey.get()));
     }
 
-    @AuthorityOf(Authority.USER)
+    @AuthorityOf(USER)
     @PutMapping
     public void update(@RequestBody @Validated UserUpdateControllerRequest request) {
         userService.update(AuthKey.get(), request.getName(), request.getPassword());
     }
 
-    @AuthorityOf(Authority.USER)
+    @AuthorityOf(USER)
     @DeleteMapping("/logout")
     public void logout() {
         userService.logout(AuthKey.get());
     }
 
-    @AuthorityOf(Authority.USER)
+    @AuthorityOf(USER)
     @DeleteMapping
     public void withdraw() {
         userService.withdraw(AuthKey.get());
