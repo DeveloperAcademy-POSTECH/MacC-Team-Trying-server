@@ -4,16 +4,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.entity.component.Authority;
-import trying.cosmos.entity.component.CreatedDateEntity;
-import trying.cosmos.entity.component.FollowPlanet;
+import trying.cosmos.entity.component.DateEntity;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.utils.cipher.BCryptUtils;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static trying.cosmos.entity.component.UserStatus.*;
 
@@ -21,7 +18,7 @@ import static trying.cosmos.entity.component.UserStatus.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User extends CreatedDateEntity {
+public class User extends DateEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -43,8 +40,9 @@ public class User extends CreatedDateEntity {
 
     private String deviceToken;
 
-    @OneToMany(mappedBy = "planet", cascade = CascadeType.ALL)
-    private List<FollowPlanet> follows = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "planet_id")
+    private Planet planet;
 
     private static final String WITHDRAWN_USER_PREFIX = "[UNKNOWN] ";
 
@@ -123,5 +121,34 @@ public class User extends CreatedDateEntity {
             case WITHDRAWN:
                 throw new CustomException(ExceptionType.NO_DATA);
         }
+    }
+
+    public Planet getPlanet() {
+        if (this.planet == null) {
+            throw new CustomException(ExceptionType.NO_DATA);
+        }
+        return planet;
+    }
+
+    public void setPlanet(Planet planet) {
+        if (this.planet != null) {
+            throw new CustomException(ExceptionType.CREATE_PLANET_FAILED);
+        }
+        this.planet = planet;
+    }
+
+    public boolean hasPlanet() {
+        return planet != null;
+    }
+
+    public boolean hasMate() {
+        return planet != null && planet.getMate(this) != null;
+    }
+
+    public User getMate() {
+        if (planet == null) {
+            return null;
+        }
+        return planet.getMate(this);
     }
 }

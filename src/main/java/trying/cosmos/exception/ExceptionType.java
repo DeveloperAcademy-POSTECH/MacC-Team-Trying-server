@@ -32,6 +32,8 @@ public enum ExceptionType {
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
 
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
+    CREATE_PLANET_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
+    JOIN_PLANET_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 

@@ -2,11 +2,13 @@ package trying.cosmos.dev;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import trying.cosmos.controller.response.UserLoginResponse;
+import trying.cosmos.controller.response.PlanetFindResponse;
+import trying.cosmos.dev.request.TestPlanetCreateRequest;
 import trying.cosmos.dev.request.TestUserJoinRequest;
 
 @RestController
@@ -18,7 +20,18 @@ public class DevController {
     private final DevService devService;
 
     @PostMapping("/users")
-    public UserLoginResponse createUser(@RequestBody TestUserJoinRequest request) {
-        return new UserLoginResponse(devService.createUser(request));
+    public void createUser(@RequestBody TestUserJoinRequest request) {
+        devService.createUser(request.getEmail(), request.getPassword(), request.getName());
+    }
+
+    @PostMapping("/planets")
+    public PlanetFindResponse createPlanet(@RequestBody @Validated TestPlanetCreateRequest request) {
+        return new PlanetFindResponse(devService.createPlanet(
+                        request.getEmail(),
+                        request.getPassword(),
+                        request.getName(),
+                        request.getPlanetName(),
+                        request.getPlanetImageType())
+        );
     }
 }

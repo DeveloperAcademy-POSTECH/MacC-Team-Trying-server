@@ -39,6 +39,8 @@ public class CustomExceptionAdvice {
             return generalResponse(NO_DATA, e);
         } else if (e.getMessage().contains("NumberFormat")) {
             return generalResponse(INVALID_TYPE, e);
+        } else if (e.getMessage().contains("UnrecognizedPropertyException")) {
+            return generalResponse(INVALID_INPUT, e);
         } else if (e.getMessage().contains("JSON")) {
             return generalResponse(INVALID_JSON_FORMAT, e);
         } else {

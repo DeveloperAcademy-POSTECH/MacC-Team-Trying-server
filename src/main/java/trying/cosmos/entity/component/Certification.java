@@ -20,7 +20,7 @@ public class Certification {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String code;

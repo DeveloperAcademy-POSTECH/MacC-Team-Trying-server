@@ -13,7 +13,6 @@ import trying.cosmos.entity.User;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.repository.UserRepository;
 import trying.cosmos.service.UserService;
-import trying.cosmos.service.request.UserLoginRequest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,11 +77,11 @@ public class AuthenticationTest {
 
     private String createAdmin() {
         userRepository.save(new User("email", "password", "admin", UserStatus.LOGOUT, ADMIN));
-        return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
+        return userService.login("email", "password", "deviceToken");
     }
 
     private String createUser() {
         userRepository.save(new User("email", "password", "admin", UserStatus.LOGOUT, USER));
-        return userService.login(new UserLoginRequest("email", "password", "deviceToken"));
+        return userService.login("email", "password", "deviceToken");
     }
 }
