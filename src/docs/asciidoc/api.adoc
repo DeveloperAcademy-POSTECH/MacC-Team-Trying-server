@@ -1,0 +1,117 @@
+= 맛스타
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+[[user]]
+== User
+
+[[validate-email]]
+=== 1. 이메일 검증
+- 회원가입 전 해당 이메일의 형식과 중복 여부를 검사
+
+**Request**
+include::{snippets}/validate-email/http-request.adoc[]
+include::{snippets}/validate-email/request-fields.adoc[]
+
+**Response**
+include::{snippets}/validate-email/http-response.adoc[]
+
+'''
+
+[[join]]
+=== 2. 회원 가입
+- 회원 가입 후 메일로 인증 코드 전송
+
+*Request*
+include::{snippets}/join/http-request.adoc[]
+include::{snippets}/join/request-fields.adoc[]
+
+*Response*
+include::{snippets}/join/http-response.adoc[]
+
+'''
+
+[[certification]]
+=== 3. 인증코드 확인
+- 이메일로 받은 인증 코드 입력
+
+*Request*
+include::{snippets}/certification/http-request.adoc[]
+include::{snippets}/certification/request-fields.adoc[]
+
+*Response*
+include::{snippets}/certification/http-response.adoc[]
+
+'''
+
+[[create-user]]
+=== 4. 사용자 생성
+- 사용할 닉네임을 입력해서 가입 완료
+
+*Request*
+include::{snippets}/create-user/http-request.adoc[]
+include::{snippets}/create-user/request-fields.adoc[]
+
+*Response*
+include::{snippets}/create-user/http-response.adoc[]
+
+'''
+
+[[login]]
+=== 5. 로그인
+- 가입한 계정으로 로그인
+
+*Request*
+include::{snippets}/login/http-request.adoc[]
+include::{snippets}/login/request-fields.adoc[]
+
+*Response*
+include::{snippets}/login/http-response.adoc[]
+include::{snippets}/login/response-fields.adoc[]
+
+'''
+
+[[reset-password]]
+=== 6. 임시 비밀번호 발급
+- 비밀번호를 잊어버렸을 때 이메일로 임시 비밀번호 전송
+
+*Request*
+include::{snippets}/reset-password/http-request.adoc[]
+include::{snippets}/reset-password/request-fields.adoc[]
+
+*Response*
+include::{snippets}/reset-password/http-response.adoc[]
+
+'''
+
+[[logout]]
+=== 7. 로그아웃
+- 현재 로그인해있는 사용자 로그아웃
+
+*Request*
+include::{snippets}/logout/http-request.adoc[]
+include::{snippets}/logout/request-headers.adoc[]
+
+*Response*
+include::{snippets}/logout/http-response.adoc[]
+
+'''
+
+[[withdraw]]
+=== 8. 회원 탈퇴
+- 현재 로그인해있는 사용자 탈퇴
+
+*Request*
+include::{snippets}/withdraw/http-request.adoc[]
+include::{snippets}/withdraw/request-headers.adoc[]
+
+*Response*
+include::{snippets}/withdraw/http-response.adoc[]
