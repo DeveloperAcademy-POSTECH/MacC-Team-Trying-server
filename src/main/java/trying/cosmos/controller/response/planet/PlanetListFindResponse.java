@@ -1,4 +1,4 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.controller.response.planet;
 
 import lombok.AccessLevel;
 import lombok.Getter;

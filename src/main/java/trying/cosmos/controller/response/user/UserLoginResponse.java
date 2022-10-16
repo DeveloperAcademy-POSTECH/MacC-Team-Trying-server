@@ -1,4 +1,4 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.controller.response.user;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PlanetInviteCodeResponse {
+public class UserLoginResponse {
 
-    private String code;
+    private String accessToken;
 }

@@ -2,23 +2,19 @@ package trying.cosmos.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
+import trying.cosmos.entity.Certification;
 import trying.cosmos.entity.User;
-import trying.cosmos.entity.component.Certification;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 import trying.cosmos.repository.CertificationRepository;
-import trying.cosmos.repository.PlanetRepository;
 import trying.cosmos.repository.UserRepository;
 import trying.cosmos.utils.cipher.BCryptUtils;
 import trying.cosmos.utils.email.EmailType;
 import trying.cosmos.utils.email.EmailUtils;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,55 +25,23 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CertificationRepository certificationRepository;
-    private final PlanetRepository planetRepository;
 
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;
 
-    public void validateEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new CustomException(ExceptionType.DUPLICATED);
+    public boolean isExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Transactional
+    public User join(String email, String password, String name) {
+        Certification certification = certificationRepository.findByEmail(email).orElseThrow(() -> new CustomException(ExceptionType.CERTIFICATION_FAILED));
+        if (!certification.isCertified()) {
+            throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
         }
-    }
 
-    @Transactional
-    public User join(String email, String password) {
-        User user = new User(email, password);
-        userRepository.save(user);
-
-        String code = createRandomStringNumber(Certification.getLength());
-        certificationRepository.save(new Certification(user, code));
-
-        sendCertificationEmail(email, code);
-        return user;
-    }
-
-    private void sendCertificationEmail(String email, String code) {
-        Map<String, String> model = new HashMap<>();
-        model.put("code", code);
-        model.put("body1", "계정 보안을 위해 이메일 주소를 인증해주세요.");
-        model.put("body2", "다음 인증코드를 10분 이내에 입력해주세요.");
-        emailUtils.send(email, "이메일 인증을 완료해주세요", "email-template", EmailType.CERTIFICATION, model);
-    }
-
-    @Transactional
-    public void certificate(String email, String code) {
-        Certification certification = certificationRepository.findByUserEmail(email).orElseThrow();
-        certification.certificate(code);
         certificationRepository.delete(certification);
-    }
-
-    @Async
-    @Scheduled(fixedDelay = 1000 * 60 * 60) // 1시간
-    @Transactional
-    public void clearCertification() {
-        certificationRepository.clearCertifications(LocalDateTime.now());
-    }
-
-    @Transactional
-    public void create(String email, String name) {
-        User user = userRepository.findByEmail(email).orElseThrow();
-        user.create(name);
+        return userRepository.save(new User(email, password, name));
     }
 
     @Transactional
@@ -88,12 +52,26 @@ public class UserService {
         return tokenProvider.getAccessToken(user);
     }
 
+    public User find(Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    private static void checkPassword(String password, User user) {
+        if (!BCryptUtils.isMatch(password, user.getPassword())) {
+            throw new CustomException(ExceptionType.INVALID_PASSWORD);
+        }
+    }
+
     @Transactional
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         String password = createRandomStringNumber(10);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
+    }
+
+    private String createRandomStringNumber(int length) {
+        return RandomStringUtils.random(length, true, true);
     }
 
     private void sendResetPasswordEmail(String email, String password) {
@@ -104,18 +82,16 @@ public class UserService {
         emailUtils.send(email, "임시 비밀번호가 발급되었습니다.", "email-template", EmailType.RESET_PASSWORD, model);
     }
 
-    public User find(String name) {
-        return userRepository.findByName(name).orElseThrow();
-    }
-
-    public User find(Long id) {
-        return userRepository.findById(id).orElseThrow();
+    @Transactional
+    public void updateName(Long id, String name) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setName(name);
     }
 
     @Transactional
-    public void update(Long id, String name, String password) {
+    public void updatePassword(Long id, String password) {
         User user = userRepository.findById(id).orElseThrow();
-        user.update(name, password);
+        user.setPassword(BCryptUtils.encrypt(password));
     }
 
     @Transactional
@@ -128,15 +104,5 @@ public class UserService {
     public void withdraw(Long id) {
         User user = userRepository.findById(id).orElseThrow();
         user.withdraw();
-    }
-
-    private String createRandomStringNumber(int length) {
-        return RandomStringUtils.random(length, true, true);
-    }
-
-    private static void checkPassword(String password, User user) {
-        if (!BCryptUtils.isMatch(password, user.getPassword())) {
-            throw new CustomException(ExceptionType.INVALID_PASSWORD);
-        }
     }
 }

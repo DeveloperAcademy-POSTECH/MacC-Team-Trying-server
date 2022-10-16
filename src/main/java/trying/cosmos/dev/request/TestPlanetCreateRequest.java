@@ -32,5 +32,5 @@ public class TestPlanetCreateRequest {
     private String planetName;
 
     @NotNull
-    private PlanetImageType planetImageType;
+    private PlanetImageType image;
 }

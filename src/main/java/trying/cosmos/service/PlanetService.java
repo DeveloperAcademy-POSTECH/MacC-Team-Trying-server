@@ -25,11 +25,12 @@ public class PlanetService {
 
     public String getInviteCode(Long userId, Long planetId) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
-        return planet.getInviteCode(userRepository.findById(userId).orElseThrow());
+        planet.authorize(userId);
+        return planet.getInviteCode();
     }
 
     @Transactional
-    public void joinPlanet(Long userId, String code) {
+    public void join(Long userId, String code) {
         Planet planet = planetRepository.findByInviteCode(code).orElseThrow();
         planet.join(userRepository.findById(userId).orElseThrow());
     }
@@ -38,7 +39,11 @@ public class PlanetService {
         return planetRepository.findById(id).orElseThrow();
     }
 
-    public Slice<Planet> findPlanets(String query, Pageable pageable) {
+    public Planet find(String inviteCode) {
+        return planetRepository.findByInviteCode(inviteCode).orElseThrow();
+    }
+
+    public Slice<Planet> searchPlanets(String query, Pageable pageable) {
         return planetRepository.findByNameLike("%" + query + "%", pageable);
     }
 }

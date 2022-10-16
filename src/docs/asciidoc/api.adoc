@@ -3,115 +3,245 @@
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
-:toclevels: 4
+:toclevels: 2
+:toc-title: 목차
 :sectlinks:
+:postman: https://app.getpostman.com/join-team?invite_code=e37c0f099af0d6ca4ce663cd16eb0efe&target_code=596f255ccbb6696328c6c93603fbe66f
 
 ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-[[user]]
-== User
+== {postman}[API Test]
 
-[[validate-email]]
-=== 1. 이메일 검증
-- 회원가입 전 해당 이메일의 형식과 중복 여부를 검사
+[[Certification]]
+== Certification
+
+[[create-certification]]
+=== 1. 인증코드 생성
+- 회원가입시 이메일을 인증하기 위한 코드를 전송
 
 **Request**
-include::{snippets}/validate-email/http-request.adoc[]
-include::{snippets}/validate-email/request-fields.adoc[]
+include::{snippets}/certification/create-certification/http-request.adoc[]
+include::{snippets}/certification/create-certification/request-fields.adoc[]
 
 **Response**
-include::{snippets}/validate-email/http-response.adoc[]
+include::{snippets}/certification/create-certification/http-response.adoc[]
 
 '''
+
+[[certificate]]
+=== 2. 인증코드 확인
+- 이메일로 받은 인증코드를 확인
+
+==== Request
+include::{snippets}/certification/certificate/http-request.adoc[]
+include::{snippets}/certification/certificate/request-fields.adoc[]
+
+==== Response
+include::{snippets}/certification/certificate/http-response.adoc[]
+
+[[User]]
+== User
 
 [[join]]
-=== 2. 회원 가입
-- 회원 가입 후 메일로 인증 코드 전송
+=== 1. 회원가입
+- 회원가입
+- 인증받은 이메일로 가입해야 한다
 
-*Request*
-include::{snippets}/join/http-request.adoc[]
-include::{snippets}/join/request-fields.adoc[]
+==== Request
+include::{snippets}/user/join/http-request.adoc[]
+include::{snippets}/user/join/request-fields.adoc[]
 
-*Response*
-include::{snippets}/join/http-response.adoc[]
-
-'''
-
-[[certification]]
-=== 3. 인증코드 확인
-- 이메일로 받은 인증 코드 입력
-
-*Request*
-include::{snippets}/certification/http-request.adoc[]
-include::{snippets}/certification/request-fields.adoc[]
-
-*Response*
-include::{snippets}/certification/http-response.adoc[]
+==== Response
+include::{snippets}/user/join/http-response.adoc[]
 
 '''
 
-[[create-user]]
-=== 4. 사용자 생성
-- 사용할 닉네임을 입력해서 가입 완료
+=== 2. 이메일 체크
+- 로그인시 해당 이메일이 존재하는지 확인
 
-*Request*
-include::{snippets}/create-user/http-request.adoc[]
-include::{snippets}/create-user/request-fields.adoc[]
+==== Request
+include::{snippets}/user/check-email/http-request.adoc[]
+include::{snippets}/user/check-email/request-parameters.adoc[]
 
-*Response*
-include::{snippets}/create-user/http-response.adoc[]
-
-'''
-
-[[login]]
-=== 5. 로그인
-- 가입한 계정으로 로그인
-
-*Request*
-include::{snippets}/login/http-request.adoc[]
-include::{snippets}/login/request-fields.adoc[]
-
-*Response*
-include::{snippets}/login/http-response.adoc[]
-include::{snippets}/login/response-fields.adoc[]
+==== Response
+include::{snippets}/user/check-email/http-response.adoc[]
+include::{snippets}/user/check-email/response-fields.adoc[]
 
 '''
 
-[[reset-password]]
-=== 6. 임시 비밀번호 발급
-- 비밀번호를 잊어버렸을 때 이메일로 임시 비밀번호 전송
+=== 3. 로그인
+- 로그인
+- 사용자 인증을 위한 토큰 반환
 
-*Request*
-include::{snippets}/reset-password/http-request.adoc[]
-include::{snippets}/reset-password/request-fields.adoc[]
+==== Request
+include::{snippets}/user/login/http-request.adoc[]
+include::{snippets}/user/login/request-fields.adoc[]
 
-*Response*
-include::{snippets}/reset-password/http-response.adoc[]
-
-'''
-
-[[logout]]
-=== 7. 로그아웃
-- 현재 로그인해있는 사용자 로그아웃
-
-*Request*
-include::{snippets}/logout/http-request.adoc[]
-include::{snippets}/logout/request-headers.adoc[]
-
-*Response*
-include::{snippets}/logout/http-response.adoc[]
+==== Response
+include::{snippets}/user/login/http-response.adoc[]
+include::{snippets}/user/login/response-fields.adoc[]
 
 '''
 
-[[withdraw]]
-=== 8. 회원 탈퇴
-- 현재 로그인해있는 사용자 탈퇴
+=== 4. 로그아웃
+- 로그아웃
 
-*Request*
-include::{snippets}/withdraw/http-request.adoc[]
-include::{snippets}/withdraw/request-headers.adoc[]
+==== Request
+include::{snippets}/user/logout/http-request.adoc[]
+include::{snippets}/user/logout/request-headers.adoc[]
 
-*Response*
-include::{snippets}/withdraw/http-response.adoc[]
+==== Response
+include::{snippets}/user/logout/http-response.adoc[]
+
+'''
+
+=== 5. 회원탈퇴
+- 회원탈퇴
+
+==== Request
+include::{snippets}/user/withdraw/http-request.adoc[]
+include::{snippets}/user/withdraw/request-headers.adoc[]
+
+==== Response
+include::{snippets}/user/withdraw/http-response.adoc[]
+
+'''
+
+=== 6. 내 정보 조회
+- 내 정보 조회
+- 행성을 만들었으면 만든 행성 정보도 함께 조회
+- 행성에 메이트가 초대되었으면 메이트 정보도 함께 조회
+
+==== Request
+include::{snippets}/user/find-me/http-request.adoc[]
+include::{snippets}/user/find-me/request-headers.adoc[]
+
+==== Response
+include::{snippets}/user/find-me/http-response.adoc[]
+include::{snippets}/user/find-me/response-fields.adoc[]
+
+'''
+
+=== 7. 닉네임 변경
+- 닉네임 변경
+
+==== Request
+include::{snippets}/user/update-name/http-request.adoc[]
+include::{snippets}/user/update-name/request-headers.adoc[]
+include::{snippets}/user/update-name/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/update-name/http-response.adoc[]
+
+'''
+
+
+=== 8. 비밀번호 변경
+- 비밀번호 변경
+
+==== Request
+include::{snippets}/user/update-password/http-request.adoc[]
+include::{snippets}/user/update-password/request-headers.adoc[]
+include::{snippets}/user/update-password/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/update-password/http-response.adoc[]
+
+'''
+
+=== 9. 비밀번호 재설정
+- 비밀번호 재설정
+- 임의의 비밀번호로 변경되고, 입력한 이메일로 메일 전송
+
+==== Request
+include::{snippets}/user/reset-password/http-request.adoc[]
+include::{snippets}/user/reset-password/request-fields.adoc[]
+
+==== Response
+include::{snippets}/user/reset-password/http-response.adoc[]
+
+[[Planet]]
+== Planet
+
+=== 1. 행성 생성
+- 행성 생성
+
+==== Request
+include::{snippets}/planet/create/http-request.adoc[]
+include::{snippets}/planet/create/request-headers.adoc[]
+include::{snippets}/planet/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/planet/create/http-response.adoc[]
+include::{snippets}/planet/create/response-fields.adoc[]
+
+'''
+
+=== 2. 초대코드 조회
+- 초대코드 조회
+
+==== Request
+include::{snippets}/planet/invite-code/http-request.adoc[]
+include::{snippets}/planet/invite-code/request-headers.adoc[]
+include::{snippets}/planet/invite-code/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/invite-code/http-response.adoc[]
+include::{snippets}/planet/invite-code/response-fields.adoc[]
+
+'''
+
+=== 3. 초대코드로 행성 조회
+- 초대코드로 행성에 참가하기 전에 정보를 조회
+
+==== Request
+include::{snippets}/planet/find-by-code/http-request.adoc[]
+include::{snippets}/planet/find-by-code/request-headers.adoc[]
+include::{snippets}/planet/find-by-code/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/find-by-code/http-response.adoc[]
+include::{snippets}/planet/find-by-code/response-fields.adoc[]
+
+'''
+
+=== 4. 행성 참가
+- 행성 참가
+- 내가 만든 행성에는 참가 불가
+- 이미 행성에 2명이 참여해있다면 참가 불가
+
+==== Request
+include::{snippets}/planet/join/http-request.adoc[]
+include::{snippets}/planet/join/request-headers.adoc[]
+
+==== Response
+include::{snippets}/planet/join/http-response.adoc[]
+
+'''
+
+=== 5. 행성 조회
+- 행성 조회
+
+==== Request
+include::{snippets}/planet/find/http-request.adoc[]
+include::{snippets}/planet/find/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/find/http-response.adoc[]
+include::{snippets}/planet/find/response-fields.adoc[]
+
+'''
+
+=== 6. 행성 리스트 조회
+- 행성 리스트 조회
+- 무한 페이지 이용
+
+==== Request
+include::{snippets}/planet/find-list/http-request.adoc[]
+include::{snippets}/planet/find-list/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/find-list/http-response.adoc[]
+include::{snippets}/planet/find-list/response-fields.adoc[]

@@ -1,4 +1,4 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.controller.response.planet;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,13 +8,15 @@ import trying.cosmos.entity.component.PlanetImageType;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlanetFindResponse {
+public class PlanetListFindContent {
 
+    private Long id;
     private String name;
-    private PlanetImageType planetImageType;
+    private PlanetImageType image;
 
-    public PlanetFindResponse(Planet planet) {
+    public PlanetListFindContent(Planet planet) {
+        this.id = planet.getId();
         this.name = planet.getName();
-        this.planetImageType = planet.getImageType();
+        this.image = planet.getImage();
     }
 }

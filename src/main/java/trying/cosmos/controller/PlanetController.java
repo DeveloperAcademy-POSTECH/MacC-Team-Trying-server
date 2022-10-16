@@ -6,11 +6,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.auth.AuthKey;
 import trying.cosmos.auth.AuthorityOf;
-import trying.cosmos.controller.request.PlanetCreateRequest;
-import trying.cosmos.controller.request.PlanetJoinRequest;
-import trying.cosmos.controller.response.PlanetFindResponse;
-import trying.cosmos.controller.response.PlanetInviteCodeResponse;
-import trying.cosmos.controller.response.PlanetListFindResponse;
+import trying.cosmos.controller.request.planet.PlanetCreateRequest;
+import trying.cosmos.controller.request.planet.PlanetJoinRequest;
+import trying.cosmos.controller.response.planet.PlanetCreateResponse;
+import trying.cosmos.controller.response.planet.PlanetFindResponse;
+import trying.cosmos.controller.response.planet.PlanetInviteCodeResponse;
+import trying.cosmos.controller.response.planet.PlanetListFindResponse;
 import trying.cosmos.entity.Planet;
 import trying.cosmos.entity.component.Authority;
 import trying.cosmos.service.PlanetService;
@@ -24,9 +25,9 @@ public class PlanetController {
 
     @AuthorityOf(Authority.USER)
     @PostMapping
-    public PlanetInviteCodeResponse create(@RequestBody @Validated PlanetCreateRequest request) {
-        Planet planet = planetService.create(AuthKey.get(), request.getName(), request.getPlanetImageType());
-        return new PlanetInviteCodeResponse(planetService.getInviteCode(AuthKey.get(), planet.getId()));
+    public PlanetCreateResponse create(@RequestBody @Validated PlanetCreateRequest request) {
+        Planet planet = planetService.create(AuthKey.get(), request.getName(), request.getImage());
+        return new PlanetCreateResponse(planet);
     }
 
     @AuthorityOf(Authority.USER)
@@ -36,9 +37,15 @@ public class PlanetController {
     }
 
     @AuthorityOf(Authority.USER)
+    @GetMapping("/join")
+    public PlanetFindResponse findPlanet(@RequestParam String code) {
+        return new PlanetFindResponse(planetService.find(code));
+    }
+
+    @AuthorityOf(Authority.USER)
     @PostMapping("/join")
     public void joinPlanet(@RequestBody @Validated PlanetJoinRequest request) {
-        planetService.joinPlanet(AuthKey.get(), request.getCode());
+        planetService.join(AuthKey.get(), request.getCode());
     }
 
     @GetMapping("/{id}")
@@ -47,7 +54,7 @@ public class PlanetController {
     }
 
     @GetMapping
-    public PlanetListFindResponse findPlanets(@RequestParam String query, Pageable pageable) {
-        return new PlanetListFindResponse(planetService.findPlanets(query, pageable));
+    public PlanetListFindResponse findPlanets(@RequestParam(required = false) String query, Pageable pageable) {
+        return new PlanetListFindResponse(planetService.searchPlanets(query, pageable));
     }
 }

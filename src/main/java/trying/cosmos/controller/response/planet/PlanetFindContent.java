@@ -1,4 +1,4 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.controller.response.planet;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,11 +14,11 @@ public class PlanetFindContent {
 
     private String name;
     private int dday;
-    private PlanetImageType imageType;
+    private PlanetImageType image;
 
     public PlanetFindContent(Planet planet) {
         this.name = planet.getName();
         this.dday = planet.getDday();
-        this.imageType = planet.getImageType();
+        this.image = planet.getImage();
     }
 }

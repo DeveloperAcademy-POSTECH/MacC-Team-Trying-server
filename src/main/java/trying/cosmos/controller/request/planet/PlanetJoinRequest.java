@@ -1,20 +1,14 @@
-package trying.cosmos.controller.request;
+package trying.cosmos.controller.request.planet;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserCertificationRequest {
+public class PlanetJoinRequest {
 
-    @NotBlank
-    String email;
-
-    @NotBlank
-    String code;
+    private String code;
 }

@@ -28,16 +28,17 @@ public class DevService {
     private static final String MOCK_DEVICE_TOKEN = "deviceToken";
 
     @Transactional
-    public void createUser(String email, String password, String name) {
-        userRepository.save(new User(email, password, name, UserStatus.LOGOUT, Authority.USER));
+    public User createUser() {
+        String str = randomName();
+        return userRepository.save(new User(str + "@gmail.com", "password", str, UserStatus.LOGOUT, Authority.USER));
     }
 
     @Transactional
-    public Planet createPlanet(String email, String password, String name, String planetName, PlanetImageType type) {
-        User user = userRepository.save(new User(email, password, name, UserStatus.LOGOUT, Authority.USER));
-        User mate = userRepository.save(new User(random(5), random(5), random(5), UserStatus.LOGOUT, Authority.USER));
-        Planet planet = planetRepository.save(new Planet(user, planetName, type));
-        planetService.joinPlanet(mate.getId(), planetService.getInviteCode(user.getId(), planet.getId()));
-        return planet;
+    public Planet createPlanet() {
+        return planetRepository.save(new Planet(createUser(), randomName(), PlanetImageType.EARTH));
+    }
+
+    private String randomName() {
+        return random(6, true, true);
     }
 }
