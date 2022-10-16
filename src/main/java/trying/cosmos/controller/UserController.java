@@ -5,9 +5,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.auth.AuthKey;
 import trying.cosmos.auth.AuthorityOf;
-import trying.cosmos.controller.request.*;
-import trying.cosmos.controller.response.UserFindResponse;
-import trying.cosmos.controller.response.UserLoginResponse;
+import trying.cosmos.controller.request.user.*;
+import trying.cosmos.controller.response.user.UserEmailExistResponse;
+import trying.cosmos.controller.response.user.UserFindResponse;
+import trying.cosmos.controller.response.user.UserLoginResponse;
 import trying.cosmos.service.UserService;
 
 import static trying.cosmos.entity.component.Authority.USER;
@@ -19,34 +20,19 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/validate-email")
-    public void validateEmail(@RequestBody @Validated UserValidateEmailRequest request) {
-        userService.validateEmail(request.getEmail());
+    @GetMapping("/exist")
+    public UserEmailExistResponse isEmailExist(@RequestParam String email) {
+        return new UserEmailExistResponse(userService.isExist(email));
     }
 
     @PostMapping
     public void join(@RequestBody @Validated UserJoinRequest request) {
-        userService.join(request.getEmail(), request.getPassword());
-    }
-
-    @PostMapping("/certificate")
-    public void certificate(@RequestBody @Validated UserCertificationRequest request) {
-        userService.certificate(request.getEmail(), request.getCode());
-    }
-
-    @PostMapping("/create")
-    public void createUser(@RequestBody @Validated UserCreateRequest request) {
-        userService.create(request.getEmail(), request.getName());
+        userService.join(request.getEmail(), request.getPassword(), request.getName());
     }
 
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody @Validated UserLoginRequest request) {
         return new UserLoginResponse(userService.login(request.getEmail(), request.getPassword(), request.getDeviceToken()));
-    }
-
-    @PatchMapping("/reset-password")
-    public void resetPassword(@RequestBody @Validated UserResetPasswordRequest request) {
-        userService.resetPassword(request.getEmail());
     }
 
     @AuthorityOf(USER)
@@ -55,10 +41,21 @@ public class UserController {
         return new UserFindResponse(userService.find(AuthKey.get()));
     }
 
+    @PatchMapping("/password")
+    public void resetPassword(@RequestBody @Validated UserResetPasswordRequest request) {
+        userService.resetPassword(request.getEmail());
+    }
+
     @AuthorityOf(USER)
-    @PutMapping
-    public void update(@RequestBody @Validated UserUpdateRequest request) {
-        userService.update(AuthKey.get(), request.getName(), request.getPassword());
+    @PutMapping("/name")
+    public void updateName(@RequestBody @Validated UserUpdateNameRequest request) {
+        userService.updateName(AuthKey.get(), request.getName());
+    }
+
+    @AuthorityOf(USER)
+    @PutMapping("/password")
+    public void updatePassword(@RequestBody @Validated UserUpdatePasswordRequest request) {
+        userService.updatePassword(AuthKey.get(), request.getPassword());
     }
 
     @AuthorityOf(USER)

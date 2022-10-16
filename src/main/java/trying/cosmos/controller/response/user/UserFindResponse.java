@@ -1,10 +1,11 @@
-package trying.cosmos.controller.response;
+package trying.cosmos.controller.response.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import trying.cosmos.controller.response.planet.PlanetFindContent;
 import trying.cosmos.entity.User;
 
 @Getter

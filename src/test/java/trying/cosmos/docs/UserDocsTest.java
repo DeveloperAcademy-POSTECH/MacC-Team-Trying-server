@@ -13,30 +13,36 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
 import trying.cosmos.controller.UserController;
-import trying.cosmos.controller.request.*;
+import trying.cosmos.controller.request.user.*;
+import trying.cosmos.docs.utils.ApiDocumentUtils;
+import trying.cosmos.entity.Certification;
+import trying.cosmos.entity.Planet;
 import trying.cosmos.entity.User;
 import trying.cosmos.entity.component.Authority;
-import trying.cosmos.entity.component.Certification;
+import trying.cosmos.entity.component.PlanetImageType;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.repository.CertificationRepository;
 import trying.cosmos.repository.UserRepository;
+import trying.cosmos.service.CertificationService;
+import trying.cosmos.service.PlanetService;
 import trying.cosmos.service.UserService;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentRequest;
-import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
 @ActiveProfiles("test")
-
 public class UserDocsTest {
 
     @Autowired MockMvc mvc;
@@ -45,7 +51,10 @@ public class UserDocsTest {
     @Autowired TokenProvider tokenProvider;
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
+    @Autowired CertificationService certificationService;
     @Autowired CertificationRepository certificationRepository;
+
+    @Autowired PlanetService planetService;
 
     private static final String JSON_CONTENT_TYPE = "application/json";
 
@@ -53,89 +62,51 @@ public class UserDocsTest {
     private static final String PASSWORD = "password";
     private static final String NAME = "name";
     private static final String DEVICE_TOKEN = "device_token";
+    private static final String PLANET_NAME = "포딩행성";
 
     @Test
-    @DisplayName("이메일 확인")
-    void validate_email() throws Exception {
-        String json = objectMapper.writeValueAsString(new UserValidateEmailRequest(EMAIL));
-
-        ResultActions actions = mvc.perform(post("/users/validate-email")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
-                .andExpect(status().isOk());
-
-        // docs
-        actions.andDo(document("validate-email",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                requestFields(
-                    fieldWithPath("email").description("확인하려는 이메일 주소")
-                )
-        ));
-    }
-
-    @Test
-    @DisplayName("회원 가입")
+    @DisplayName("회원가입")
     void join() throws Exception {
-        String json = objectMapper.writeValueAsString(new UserJoinRequest(EMAIL, PASSWORD));
+        certificationService.createCertificationCode(EMAIL);
+        Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
+        certificationService.certificate(certification.getEmail(), certification.getCode());
+
+        String content = objectMapper.writeValueAsString(new UserJoinRequest(EMAIL, PASSWORD, NAME));
 
         ResultActions actions = mvc.perform(post("/users")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        // docs
-        actions.andDo(document("join",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(document("user/join",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("password").description("사용자 비밀번호")
+                        fieldWithPath("email").description("이메일"),
+                        fieldWithPath("password").description("비밀번호"),
+                        fieldWithPath("name").description("닉네임")
                 )
         ));
     }
 
     @Test
-    @DisplayName("인증코드 확인")
-    void certificate() throws Exception {
-        User user = userService.join(EMAIL, PASSWORD);
-        Certification certification = certificationRepository.findByUserEmail(user.getEmail()).orElseThrow();
-        String json = objectMapper.writeValueAsString(new UserCertificationRequest(EMAIL, certification.getCode()));
+    @DisplayName("이메일 체크")
+    void check_email() throws Exception {
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
 
-        ResultActions actions = mvc.perform(post("/users/certificate")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
+        ResultActions actions = mvc.perform(get("/users/exist")
+                .param("email", EMAIL)
+                .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        // docs
-        actions.andDo(document("certification",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                requestFields(
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("code").description("이메일을 통해 받은 인증코드")
-                )
-        ));
-    }
-
-    @Test
-    @DisplayName("유저 생성")
-    void create_user() throws Exception {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.INCOMPLETE, Authority.USER));
-        String json = objectMapper.writeValueAsString(new UserCreateRequest(EMAIL, NAME));
-
-        ResultActions actions = mvc.perform(post("/users/create")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
-                .andExpect(status().isOk());
-
-        // docs
-        actions.andDo(document("create-user",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                requestFields(
-                        fieldWithPath("email").description("회원가입할 때 사용한 이메일"),
-                        fieldWithPath("name").description("사용자 이름")
+        actions.andDo(document("user/check-email",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("email").description("확인하려는 이메일")
+                ),
+                responseFields(
+                        fieldWithPath("exist").description("기존 이메일 존재 여부")
                 )
         ));
     }
@@ -143,46 +114,25 @@ public class UserDocsTest {
     @Test
     @DisplayName("로그인")
     void login() throws Exception {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
-        String json = objectMapper.writeValueAsString(new UserLoginRequest(EMAIL, PASSWORD, DEVICE_TOKEN));
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+
+        String content = objectMapper.writeValueAsString(new UserLoginRequest(EMAIL, PASSWORD, DEVICE_TOKEN));
 
         ResultActions actions = mvc.perform(post("/users/login")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        // docs
-        actions.andDo(document("login",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(document("user/login",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("email").description("사용자 이메일"),
-                        fieldWithPath("password").description("사용자 비밀번호"),
-                        fieldWithPath("deviceToken").description("푸시 알림을 위한 토큰")
+                        fieldWithPath("email").description("이메일"),
+                        fieldWithPath("password").description("비밀번호"),
+                        fieldWithPath("deviceToken").description("푸시 알림을 위한 기기 고유 토큰")
                 ),
                 responseFields(
-                        fieldWithPath("accessToken").description("사용자 인증을 위한 토큰")
-                )
-        ));
-    }
-
-    @Test
-    @DisplayName("임시 비밀번호 발급")
-    void reset_password() throws Exception {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
-        String json = objectMapper.writeValueAsString(new UserResetPasswordRequest(EMAIL));
-
-        ResultActions actions = mvc.perform(patch("/users/reset-password")
-                        .content(json)
-                        .contentType(JSON_CONTENT_TYPE))
-                .andExpect(status().isOk());
-
-        // docs
-        actions.andDo(document("reset-password",
-                getDocumentRequest(),
-                getDocumentResponse(),
-                requestFields(
-                        fieldWithPath("email").description("사용자 이메일")
+                        fieldWithPath("accessToken").description("인증 토큰")
                 )
         ));
     }
@@ -190,39 +140,143 @@ public class UserDocsTest {
     @Test
     @DisplayName("로그아웃")
     void logout() throws Exception {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGIN, Authority.USER));
-        String accessToken = tokenProvider.getAccessToken(user);
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
         ResultActions actions = mvc.perform(delete("/users/logout")
-                        .header("accessToken", accessToken))
+                        .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        // docs
-        actions.andDo(document("logout",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(document("user/logout",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
                 requestHeaders(
-                        headerWithName("accessToken").description("사용자 인증 토큰")
+                        headerWithName("accessToken").description("인증 토큰")
                 )
         ));
     }
 
     @Test
-    @DisplayName("회원 탈퇴")
+    @DisplayName("회원탈퇴")
     void withdraw() throws Exception {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGIN, Authority.USER));
-        String accessToken = tokenProvider.getAccessToken(user);
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
         ResultActions actions = mvc.perform(delete("/users")
-                        .header("accessToken", accessToken))
+                        .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        // docs
-        actions.andDo(document("withdraw",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(document("user/withdraw",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
                 requestHeaders(
-                        headerWithName("accessToken").description("사용자 인증 토큰")
+                        headerWithName("accessToken").description("인증 토큰")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("내 정보 조회")
+    void findMe() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate", UserStatus.LOGIN, Authority.USER));
+        planetService.join(mate.getId(), planet.getInviteCode());
+
+        ResultActions actions = mvc.perform(get("/users/me")
+                        .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("user/find-me",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("me.name").description("내 닉네임"),
+                        fieldWithPath("mate.name").description("메이트 닉네임").optional(),
+                        fieldWithPath("planet.name").description("내가 속한 행성 이름").optional(),
+                        fieldWithPath("planet.dday").description("행성 디데이").optional(),
+                        fieldWithPath("planet.imageType").description("행성 이미지").optional()
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("닉네임 변경")
+    void update_name() throws Exception {
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        String content = objectMapper.writeValueAsString(new UserUpdateNameRequest("name1234"));
+
+        ResultActions actions = mvc.perform(put("/users/name")
+                .header("accessToken", accessToken)
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("user/update-name",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("name").description("변경하려는 이름")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경")
+    void update_password() throws Exception {
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        String content = objectMapper.writeValueAsString(new UserUpdatePasswordRequest("password1234"));
+
+        ResultActions actions = mvc.perform(put("/users/password")
+                .header("accessToken", accessToken)
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("user/update-password",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("password").description("변경하려는 비밀번호")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("비밀번호 재설정")
+    void reset_password() throws Exception {
+        userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+
+        String content = objectMapper.writeValueAsString(new UserResetPasswordRequest(EMAIL));
+
+        ResultActions actions = mvc.perform(patch("/users/password")
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("user/reset-password",
+                ApiDocumentUtils.getDocumentRequest(),
+                ApiDocumentUtils.getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("email").description("가입한 이메일")
                 )
         ));
     }

@@ -46,10 +46,11 @@ public class User extends DateEntity {
 
     private static final String WITHDRAWN_USER_PREFIX = "[UNKNOWN] ";
 
-    public User(String email, String password) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = BCryptUtils.encrypt(password);
-        this.status = UNCERTIFICATED;
+        this.name = name;
+        this.status = LOGOUT;
         this.authority = Authority.USER;
         this.deviceToken = "";
     }
@@ -64,21 +65,6 @@ public class User extends DateEntity {
     }
 
     // Convenient Method
-    public void certificate() {
-        if (!this.status.equals(UNCERTIFICATED)) {
-            throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
-        }
-        this.status = INCOMPLETE;
-    }
-
-    public void create(String name) {
-        if (!this.status.equals(INCOMPLETE)) {
-            throw new CustomException(ExceptionType.USER_CREATION_FAILED);
-        }
-        this.name = name;
-        this.status = LOGOUT;
-    }
-
     public void login(String deviceToken) {
         checkAccessibleUser();
         this.status = LOGIN;
@@ -91,13 +77,12 @@ public class User extends DateEntity {
         this.status = LOGOUT;
     }
 
-    public boolean isAccessibleUser() {
-        return this.status.equals(LOGIN) || this.status.equals(LOGOUT);
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void update(String name, String password) {
-        this.name = name;
-        this.password = BCryptUtils.encrypt(password);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void logout() {
@@ -112,10 +97,6 @@ public class User extends DateEntity {
 
     private void checkAccessibleUser() {
         switch (status) {
-            case UNCERTIFICATED:
-                throw new CustomException(ExceptionType.NOT_CERTIFICATED);
-            case INCOMPLETE:
-                throw new CustomException(ExceptionType.INCOMPLETE_CREATE_USER);
             case SUSPENDED:
                 throw new CustomException(ExceptionType.SUSPENDED);
             case WITHDRAWN:

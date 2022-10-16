@@ -1,4 +1,4 @@
-package trying.cosmos.controller.request;
+package trying.cosmos.controller.request.planet;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class PlanetCreateRequest {
 
-    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}", message = "닉네임은 한글, 영어, 숫자로 이루어진 2~8자리 문자열입니다.")
+    @Pattern(regexp = "^[가-힣A-Za-z0-9]{2,8}", message = "행성 이름은 한글, 영어, 숫자로 이루어진 2~8자리 문자열입니다.")
     private String name;
 
     @NotNull

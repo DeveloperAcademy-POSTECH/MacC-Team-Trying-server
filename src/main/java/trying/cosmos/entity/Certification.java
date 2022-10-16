@@ -1,9 +1,9 @@
-package trying.cosmos.entity.component;
+package trying.cosmos.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.entity.User;
+import org.apache.commons.lang3.RandomStringUtils;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
 
@@ -19,34 +19,35 @@ public class Certification {
     @Column(name = "certification_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(unique = true)
+    private String email;
 
     private String code;
 
+    private boolean isCertified;
+
     private LocalDateTime expiredDate;
 
-    private static final int LENGTH = 6;
+    private static final int CODE_LENGTH = 6;
     private static final int EXPIRED_TIME =  60 * 10; //10분
 
     // Constructor
-    public Certification(User user, String code) {
-        this.user = user;
-        this.code = code;
+    public Certification(String email) {
+        this.email = email;
+        this.code = createCode();
+        this.isCertified = false;
         this.expiredDate = LocalDateTime.now().plusSeconds(EXPIRED_TIME);
     }
 
-    // Convenient Method
-    public static int getLength() {
-        return LENGTH;
+    private String createCode() {
+        return RandomStringUtils.random(CODE_LENGTH, true, true);
     }
 
     public void certificate(String code) {
-        if (isExpired() || isWrongCode(code)) {
+        if (isExpired() && isWrongCode(code)) {
             throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
         }
-        user.certificate();
+        this.isCertified = true;
     }
 
     private boolean isExpired() {

@@ -32,17 +32,18 @@ public class Planet extends DateEntity {
 
     private LocalDate meetDate;
 
-    private String inviteCode;
-
     @Enumerated(EnumType.STRING)
     private PlanetImageType imageType;
+
+    private String inviteCode;
 
     // Constructor
     public Planet(User user, String name, PlanetImageType imageType) {
         setPlanet(user, this);
         this.name = name;
-        this.imageType = imageType;
         this.inviteCode = UUID.randomUUID().toString();
+        this.imageType = imageType;
+        this.meetDate = LocalDate.now();
     }
 
     // Convenience Method
@@ -58,13 +59,6 @@ public class Planet extends DateEntity {
         planet.owners.add(user);
     }
 
-    public String getInviteCode(User user) {
-        if (!this.owners.contains(user)) {
-            throw new CustomException(ExceptionType.NO_PERMISSION);
-        }
-        return this.inviteCode;
-    }
-
     public List<String> getOwnersName() {
         return this.owners.stream().map(User::getName).collect(Collectors.toList());
     }
@@ -74,8 +68,7 @@ public class Planet extends DateEntity {
     }
 
     public int getDday() {
-        LocalDate from = this.meetDate == null ? getCreatedDate().toLocalDate() : this.meetDate;
-        return (int) Duration.between(from.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays() + 1;
+        return (int) Duration.between(this.meetDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays() + 1;
     }
 
     public User getMate(User me) {
@@ -89,5 +82,14 @@ public class Planet extends DateEntity {
             users.remove(me);
             return users.get(0);
         }
+    }
+
+    public void authorize(Long userId) {
+        for (User owner : owners) {
+            if (owner.getId().equals(userId)) {
+                return;
+            }
+        }
+        throw new CustomException(ExceptionType.NO_PERMISSION);
     }
 }
