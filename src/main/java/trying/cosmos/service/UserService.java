@@ -1,7 +1,6 @@
 package trying.cosmos.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.auth.TokenProvider;
@@ -17,6 +16,8 @@ import trying.cosmos.utils.email.EmailUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.RandomStringUtils.random;
 
 @Service
 @Transactional(readOnly = true)
@@ -65,13 +66,9 @@ public class UserService {
     @Transactional
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        String password = createRandomStringNumber(10);
+        String password = random(10, true, true);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
-    }
-
-    private String createRandomStringNumber(int length) {
-        return RandomStringUtils.random(length, true, true);
     }
 
     private void sendResetPasswordEmail(String email, String password) {

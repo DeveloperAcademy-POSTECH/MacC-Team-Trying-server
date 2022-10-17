@@ -4,6 +4,10 @@ public class AuthKey {
 
     private static ThreadLocal<Long> AuthKey = new ThreadLocal<>();
 
+    public static boolean isAuthenticated() {
+        return AuthKey.get() != null;
+    }
+
     public static Long get() {
         return AuthKey.get();
     }

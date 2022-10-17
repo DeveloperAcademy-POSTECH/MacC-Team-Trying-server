@@ -8,10 +8,7 @@ import trying.cosmos.auth.AuthKey;
 import trying.cosmos.auth.AuthorityOf;
 import trying.cosmos.controller.request.planet.PlanetCreateRequest;
 import trying.cosmos.controller.request.planet.PlanetJoinRequest;
-import trying.cosmos.controller.response.planet.PlanetCreateResponse;
-import trying.cosmos.controller.response.planet.PlanetFindResponse;
-import trying.cosmos.controller.response.planet.PlanetInviteCodeResponse;
-import trying.cosmos.controller.response.planet.PlanetListFindResponse;
+import trying.cosmos.controller.response.planet.*;
 import trying.cosmos.entity.Planet;
 import trying.cosmos.entity.component.Authority;
 import trying.cosmos.service.PlanetService;
@@ -56,5 +53,23 @@ public class PlanetController {
     @GetMapping
     public PlanetListFindResponse findPlanets(@RequestParam(required = false) String query, Pageable pageable) {
         return new PlanetListFindResponse(planetService.searchPlanets(query, pageable));
+    }
+
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/{id}/courses")
+    public PlanetCourseListResponse findPlanetCourses(@PathVariable Long id, Pageable pageable) {
+        return new PlanetCourseListResponse(planetService.findPlanetCourses(AuthKey.get(), id, pageable));
+    }
+
+    @AuthorityOf(Authority.USER)
+    @PostMapping("/{id}/follow")
+    public void follow(@PathVariable Long id) {
+        planetService.follow(AuthKey.get(), id);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @DeleteMapping("/{id}/follow")
+    public void unfollow(@PathVariable Long id) {
+        planetService.unfollow(AuthKey.get(), id);
     }
 }

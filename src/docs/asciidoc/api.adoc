@@ -46,7 +46,6 @@ include::{snippets}/certification/certificate/http-response.adoc[]
 
 [[join]]
 === 1. 회원가입
-- 회원가입
 - 인증받은 이메일로 가입해야 한다
 
 ==== Request
@@ -72,7 +71,6 @@ include::{snippets}/user/check-email/response-fields.adoc[]
 '''
 
 === 3. 로그인
-- 로그인
 - 사용자 인증을 위한 토큰 반환
 
 ==== Request
@@ -86,7 +84,6 @@ include::{snippets}/user/login/response-fields.adoc[]
 '''
 
 === 4. 로그아웃
-- 로그아웃
 
 ==== Request
 include::{snippets}/user/logout/http-request.adoc[]
@@ -98,7 +95,6 @@ include::{snippets}/user/logout/http-response.adoc[]
 '''
 
 === 5. 회원탈퇴
-- 회원탈퇴
 
 ==== Request
 include::{snippets}/user/withdraw/http-request.adoc[]
@@ -110,7 +106,6 @@ include::{snippets}/user/withdraw/http-response.adoc[]
 '''
 
 === 6. 내 정보 조회
-- 내 정보 조회
 - 행성을 만들었으면 만든 행성 정보도 함께 조회
 - 행성에 메이트가 초대되었으면 메이트 정보도 함께 조회
 
@@ -125,7 +120,6 @@ include::{snippets}/user/find-me/response-fields.adoc[]
 '''
 
 === 7. 닉네임 변경
-- 닉네임 변경
 
 ==== Request
 include::{snippets}/user/update-name/http-request.adoc[]
@@ -139,7 +133,6 @@ include::{snippets}/user/update-name/http-response.adoc[]
 
 
 === 8. 비밀번호 변경
-- 비밀번호 변경
 
 ==== Request
 include::{snippets}/user/update-password/http-request.adoc[]
@@ -152,7 +145,6 @@ include::{snippets}/user/update-password/http-response.adoc[]
 '''
 
 === 9. 비밀번호 재설정
-- 비밀번호 재설정
 - 임의의 비밀번호로 변경되고, 입력한 이메일로 메일 전송
 
 ==== Request
@@ -166,7 +158,6 @@ include::{snippets}/user/reset-password/http-response.adoc[]
 == Planet
 
 === 1. 행성 생성
-- 행성 생성
 
 ==== Request
 include::{snippets}/planet/create/http-request.adoc[]
@@ -180,7 +171,6 @@ include::{snippets}/planet/create/response-fields.adoc[]
 '''
 
 === 2. 초대코드 조회
-- 초대코드 조회
 
 ==== Request
 include::{snippets}/planet/invite-code/http-request.adoc[]
@@ -208,7 +198,6 @@ include::{snippets}/planet/find-by-code/response-fields.adoc[]
 '''
 
 === 4. 행성 참가
-- 행성 참가
 - 내가 만든 행성에는 참가 불가
 - 이미 행성에 2명이 참여해있다면 참가 불가
 
@@ -222,7 +211,6 @@ include::{snippets}/planet/join/http-response.adoc[]
 '''
 
 === 5. 행성 조회
-- 행성 조회
 
 ==== Request
 include::{snippets}/planet/find/http-request.adoc[]
@@ -235,8 +223,6 @@ include::{snippets}/planet/find/response-fields.adoc[]
 '''
 
 === 6. 행성 리스트 조회
-- 행성 리스트 조회
-- 무한 페이지 이용
 
 ==== Request
 include::{snippets}/planet/find-list/http-request.adoc[]
@@ -245,3 +231,101 @@ include::{snippets}/planet/find-list/request-parameters.adoc[]
 ==== Response
 include::{snippets}/planet/find-list/http-response.adoc[]
 include::{snippets}/planet/find-list/response-fields.adoc[]
+
+'''
+
+=== 7. 행성 코스 목록 조회
+- 내 행성은 모든 코스 조회
+- 다른 사람의 행성은 공개 코스만 조회
+
+==== Request
+include::{snippets}/planet/courses/http-request.adoc[]
+include::{snippets}/planet/courses/request-headers.adoc[]
+include::{snippets}/planet/courses/request-parameters.adoc[]
+include::{snippets}/planet/courses/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/courses/http-response.adoc[]
+include::{snippets}/planet/courses/response-fields.adoc[]
+
+'''
+
+=== 8. 행성 팔로우
+- 자신의 행성은 팔로우 불가
+
+==== Request
+include::{snippets}/planet/follow/http-request.adoc[]
+include::{snippets}/planet/follow/request-headers.adoc[]
+
+==== Response
+include::{snippets}/planet/follow/http-response.adoc[]
+
+'''
+
+=== 9. 행성 언팔로우
+
+==== Request
+include::{snippets}/planet/unfollow/http-request.adoc[]
+include::{snippets}/planet/unfollow/request-headers.adoc[]
+
+==== Response
+include::{snippets}/planet/unfollow/http-response.adoc[]
+
+[[Course]]
+== Course
+
+=== 1. 코스 생성
+
+==== Request
+include::{snippets}/course/create/http-request.adoc[]
+include::{snippets}/course/create/request-headers.adoc[]
+include::{snippets}/course/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/course/create/http-response.adoc[]
+include::{snippets}/course/create/response-fields.adoc[]
+
+=== 2. 코스 조회
+- 다른 사람의 코스는 공개 코스만 조회 가능
+
+==== Request
+include::{snippets}/course/find/http-request.adoc[]
+include::{snippets}/course/find/request-headers.adoc[]
+include::{snippets}/course/find/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/course/find/http-response.adoc[]
+include::{snippets}/course/find/response-fields.adoc[]
+
+=== 3. 코스 목록 조회
+- 다른 사람의 코스는 공개 코스만, 내 코스는 비공개 코스도 조회
+
+==== Request
+include::{snippets}/course/find-list/http-request.adoc[]
+include::{snippets}/course/find-list/request-headers.adoc[]
+include::{snippets}/course/find-list/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/course/find-list/http-response.adoc[]
+include::{snippets}/course/find-list/response-fields.adoc[]
+
+=== 4. 코스 좋아요
+- 내 코스에도 좋아요 가능
+
+==== Request
+include::{snippets}/course/like/http-request.adoc[]
+include::{snippets}/course/like/request-headers.adoc[]
+include::{snippets}/course/like/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/course/like/http-response.adoc[]
+
+=== 5. 코스 좋아요 제거
+
+==== Request
+include::{snippets}/course/unlike/http-request.adoc[]
+include::{snippets}/course/unlike/request-headers.adoc[]
+include::{snippets}/course/unlike/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/course/unlike/http-response.adoc[]

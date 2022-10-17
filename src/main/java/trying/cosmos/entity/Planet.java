@@ -3,7 +3,7 @@ package trying.cosmos.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.entity.component.DateEntity;
+import trying.cosmos.entity.component.DateAuditingEntity;
 import trying.cosmos.entity.component.PlanetImageType;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Planet extends DateEntity {
+public class Planet extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "planet_id")
@@ -49,7 +49,7 @@ public class Planet extends DateEntity {
     // Convenience Method
     public void join(User user) {
         if (this.owners.size() >= 2 || this.owners.contains(user)) {
-            throw new CustomException(ExceptionType.JOIN_PLANET_FAILED);
+            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
         }
         setPlanet(user, this);
     }
@@ -91,5 +91,9 @@ public class Planet extends DateEntity {
             }
         }
         throw new CustomException(ExceptionType.NO_PERMISSION);
+    }
+
+    public boolean beOwnedBy(User user) {
+        return owners.contains(user);
     }
 }
