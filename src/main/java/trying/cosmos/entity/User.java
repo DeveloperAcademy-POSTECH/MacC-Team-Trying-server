@@ -3,8 +3,9 @@ package trying.cosmos.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import trying.cosmos.entity.component.Authority;
-import trying.cosmos.entity.component.DateEntity;
+import trying.cosmos.entity.component.DateAuditingEntity;
 import trying.cosmos.entity.component.UserStatus;
 import trying.cosmos.exception.CustomException;
 import trying.cosmos.exception.ExceptionType;
@@ -18,7 +19,7 @@ import static trying.cosmos.entity.component.UserStatus.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User extends DateEntity {
+public class User extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -43,8 +44,6 @@ public class User extends DateEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planet_id")
     private Planet planet;
-
-    private static final String WITHDRAWN_USER_PREFIX = "[UNKNOWN] ";
 
     public User(String email, String password, String name) {
         this.email = email;
@@ -90,9 +89,14 @@ public class User extends DateEntity {
     }
 
     public void withdraw() {
-        this.email = WITHDRAWN_USER_PREFIX + this.email;
-        this.name = WITHDRAWN_USER_PREFIX + this.name;
+        String prefix = createWithdrawPrefix();
+        this.email = prefix + this.email;
+        this.name = prefix + this.name;
         this.status = WITHDRAWN;
+    }
+
+    public String getOriginData(String data) {
+        return data.substring(9);
     }
 
     private void checkAccessibleUser() {
@@ -113,7 +117,7 @@ public class User extends DateEntity {
 
     public void setPlanet(Planet planet) {
         if (this.planet != null) {
-            throw new CustomException(ExceptionType.CREATE_PLANET_FAILED);
+            throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
         }
         this.planet = planet;
     }
@@ -131,5 +135,9 @@ public class User extends DateEntity {
             return null;
         }
         return planet.getMate(this);
+    }
+
+    public String createWithdrawPrefix() {
+        return "[" + RandomStringUtils.random(6, true, true) + "] ";
     }
 }

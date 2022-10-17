@@ -1,7 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id "org.asciidoctor.jvm.convert" version "3.3.2"
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
 }
 
@@ -53,6 +60,10 @@ dependencies {
 
 	// Rest Doc
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// Querydsl
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
 tasks.named('test') {
@@ -60,6 +71,7 @@ tasks.named('test') {
 	outputs.dir snippetsDir
 }
 
+// Rest Docs
 ext {
 	snippetsDir = file('build/generated-snippets')
 }
@@ -86,4 +98,24 @@ task copyDocument(type: Copy) {
 
 build {
 	dependsOn copyDocument
+}
+
+// Querydsl
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }

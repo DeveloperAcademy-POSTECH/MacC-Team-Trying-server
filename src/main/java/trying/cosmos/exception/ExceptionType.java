@@ -21,9 +21,6 @@ public enum ExceptionType {
 
     NOT_AUTHENTICATED(UNAUTHORIZED, "로그인되지 않았습니다."),
     CERTIFICATION_FAILED(UNAUTHORIZED, "이메일 인증에 실패했습니다."),
-    NOT_CERTIFICATED(UNAUTHORIZED, "이메일 인증이 완료되지 않았습니다."),
-    USER_CREATION_FAILED(UNAUTHORIZED, "사용자 생성에 실패했습니다."),
-    INCOMPLETE_CREATE_USER(UNAUTHORIZED, "아직 사용자 생성이 완료되지 않았습니다."),
     INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
     NO_PERMISSION(FORBIDDEN, "권한이 없습니다."),
@@ -32,8 +29,9 @@ public enum ExceptionType {
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
 
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
-    CREATE_PLANET_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
-    JOIN_PLANET_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
+    PLANET_CREATE_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
+    PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
+    PLANET_FOLLOW_FAILED(CONFLICT, "행성 팔로우에 실패했습니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 

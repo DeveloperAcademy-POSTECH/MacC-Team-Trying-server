@@ -18,6 +18,7 @@ import java.security.Key;
 public class TokenProvider {
 
     private static final String SUBJECT_KEY = "sub";
+    private static final String AUTHORITY_KEY = "auth";
 
     private final Key key;
 
@@ -29,6 +30,7 @@ public class TokenProvider {
     public String getAccessToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim(AUTHORITY_KEY, user.getAuthority())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }

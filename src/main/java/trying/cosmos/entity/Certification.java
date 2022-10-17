@@ -34,13 +34,9 @@ public class Certification {
     // Constructor
     public Certification(String email) {
         this.email = email;
-        this.code = createCode();
+        this.code = RandomStringUtils.random(CODE_LENGTH, true, true);
         this.isCertified = false;
         this.expiredDate = LocalDateTime.now().plusSeconds(EXPIRED_TIME);
-    }
-
-    private String createCode() {
-        return RandomStringUtils.random(CODE_LENGTH, true, true);
     }
 
     public void certificate(String code) {
