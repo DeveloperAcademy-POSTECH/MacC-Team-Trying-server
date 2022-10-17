@@ -11,21 +11,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.auth.TokenProvider;
-import trying.cosmos.controller.UserController;
-import trying.cosmos.controller.request.user.*;
 import trying.cosmos.docs.utils.ApiDocumentUtils;
-import trying.cosmos.entity.Certification;
-import trying.cosmos.entity.Planet;
-import trying.cosmos.entity.User;
-import trying.cosmos.entity.component.Authority;
-import trying.cosmos.entity.component.PlanetImageType;
-import trying.cosmos.entity.component.UserStatus;
-import trying.cosmos.repository.CertificationRepository;
-import trying.cosmos.repository.UserRepository;
-import trying.cosmos.service.CertificationService;
-import trying.cosmos.service.PlanetService;
-import trying.cosmos.service.UserService;
+import trying.cosmos.domain.certification.Certification;
+import trying.cosmos.domain.certification.CertificationRepository;
+import trying.cosmos.domain.certification.CertificationService;
+import trying.cosmos.domain.planet.Planet;
+import trying.cosmos.domain.planet.PlanetImageType;
+import trying.cosmos.domain.planet.PlanetService;
+import trying.cosmos.domain.user.*;
+import trying.cosmos.domain.user.request.*;
+import trying.cosmos.global.auth.Authority;
+import trying.cosmos.global.auth.TokenProvider;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -46,13 +42,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserDocsTest {
 
     @Autowired MockMvc mvc;
-    @Autowired UserController userController;
+    @Autowired
+    UserController userController;
     @Autowired ObjectMapper objectMapper;
     @Autowired TokenProvider tokenProvider;
-    @Autowired UserService userService;
-    @Autowired UserRepository userRepository;
-    @Autowired CertificationService certificationService;
-    @Autowired CertificationRepository certificationRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    CertificationService certificationService;
+    @Autowired
+    CertificationRepository certificationRepository;
 
     @Autowired PlanetService planetService;
 

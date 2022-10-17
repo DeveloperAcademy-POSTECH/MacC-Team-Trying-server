@@ -11,20 +11,20 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.controller.request.course.TagCreateRequest;
-import trying.cosmos.controller.request.planet.PlanetCreateRequest;
-import trying.cosmos.controller.request.planet.PlanetJoinRequest;
-import trying.cosmos.entity.Place;
-import trying.cosmos.entity.Planet;
-import trying.cosmos.entity.User;
-import trying.cosmos.entity.component.Access;
-import trying.cosmos.entity.component.Authority;
-import trying.cosmos.entity.component.PlanetImageType;
-import trying.cosmos.entity.component.UserStatus;
-import trying.cosmos.repository.UserRepository;
-import trying.cosmos.service.CourseService;
-import trying.cosmos.service.PlanetService;
-import trying.cosmos.service.UserService;
+import trying.cosmos.domain.course.Access;
+import trying.cosmos.domain.course.CourseService;
+import trying.cosmos.domain.course.request.TagCreateRequest;
+import trying.cosmos.domain.place.Place;
+import trying.cosmos.domain.planet.Planet;
+import trying.cosmos.domain.planet.PlanetImageType;
+import trying.cosmos.domain.planet.PlanetService;
+import trying.cosmos.domain.planet.response.PlanetCreateRequest;
+import trying.cosmos.domain.planet.response.PlanetJoinRequest;
+import trying.cosmos.domain.user.User;
+import trying.cosmos.domain.user.UserRepository;
+import trying.cosmos.domain.user.UserService;
+import trying.cosmos.domain.user.UserStatus;
+import trying.cosmos.global.auth.Authority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +48,10 @@ public class PlanetDocsTest {
 
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper objectMapper;
-    @Autowired UserRepository userRepository;
-    @Autowired UserService userService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    UserService userService;
     @Autowired PlanetService planetService;
     @Autowired CourseService courseService;
 

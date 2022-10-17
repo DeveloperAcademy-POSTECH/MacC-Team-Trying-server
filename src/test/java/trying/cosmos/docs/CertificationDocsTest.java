@@ -11,11 +11,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.controller.request.certification.CertificateRequest;
-import trying.cosmos.controller.request.certification.GenerateCertificationRequest;
-import trying.cosmos.entity.Certification;
-import trying.cosmos.repository.CertificationRepository;
-import trying.cosmos.service.CertificationService;
+import trying.cosmos.domain.certification.Certification;
+import trying.cosmos.domain.certification.CertificationRepository;
+import trying.cosmos.domain.certification.CertificationService;
+import trying.cosmos.domain.certification.request.CertificateRequest;
+import trying.cosmos.domain.certification.request.GenerateCertificationRequest;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
