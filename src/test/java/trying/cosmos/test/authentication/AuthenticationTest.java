@@ -9,15 +9,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.entity.User;
-import trying.cosmos.entity.component.UserStatus;
-import trying.cosmos.repository.UserRepository;
-import trying.cosmos.service.UserService;
+import trying.cosmos.domain.user.User;
+import trying.cosmos.domain.user.UserRepository;
+import trying.cosmos.domain.user.UserService;
+import trying.cosmos.domain.user.UserStatus;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.entity.component.Authority.ADMIN;
-import static trying.cosmos.entity.component.Authority.USER;
+import static trying.cosmos.global.auth.Authority.ADMIN;
+import static trying.cosmos.global.auth.Authority.USER;
 
 @SpringBootTest
 @Transactional
