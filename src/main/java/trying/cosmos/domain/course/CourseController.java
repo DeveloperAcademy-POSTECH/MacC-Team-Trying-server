@@ -34,12 +34,12 @@ public class CourseController {
 
     @GetMapping("/{courseId}")
     public CourseFindResponse find(@PathVariable Long courseId) {
-        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, courseId);
+        return courseService.find(AuthKey.getKey(), courseId);
     }
 
     @GetMapping
     public CourseListFindResponse findList(Pageable pageable) {
-        return new CourseListFindResponse(courseService.findCourses(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, pageable));
+        return new CourseListFindResponse(courseService.findCourses(AuthKey.getKey(), pageable));
     }
 
     @AuthorityOf(Authority.USER)

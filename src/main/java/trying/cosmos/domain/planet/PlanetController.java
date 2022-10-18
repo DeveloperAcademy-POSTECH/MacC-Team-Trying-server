@@ -53,7 +53,7 @@ public class PlanetController {
 
     @GetMapping("/{planetId}/courses")
     public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
-        return new PlanetCourseListResponse(planetService.findPlanetCourses(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, planetId, pageable));
+        return new PlanetCourseListResponse(planetService.findPlanetCourses(AuthKey.getKey(), planetId, pageable));
     }
 
     @AuthorityOf(Authority.USER)
