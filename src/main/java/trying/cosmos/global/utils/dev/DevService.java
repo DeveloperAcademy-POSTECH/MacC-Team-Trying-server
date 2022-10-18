@@ -30,12 +30,12 @@ public class DevService {
     @Transactional
     public User createUser() {
         String str = randomName();
-        return userRepository.save(new User(str + "@gmail.com", "password", str, UserStatus.LOGOUT, Authority.USER));
+        return userRepository.save(new User(str + "@gmail.com", "password", str, UserStatus.LOGIN, Authority.USER));
     }
 
     @Transactional
-    public Planet createPlanet() {
-        return planetRepository.save(new Planet(createUser(), randomName(), PlanetImageType.EARTH));
+    public Planet createPlanet(User user) {
+        return planetRepository.save(new Planet(user, randomName(), PlanetImageType.EARTH));
     }
 
     private String randomName() {

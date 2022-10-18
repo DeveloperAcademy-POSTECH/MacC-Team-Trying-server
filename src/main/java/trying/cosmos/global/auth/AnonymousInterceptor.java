@@ -6,19 +6,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import trying.cosmos.domain.user.User;
 import trying.cosmos.domain.user.UserRepository;
 import trying.cosmos.domain.user.UserStatus;
-import trying.cosmos.global.exception.CustomException;
-import trying.cosmos.global.exception.ExceptionType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AuthenticationInterceptor implements HandlerInterceptor {
+public class AnonymousInterceptor implements HandlerInterceptor {
 
     private static final String ACCESS_TOKEN_HEADER = "accessToken";
-    private static final String SUBJECT_KEY = "sub";
-    private static final String AUTHORITY_KEY = "auth";
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
@@ -30,35 +26,27 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         AuthorityOf annotation = ((HandlerMethod) handler).getMethodAnnotation(AuthorityOf.class);
-        // 권한이 필요하지 않는 함수인 경우 다음 인터셉터로
-        if (annotation == null) {
+        // 권한이 필요한 함수인 경우 다음 인터셉터로
+        if (annotation != null) {
             return true;
         }
 
         String token = request.getHeader(ACCESS_TOKEN_HEADER);
         if (token == null || !tokenProvider.validateToken(token)) {
-            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+            return true;
         }
 
-        Map<String, String> userData = tokenProvider.parseToken(token);
-
-        Authority authority = annotation.value();
-        if (Authority.valueOf(userData.get(AUTHORITY_KEY)).level < authority.level) {
-            throw new CustomException(ExceptionType.NO_PERMISSION);
+        Optional<User> optionalUser = userRepository.findByEmail(tokenProvider.getSubject(token));
+        if (optionalUser.isEmpty()) {
+            return true;
         }
-
-        User user = userRepository.findByEmail(userData.get(SUBJECT_KEY)).orElseThrow(() -> new CustomException(ExceptionType.AUTHENTICATION_FAILED));
+        User user = optionalUser.get();
 
         if (!user.getStatus().equals(UserStatus.LOGIN)) {
-            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+            return true;
         }
 
         AuthKey.set(user.getId());
         return true;
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        AuthKey.remove();
     }
 }

@@ -3,9 +3,12 @@ package trying.cosmos.domain.course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.request.TagCreateRequest;
+import trying.cosmos.domain.course.response.CourseFindContent;
+import trying.cosmos.domain.course.response.CourseFindResponse;
 import trying.cosmos.domain.place.PlaceService;
 import trying.cosmos.domain.planet.Planet;
 import trying.cosmos.domain.planet.PlanetRepository;
@@ -40,22 +43,37 @@ public class CourseService {
         return course;
     }
 
-    public Course find(Long userId, Long courseId) {
+    public CourseFindResponse find(Long userId, Long courseId) {
         Course course = courseRepository.findByIdWithTagPlace(courseId).orElseThrow();
+        if (userId == null) {
+            return new CourseFindResponse(course, false);
+        }
+
         User user = userRepository.findById(userId).orElseThrow();
         if (course.getAccess().equals(Access.PRIVATE) && !course.getPlanet().beOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
-        return course;
+        return new CourseFindResponse(course, isLiked(userId, course.getId()));
     }
 
-    public Slice<Course> findFeeds(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Planet planet = user.hasPlanet() ? user.getPlanet() : null;
-        return courseRepository.findPublicByPlanet(planet, pageable);
+    public Slice<CourseFindContent> findCourses(Long userId, Pageable pageable) {
+        Planet planet = null;
+        if (userId != null) {
+            User user = userRepository.findById(userId).orElseThrow();
+            planet = user.hasPlanet() ? user.getPlanet() : null;
+        }
+
+        Slice<Course> courseSlice = courseRepository.findAll(planet, pageable);
+        List<CourseFindContent> contents = courseSlice.getContent().stream()
+                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
+                .collect(Collectors.toList());
+        return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
 
-    public boolean isLiked(Long userId, Long courseId) {
+    private boolean isLiked(Long userId, Long courseId) {
+        if (userId == null || courseId == null) {
+            return false;
+        }
         return courseLikeRepository.existsByUserIdAndCourseId(userId, courseId);
     }
 

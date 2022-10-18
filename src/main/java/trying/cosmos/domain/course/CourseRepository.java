@@ -15,6 +15,11 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
 
     Slice<Course> findAllByPlanet(Planet planet, Pageable pageable);
 
+    //
     @Query("select c from Course c where c.planet = :planet and c.access = trying.cosmos.domain.course.Access.PUBLIC")
     Slice<Course> findPublicByPlanet(Planet planet, Pageable pageable);
+
+    // 모든 코스 조회, 내 행성의 코스인 경우 모든 코스, 다른 행성의 코스인 경우 PUBLIC 코스만
+    @Query("select c from Course c where c.planet = :planet or c.access = trying.cosmos.domain.course.Access.PUBLIC")
+    Slice<Course> findAll(Planet planet, Pageable pageable);
 }

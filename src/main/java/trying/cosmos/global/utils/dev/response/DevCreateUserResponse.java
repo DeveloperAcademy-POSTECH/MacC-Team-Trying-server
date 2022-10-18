@@ -12,9 +12,12 @@ public class DevCreateUserResponse {
     private String email;
     private String password;
     private String name;
-    public DevCreateUserResponse(User user) {
+    private String accessToken;
+
+    public DevCreateUserResponse(User user, String accessToken) {
         this.email = user.getEmail();
         this.password = "password";
         this.name = user.getName();
+        this.accessToken = accessToken;
     }
 }
