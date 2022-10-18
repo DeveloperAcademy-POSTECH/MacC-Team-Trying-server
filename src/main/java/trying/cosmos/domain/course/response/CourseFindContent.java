@@ -15,11 +15,13 @@ public class CourseFindContent {
     private PlanetFindResponse planet;
     private String title;
     private String createdDate;
+    private boolean liked;
 
-    public CourseFindContent(Course course) {
+    public CourseFindContent(Course course, boolean liked) {
         this.id = course.getId();
         this.planet = new PlanetFindResponse(course.getPlanet());
         this.title = course.getTitle();
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
+        this.liked = liked;
     }
 }

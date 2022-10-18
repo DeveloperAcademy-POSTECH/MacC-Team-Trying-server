@@ -32,16 +32,14 @@ public class CourseController {
         );
     }
 
-    @AuthorityOf(Authority.USER)
     @GetMapping("/{id}")
     public CourseFindResponse find(@PathVariable Long id) {
-        return new CourseFindResponse(courseService.find(AuthKey.get(), id), courseService.isLiked(AuthKey.get(), id));
+        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.get() : null, id);
     }
 
-    @AuthorityOf(Authority.USER)
     @GetMapping
     public CourseListFindResponse findList(Pageable pageable) {
-        return new CourseListFindResponse(courseService.findFeeds(AuthKey.get(), pageable));
+        return new CourseListFindResponse(courseService.findCourses(AuthKey.isAuthenticated() ? AuthKey.get() : null, pageable));
     }
 
     @AuthorityOf(Authority.USER)

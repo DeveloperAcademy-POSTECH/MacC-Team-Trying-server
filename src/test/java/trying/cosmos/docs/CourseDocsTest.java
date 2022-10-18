@@ -198,6 +198,7 @@ public class CourseDocsTest {
                         fieldWithPath("courses[].planet.image").description("코스가 포함된 행성 이미지 타입"),
                         fieldWithPath("courses[].title").description("코스 제목"),
                         fieldWithPath("courses[].createdDate").description("코스 생성일"),
+                        fieldWithPath("courses[].liked").description("코스 좋아요 여부"),
                         fieldWithPath("size").description("불러온 코스 수"),
                         fieldWithPath("hasNext").description("다음 페이지 존재 여부")
                 )

@@ -12,8 +12,8 @@ public class DevPlanetResponse {
     private DevCreateUserResponse owner;
     private DevPlanetContent planet;
 
-    public DevPlanetResponse(Planet planet) {
-        this.owner = new DevCreateUserResponse(planet.getOwners().get(0));
+    public DevPlanetResponse(Planet planet, String accessToken) {
+        this.owner = new DevCreateUserResponse(planet.getOwners().get(0), accessToken);
         this.planet = new DevPlanetContent(planet);
     }
 }

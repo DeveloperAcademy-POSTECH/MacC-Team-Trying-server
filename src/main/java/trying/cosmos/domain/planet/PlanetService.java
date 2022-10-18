@@ -53,10 +53,17 @@ public class PlanetService {
 
     public Slice<Course> findPlanetCourses(Long userId, Long planetId, Pageable pageable) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
+        // 익명의 사용자
+        if (userId == null) {
+            return courseRepository.findPublicByPlanet(planet, pageable);
+        }
+
         User user = userRepository.findById(userId).orElseThrow();
         if (planet.beOwnedBy(user)) {
+            // 내 행성
             return courseRepository.findAllByPlanet(planet, pageable);
         } else {
+            // 다른 사람 행성
             return courseRepository.findPublicByPlanet(planet, pageable);
         }
     }

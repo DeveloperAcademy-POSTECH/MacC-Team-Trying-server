@@ -576,7 +576,7 @@ Host: 15.165.72.196:3059
 
 {
   "email" : "email@gmail.com",
-  "code" : "XzvAOp"
+  "code" : "c7hath"
 }</code></pre>
 </div>
 </div>
@@ -1312,7 +1312,7 @@ Content-Length: 65
 
 {
   "id" : 6,
-  "code" : "6744aedd-0c76-43e5-a741-d91ed473bdaa"
+  "code" : "16a6bfc1-3ee3-4098-8a15-c2cc8d03094c"
 }</code></pre>
 </div>
 </div>
@@ -1404,7 +1404,7 @@ Content-Type: application/json
 Content-Length: 53
 
 {
-  "code" : "684e46d9-d3dd-4c9b-9a96-2486e7a13f28"
+  "code" : "c9cc39b9-8e73-4604-bd83-8ad418b02eea"
 }</code></pre>
 </div>
 </div>
@@ -1445,7 +1445,7 @@ Content-Length: 53
 <h4 id="_request_13"><a class="link" href="#_request_13">Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /planets/join?code=d3898fc7-21cf-40c4-afcf-b672b37c7590 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /planets/join?code=1845ac0b-3f4e-44a7-939e-74ea253cc875 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 accessToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBnbWFpbC5jb20iLCJhdXRoIjoiVVNFUiJ9.9DI3jansyUxSnl3v0Fu-wSmwERgkEpVZpVq1V5CfIVtdk9a5OUede6xtC4cfDaIhKStu_sWZro_L_-6JDwbMqA
 Host: 15.165.72.196:3059</code></pre>
@@ -1560,7 +1560,7 @@ Content-Length: 53
 Host: 15.165.72.196:3059
 
 {
-  "code" : "41d613af-16b5-40c4-afac-454384e9a545"
+  "code" : "a0a9f1e9-e2c9-44ae-94e4-a71af74879a3"
 }</code></pre>
 </div>
 </div>
@@ -2231,7 +2231,7 @@ Content-Length: 715
 {
   "title" : "효자시장 맛집코스",
   "body" : "굿",
-  "createdDate" : "2022-10-17 23:56:19",
+  "createdDate" : "2022-10-18 11:28:58",
   "liked" : false,
   "planet" : {
     "id" : 3,
@@ -2410,7 +2410,7 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 471
+Content-Length: 513
 
 {
   "courses" : [ {
@@ -2421,7 +2421,8 @@ Content-Length: 471
       "image" : "EARTH"
     },
     "title" : "효자시장 맛집코스",
-    "createdDate" : "2022-10-17 23:56:20"
+    "createdDate" : "2022-10-18 11:28:59",
+    "liked" : false
   }, {
     "id" : 6,
     "planet" : {
@@ -2430,7 +2431,8 @@ Content-Length: 471
       "image" : "EARTH"
     },
     "title" : "한번쯤 가볼만한 식당 리스트",
-    "createdDate" : "2022-10-17 23:56:20"
+    "createdDate" : "2022-10-18 11:28:59",
+    "liked" : false
   } ],
   "size" : 2,
   "hasNext" : false
@@ -2480,6 +2482,11 @@ Content-Length: 471
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].createdDate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 생성일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].liked</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">코스 좋아요 여부</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>

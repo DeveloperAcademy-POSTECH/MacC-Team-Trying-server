@@ -13,6 +13,8 @@ import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import java.security.Key;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class TokenProvider {
@@ -33,6 +35,17 @@ public class TokenProvider {
                 .claim(AUTHORITY_KEY, user.getAuthority())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    public Map<String, String> parseToken(String accessToken) {
+        Map<String, String> data = new HashMap<>();
+        Claims claims = parseClaims(accessToken);
+        if (claims.get(SUBJECT_KEY) == null || claims.get(AUTHORITY_KEY) == null) {
+            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+        }
+        data.put(SUBJECT_KEY, claims.getSubject());
+        data.put(AUTHORITY_KEY, claims.get(AUTHORITY_KEY, String.class));
+        return data;
     }
 
     public String getSubject(String accessToken) {
