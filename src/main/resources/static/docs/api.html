@@ -576,7 +576,7 @@ Host: 15.165.72.196:3059
 
 {
   "email" : "email@gmail.com",
-  "code" : "c7hath"
+  "code" : "99X8ba"
 }</code></pre>
 </div>
 </div>
@@ -1308,11 +1308,11 @@ Host: 15.165.72.196:3059
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 65
+Content-Length: 71
 
 {
-  "id" : 6,
-  "code" : "16a6bfc1-3ee3-4098-8a15-c2cc8d03094c"
+  "planetId" : 6,
+  "code" : "4a10ee5a-75da-46c4-bf03-92c237a1b8a6"
 }</code></pre>
 </div>
 </div>
@@ -1331,7 +1331,7 @@ Content-Length: 65
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">생성된 행성 id</p></td>
 </tr>
@@ -1376,7 +1376,7 @@ Host: 15.165.72.196:3059</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /planets/{id}/code</caption>
+<caption class="title">Table 1. /planets/{planetId}/code</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1389,7 +1389,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
 </tbody>
@@ -1404,7 +1404,7 @@ Content-Type: application/json
 Content-Length: 53
 
 {
-  "code" : "c9cc39b9-8e73-4604-bd83-8ad418b02eea"
+  "code" : "7bb79ed5-cd85-46b5-8623-338d35b43691"
 }</code></pre>
 </div>
 </div>
@@ -1445,7 +1445,7 @@ Content-Length: 53
 <h4 id="_request_13"><a class="link" href="#_request_13">Request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /planets/join?code=1845ac0b-3f4e-44a7-939e-74ea253cc875 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /planets/join?code=0d6afb0d-df43-45c8-97d6-b4b4f50336ff HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 accessToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBnbWFpbC5jb20iLCJhdXRoIjoiVVNFUiJ9.9DI3jansyUxSnl3v0Fu-wSmwERgkEpVZpVq1V5CfIVtdk9a5OUede6xtC4cfDaIhKStu_sWZro_L_-6JDwbMqA
 Host: 15.165.72.196:3059</code></pre>
@@ -1494,10 +1494,10 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 63
+Content-Length: 69
 
 {
-  "id" : 13,
+  "planetId" : 13,
   "name" : "포딩행성",
   "image" : "EARTH"
 }</code></pre>
@@ -1518,7 +1518,7 @@ Content-Length: 63
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
@@ -1560,7 +1560,7 @@ Content-Length: 53
 Host: 15.165.72.196:3059
 
 {
-  "code" : "a0a9f1e9-e2c9-44ae-94e4-a71af74879a3"
+  "code" : "d4124728-8ae3-4c25-97cf-6a8a4531f578"
 }</code></pre>
 </div>
 </div>
@@ -1605,7 +1605,7 @@ Host: 15.165.72.196:3059</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /planets/{id}</caption>
+<caption class="title">Table 2. /planets/{planetId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1618,7 +1618,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
 </tbody>
@@ -1630,10 +1630,10 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 63
+Content-Length: 69
 
 {
-  "id" : 10,
+  "planetId" : 10,
   "name" : "포딩행성",
   "image" : "EARTH"
 }</code></pre>
@@ -1654,7 +1654,7 @@ Content-Length: 63
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
@@ -1717,11 +1717,11 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 128
+Content-Length: 134
 
 {
   "planets" : [ {
-    "id" : 12,
+    "planetId" : 12,
     "name" : "포딩행성",
     "image" : "EARTH"
   } ],
@@ -1745,7 +1745,7 @@ Content-Length: 128
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planets[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planets[].planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
@@ -1837,7 +1837,7 @@ Host: 15.165.72.196:3059</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. /planets/{id}/courses</caption>
+<caption class="title">Table 3. /planets/{planetId}/courses</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1850,7 +1850,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">행성 id</p></td>
 </tr>
 </tbody>
@@ -2011,7 +2011,7 @@ Host: 15.165.72.196:3059</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /courses HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 accessToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBnbWFpbC5jb20iLCJhdXRoIjoiVVNFUiJ9.9DI3jansyUxSnl3v0Fu-wSmwERgkEpVZpVq1V5CfIVtdk9a5OUede6xtC4cfDaIhKStu_sWZro_L_-6JDwbMqA
-Content-Length: 611
+Content-Length: 626
 Host: 15.165.72.196:3059
 
 {
@@ -2021,7 +2021,7 @@ Host: 15.165.72.196:3059
   "access" : "PUBLIC",
   "tags" : [ {
     "place" : {
-      "id" : 1,
+      "placeId" : 1,
       "name" : "참뼈 효자시장점",
       "latitude" : 36.4,
       "longitude" : 124.0
@@ -2029,7 +2029,7 @@ Host: 15.165.72.196:3059
     "name" : "참뼈"
   }, {
     "place" : {
-      "id" : 2,
+      "placeId" : 2,
       "name" : "맥도날드 포항점",
       "latitude" : 37.0,
       "longitude" : 125.3
@@ -2037,7 +2037,7 @@ Host: 15.165.72.196:3059
     "name" : "맥도날드"
   }, {
     "place" : {
-      "id" : 3,
+      "placeId" : 3,
       "name" : "명륜진사갈비",
       "latitude" : 35.1,
       "longitude" : 122.1
@@ -2100,7 +2100,7 @@ Host: 15.165.72.196:3059
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 공개여부</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags[].place.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags[].place.placeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">태그할 장소 id</p></td>
 </tr>
@@ -2133,10 +2133,10 @@ Host: 15.165.72.196:3059
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 14
+Content-Length: 20
 
 {
-  "id" : 1
+  "courseId" : 1
 }</code></pre>
 </div>
 </div>
@@ -2155,7 +2155,7 @@ Content-Length: 14
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courseId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">만들어진 코스 id</p></td>
 </tr>
@@ -2201,7 +2201,7 @@ Host: 15.165.72.196:3059</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. /courses/{id}</caption>
+<caption class="title">Table 4. /courses/{courseId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2214,7 +2214,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courseId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 id</p></td>
 </tr>
 </tbody>
@@ -2226,22 +2226,22 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 715
+Content-Length: 736
 
 {
   "title" : "효자시장 맛집코스",
   "body" : "굿",
-  "createdDate" : "2022-10-18 11:28:58",
+  "createdDate" : "2022-10-18 19:03:37",
   "liked" : false,
   "planet" : {
-    "id" : 3,
+    "planetId" : 3,
     "name" : "포딩행성",
     "image" : "EARTH"
   },
   "tags" : [ {
     "name" : "참뼈",
     "place" : {
-      "id" : 1,
+      "placeId" : 1,
       "name" : "참뼈 효자시장점",
       "latitude" : 36.4,
       "longitude" : 124.0
@@ -2249,7 +2249,7 @@ Content-Length: 715
   }, {
     "name" : "맥도날드",
     "place" : {
-      "id" : 2,
+      "placeId" : 2,
       "name" : "맥도날드 포항점",
       "latitude" : 37.0,
       "longitude" : 125.3
@@ -2257,7 +2257,7 @@ Content-Length: 715
   }, {
     "name" : "명륜진사갈비",
     "place" : {
-      "id" : 3,
+      "placeId" : 3,
       "name" : "명륜진사갈비",
       "latitude" : 35.1,
       "longitude" : 122.1
@@ -2301,7 +2301,7 @@ Content-Length: 715
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 좋아요 여부</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planet.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>planet.planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스가 포함된 행성 id</p></td>
 </tr>
@@ -2316,7 +2316,7 @@ Content-Length: 715
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스가 포함된 행성 이미지 타입</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags[].place.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tags[].place.placeId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">태그할 장소 id</p></td>
 </tr>
@@ -2410,28 +2410,28 @@ Host: 15.165.72.196:3059</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 513
+Content-Length: 537
 
 {
   "courses" : [ {
-    "id" : 5,
+    "courseId" : 5,
     "planet" : {
-      "id" : 5,
+      "planetId" : 5,
       "name" : "포딩행성",
       "image" : "EARTH"
     },
     "title" : "효자시장 맛집코스",
-    "createdDate" : "2022-10-18 11:28:59",
+    "createdDate" : "2022-10-18 19:03:38",
     "liked" : false
   }, {
-    "id" : 6,
+    "courseId" : 6,
     "planet" : {
-      "id" : 5,
+      "planetId" : 5,
       "name" : "포딩행성",
       "image" : "EARTH"
     },
     "title" : "한번쯤 가볼만한 식당 리스트",
-    "createdDate" : "2022-10-18 11:28:59",
+    "createdDate" : "2022-10-18 19:03:38",
     "liked" : false
   } ],
   "size" : 2,
@@ -2454,12 +2454,12 @@ Content-Length: 513
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].courseId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 id</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].planet.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courses[].planet.planetId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스가 포함된 행성 id</p></td>
 </tr>
@@ -2540,7 +2540,7 @@ Host: 15.165.72.196:3059</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. /courses/{id}/like</caption>
+<caption class="title">Table 5. /courses/{courseId}/like</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2553,7 +2553,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courseId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 id</p></td>
 </tr>
 </tbody>
@@ -2599,7 +2599,7 @@ Host: 15.165.72.196:3059</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. /courses/{id}/like</caption>
+<caption class="title">Table 6. /courses/{courseId}/like</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -2612,7 +2612,7 @@ Host: 15.165.72.196:3059</code></pre>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>courseId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">코스 id</p></td>
 </tr>
 </tbody>

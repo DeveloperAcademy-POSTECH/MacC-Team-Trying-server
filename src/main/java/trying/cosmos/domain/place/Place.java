@@ -16,7 +16,7 @@ public class Place {
 
     @Id
     @Column(name = "place_id")
-    private Long id;
+    private Long placeId;
 
     private String name;
 
@@ -25,8 +25,8 @@ public class Place {
     private double longitude;
 
     // Constructor
-    public Place(Long id, String name, double latitude, double longitude) {
-        this.id = id;
+    public Place(Long placeId, String name, double latitude, double longitude) {
+        this.placeId = placeId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -37,11 +37,11 @@ public class Place {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Place place = (Place) o;
-        return id.equals(place.id);
+        return placeId.equals(place.placeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(placeId);
     }
 }

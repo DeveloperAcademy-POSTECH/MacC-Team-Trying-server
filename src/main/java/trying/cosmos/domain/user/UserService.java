@@ -51,8 +51,8 @@ public class UserService {
         return tokenProvider.getAccessToken(user);
     }
 
-    public User find(Long id) {
-        return userRepository.findById(id).orElseThrow();
+    public User find(Long userId) {
+        return userRepository.findById(userId).orElseThrow();
     }
 
     private static void checkPassword(String password, User user) {
@@ -78,26 +78,26 @@ public class UserService {
     }
 
     @Transactional
-    public void updateName(Long id, String name) {
-        User user = userRepository.findById(id).orElseThrow();
+    public void updateName(Long userId, String name) {
+        User user = userRepository.findById(userId).orElseThrow();
         user.setName(name);
     }
 
     @Transactional
-    public void updatePassword(Long id, String password) {
-        User user = userRepository.findById(id).orElseThrow();
+    public void updatePassword(Long userId, String password) {
+        User user = userRepository.findById(userId).orElseThrow();
         user.setPassword(BCryptUtils.encrypt(password));
     }
 
     @Transactional
-    public void logout(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+    public void logout(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
         user.logout();
     }
 
     @Transactional
-    public void withdraw(Long id) {
-        User user = userRepository.findById(id).orElseThrow();
+    public void withdraw(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
         user.withdraw();
     }
 }

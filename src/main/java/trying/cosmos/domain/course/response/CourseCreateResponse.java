@@ -9,9 +9,9 @@ import trying.cosmos.domain.course.Course;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseCreateResponse {
 
-    private Long id;
+    private Long courseId;
 
     public CourseCreateResponse(Course course) {
-        this.id = course.getId();
+        this.courseId = course.getId();
     }
 }

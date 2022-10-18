@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.domain.course.Course;
-import trying.cosmos.domain.planet.planet.PlanetFindResponse;
+import trying.cosmos.domain.planet.response.PlanetFindResponse;
 import trying.cosmos.global.utils.date.DateUtils;
 
 import java.util.List;

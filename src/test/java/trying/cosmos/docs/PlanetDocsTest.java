@@ -62,7 +62,6 @@ public class PlanetDocsTest {
     private static final String NAME = "name";
     private static final String DEVICE_TOKEN = "device_token";
     private static final String PLANET_NAME = "포딩행성";
-    private static final String TITLE = "효자시장 맛집코스";
     private static final String BODY = "굿";
 
     @Test
@@ -90,7 +89,7 @@ public class PlanetDocsTest {
                         fieldWithPath("image").description("행성 이미지 타입")
                 ),
                 responseFields(
-                        fieldWithPath("id").description("생성된 행성 id"),
+                        fieldWithPath("planetId").description("생성된 행성 id"),
                         fieldWithPath("code").description("초대 코드")
                 )
         ));
@@ -105,7 +104,7 @@ public class PlanetDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
         Long id = planet.getId();
 
-        ResultActions actions = mvc.perform(get("/planets/{id}/code", id)
+        ResultActions actions = mvc.perform(get("/planets/{planetId}/code", id)
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -117,7 +116,7 @@ public class PlanetDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("행성 id")
+                        parameterWithName("planetId").description("행성 id")
                 ),
                 responseFields(
                         fieldWithPath("code").description("초대 코드")
@@ -149,7 +148,7 @@ public class PlanetDocsTest {
                         parameterWithName("code").description("초대 코드")
                 ),
                 responseFields(
-                        fieldWithPath("id").description("행성 id"),
+                        fieldWithPath("planetId").description("행성 id"),
                         fieldWithPath("name").description("행성 이름"),
                         fieldWithPath("image").description("행성 이미지 타입")
                 )
@@ -193,7 +192,7 @@ public class PlanetDocsTest {
 
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
-        ResultActions actions = mvc.perform(get("/planets/{id}", planet.getId())
+        ResultActions actions = mvc.perform(get("/planets/{planetId}", planet.getId())
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
@@ -201,10 +200,10 @@ public class PlanetDocsTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                        parameterWithName("id").description("행성 id")
+                        parameterWithName("planetId").description("행성 id")
                 ),
                 responseFields(
-                        fieldWithPath("id").description("행성 id"),
+                        fieldWithPath("planetId").description("행성 id"),
                         fieldWithPath("name").description("행성 이름"),
                         fieldWithPath("image").description("행성 이미지 타입")
                 )
@@ -235,7 +234,7 @@ public class PlanetDocsTest {
                         parameterWithName("size").description("한 페이지 크기").optional()
                 ),
                 responseFields(
-                        fieldWithPath("planets[].id").description("행성 id"),
+                        fieldWithPath("planets[].planetId").description("행성 id"),
                         fieldWithPath("planets[].name").description("행성 이름"),
                         fieldWithPath("planets[].image").description("행성 이미지 타입"),
                         fieldWithPath("size").description("검색결과 불러온 행성 수"),
@@ -264,7 +263,7 @@ public class PlanetDocsTest {
         courseService.create(user.getId(), planet.getId(), "효자동 맛집 리스트", BODY, Access.PUBLIC, tagDto1);
         courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PRIVATE, tagDto2);
 
-        ResultActions actions = mvc.perform(get("/planets/{id}/courses", planet.getId())
+        ResultActions actions = mvc.perform(get("/planets/{planetId}/courses", planet.getId())
                 .param("page", "0")
                 .param("size", "5")
                 .header("accessToken", accessToken)
@@ -282,7 +281,7 @@ public class PlanetDocsTest {
                         parameterWithName("size").description("한 페이지 크기").optional()
                 ),
                 pathParameters(
-                        parameterWithName("id").description("행성 id")
+                        parameterWithName("planetId").description("행성 id")
                 ),
                 responseFields(
                         fieldWithPath("courses[].title").description("코스 제목"),
@@ -301,7 +300,7 @@ public class PlanetDocsTest {
         userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        ResultActions actions = mvc.perform(post("/planets/{id}/follow", planet.getId())
+        ResultActions actions = mvc.perform(post("/planets/{planetId}/follow", planet.getId())
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -313,7 +312,7 @@ public class PlanetDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("팔로우할 행성 id")
+                        parameterWithName("planetId").description("팔로우할 행성 id")
                 )
         ));
     }
@@ -329,7 +328,7 @@ public class PlanetDocsTest {
 
         planetService.follow(follower.getId(), planet.getId());
 
-        ResultActions actions = mvc.perform(delete("/planets/{id}/follow", planet.getId())
+        ResultActions actions = mvc.perform(delete("/planets/{planetId}/follow", planet.getId())
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -341,7 +340,7 @@ public class PlanetDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("언팔로우할 행성 id")
+                        parameterWithName("planetId").description("언팔로우할 행성 id")
                 )
         ));
     }
