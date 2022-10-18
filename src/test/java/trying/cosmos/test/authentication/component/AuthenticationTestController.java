@@ -20,14 +20,14 @@ public class AuthenticationTestController {
     @AuthorityOf(ADMIN)
     @GetMapping("/admin")
     public String testAdminRequest() {
-        User user = repository.findById(AuthKey.get()).orElseThrow();
+        User user = repository.findById(AuthKey.getKey()).orElseThrow();
         return user.getName();
     }
 
     @AuthorityOf(USER)
     @GetMapping("/user")
     public String testUserRequest() {
-        User user = repository.findById(AuthKey.get()).orElseThrow();
+        User user = repository.findById(AuthKey.getKey()).orElseThrow();
         return user.getName();
     }
 }

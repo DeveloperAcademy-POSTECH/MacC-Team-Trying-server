@@ -30,6 +30,7 @@ public class AnonymousInterceptor implements HandlerInterceptor {
         if (annotation != null) {
             return true;
         }
+        AuthKey.setNeed(false);
 
         String token = request.getHeader(ACCESS_TOKEN_HEADER);
         if (token == null || !tokenProvider.validateToken(token)) {
@@ -46,7 +47,7 @@ public class AnonymousInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        AuthKey.set(user.getId());
+        AuthKey.setKey(user.getId());
         return true;
     }
 }

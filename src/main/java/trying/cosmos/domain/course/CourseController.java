@@ -23,7 +23,7 @@ public class CourseController {
     @PostMapping
     public CourseCreateResponse create(@RequestBody @Validated CourseCreateRequest request) {
         return new CourseCreateResponse(courseService.create(
-                AuthKey.get(),
+                AuthKey.getKey(),
                 request.getPlanetId(),
                 request.getTitle(),
                 request.getBody(),
@@ -34,23 +34,23 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public CourseFindResponse find(@PathVariable Long id) {
-        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.get() : null, id);
+        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, id);
     }
 
     @GetMapping
     public CourseListFindResponse findList(Pageable pageable) {
-        return new CourseListFindResponse(courseService.findCourses(AuthKey.isAuthenticated() ? AuthKey.get() : null, pageable));
+        return new CourseListFindResponse(courseService.findCourses(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, pageable));
     }
 
     @AuthorityOf(Authority.USER)
     @PostMapping("/{id}/like")
     public void like(@PathVariable Long id) {
-        courseService.like(AuthKey.get(), id);
+        courseService.like(AuthKey.getKey(), id);
     }
 
     @AuthorityOf(Authority.USER)
     @DeleteMapping("/{id}/like")
     public void dislike(@PathVariable Long id) {
-        courseService.dislike(AuthKey.get(), id);
+        courseService.dislike(AuthKey.getKey(), id);
     }
 }
