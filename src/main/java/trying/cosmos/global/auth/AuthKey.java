@@ -13,8 +13,8 @@ public class AuthKey {
         return authKey.get();
     }
 
-    public static void setKey(Long id) {
-        authKey.set(id);
+    public static void setKey(Long userId) {
+        authKey.set(userId);
     }
 
     public static void remove() {

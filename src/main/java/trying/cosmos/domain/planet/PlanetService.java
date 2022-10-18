@@ -39,8 +39,8 @@ public class PlanetService {
         planet.join(userRepository.findById(userId).orElseThrow());
     }
 
-    public Planet find(Long id) {
-        return planetRepository.findById(id).orElseThrow();
+    public Planet find(Long planetId) {
+        return planetRepository.findById(planetId).orElseThrow();
     }
 
     public Planet find(String inviteCode) {

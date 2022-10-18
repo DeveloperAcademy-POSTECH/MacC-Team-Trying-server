@@ -32,9 +32,9 @@ public class CourseController {
         );
     }
 
-    @GetMapping("/{id}")
-    public CourseFindResponse find(@PathVariable Long id) {
-        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, id);
+    @GetMapping("/{courseId}")
+    public CourseFindResponse find(@PathVariable Long courseId) {
+        return courseService.find(AuthKey.isAuthenticated() ? AuthKey.getKey() : null, courseId);
     }
 
     @GetMapping
@@ -43,14 +43,14 @@ public class CourseController {
     }
 
     @AuthorityOf(Authority.USER)
-    @PostMapping("/{id}/like")
-    public void like(@PathVariable Long id) {
-        courseService.like(AuthKey.getKey(), id);
+    @PostMapping("/{courseId}/like")
+    public void like(@PathVariable Long courseId) {
+        courseService.like(AuthKey.getKey(), courseId);
     }
 
     @AuthorityOf(Authority.USER)
-    @DeleteMapping("/{id}/like")
-    public void dislike(@PathVariable Long id) {
-        courseService.dislike(AuthKey.getKey(), id);
+    @DeleteMapping("/{courseId}/like")
+    public void dislike(@PathVariable Long courseId) {
+        courseService.dislike(AuthKey.getKey(), courseId);
     }
 }

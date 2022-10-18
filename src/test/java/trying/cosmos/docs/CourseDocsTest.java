@@ -96,14 +96,14 @@ public class CourseDocsTest {
                         fieldWithPath("title").description("코스 제목"),
                         fieldWithPath("body").description("코스 본문"),
                         fieldWithPath("access").description("코스 공개여부"),
-                        fieldWithPath("tags[].place.id").description("태그할 장소 id"),
+                        fieldWithPath("tags[].place.placeId").description("태그할 장소 id"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
                         fieldWithPath("tags[].name").description("태그 이름")
                 ),
                 responseFields(
-                        fieldWithPath("id").description("만들어진 코스 id")
+                        fieldWithPath("courseId").description("만들어진 코스 id")
                 )
         ));
     }
@@ -123,7 +123,7 @@ public class CourseDocsTest {
 
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
 
-        ResultActions actions = mvc.perform(get("/courses/{id}", course.getId())
+        ResultActions actions = mvc.perform(get("/courses/{courseId}", course.getId())
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -135,17 +135,17 @@ public class CourseDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("코스 id")
+                        parameterWithName("courseId").description("코스 id")
                 ),
                 responseFields(
                         fieldWithPath("title").description("코스 제목"),
                         fieldWithPath("body").description("코스 본문"),
                         fieldWithPath("createdDate").description("코스 생성일"),
                         fieldWithPath("liked").description("코스 좋아요 여부"),
-                        fieldWithPath("planet.id").description("코스가 포함된 행성 id"),
+                        fieldWithPath("planet.planetId").description("코스가 포함된 행성 id"),
                         fieldWithPath("planet.name").description("코스가 포함된 행성 이름"),
                         fieldWithPath("planet.image").description("코스가 포함된 행성 이미지 타입"),
-                        fieldWithPath("tags[].place.id").description("태그할 장소 id"),
+                        fieldWithPath("tags[].place.placeId").description("태그할 장소 id"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
@@ -192,8 +192,8 @@ public class CourseDocsTest {
                         parameterWithName("size").description("한 페이지 크기").optional()
                 ),
                 responseFields(
-                        fieldWithPath("courses[].id").description("코스 id"),
-                        fieldWithPath("courses[].planet.id").description("코스가 포함된 행성 id"),
+                        fieldWithPath("courses[].courseId").description("코스 id"),
+                        fieldWithPath("courses[].planet.planetId").description("코스가 포함된 행성 id"),
                         fieldWithPath("courses[].planet.name").description("코스가 포함된 행성 이름"),
                         fieldWithPath("courses[].planet.image").description("코스가 포함된 행성 이미지 타입"),
                         fieldWithPath("courses[].title").description("코스 제목"),
@@ -220,7 +220,7 @@ public class CourseDocsTest {
 
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
 
-        ResultActions actions = mvc.perform(post("/courses/{id}/like", course.getId())
+        ResultActions actions = mvc.perform(post("/courses/{courseId}/like", course.getId())
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -232,7 +232,7 @@ public class CourseDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("코스 id")
+                        parameterWithName("courseId").description("코스 id")
                 )
         ));
     }
@@ -254,7 +254,7 @@ public class CourseDocsTest {
 
         courseService.like(user.getId(), course.getId());
 
-        ResultActions actions = mvc.perform(delete("/courses/{id}/like", course.getId())
+        ResultActions actions = mvc.perform(delete("/courses/{courseId}/like", course.getId())
                 .header("accessToken", accessToken)
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
@@ -266,7 +266,7 @@ public class CourseDocsTest {
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("id").description("코스 id")
+                        parameterWithName("courseId").description("코스 id")
                 )
         ));
     }

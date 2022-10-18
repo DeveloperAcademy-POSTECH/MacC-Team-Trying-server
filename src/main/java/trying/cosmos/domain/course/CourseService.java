@@ -38,7 +38,7 @@ public class CourseService {
 
         Course course = courseRepository.save(new Course(planet, title, body, access));
         List<Tag> tags = tagDto.stream().map(tag ->
-                new Tag(course, placeService.create(tag.getPlace().getId(), tag.getPlace().getName(), tag.getPlace().getLatitude(), tag.getPlace().getLongitude()), tag.getName())
+                new Tag(course, placeService.create(tag.getPlace().getPlaceId(), tag.getPlace().getName(), tag.getPlace().getLatitude(), tag.getPlace().getLongitude()), tag.getName())
         ).collect(Collectors.toList());
         return course;
     }

@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.domain.planet.planet.PlanetFindContent;
+import trying.cosmos.domain.planet.response.PlanetFindContent;
 import trying.cosmos.domain.user.User;
 
 @Getter

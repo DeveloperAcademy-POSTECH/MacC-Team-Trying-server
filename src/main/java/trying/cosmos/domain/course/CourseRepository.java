@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Long>{
 
-    @Query("select c from Course c join fetch c.tags t join fetch t.place where c.id = :id")
-    Optional<Course> findByIdWithTagPlace(Long id);
+    @Query("select c from Course c join fetch c.tags t join fetch t.place where c.id = :courseId")
+    Optional<Course> findByIdWithTagPlace(Long courseId);
 
     Slice<Course> findAllByPlanet(Planet planet, Pageable pageable);
 
