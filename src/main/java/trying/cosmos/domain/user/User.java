@@ -63,13 +63,11 @@ public class User extends DateAuditingEntity {
 
     // Convenient Method
     public void login(String deviceToken) {
-        checkAccessibleUser();
         this.status = UserStatus.LOGIN;
         this.deviceToken = deviceToken;
     }
 
     public void resetPassword(String password) {
-        checkAccessibleUser();
         this.password = password;
         this.status = UserStatus.LOGOUT;
     }
@@ -93,17 +91,18 @@ public class User extends DateAuditingEntity {
         this.status = UserStatus.WITHDRAWN;
     }
 
-    public String getOriginData(String data) {
-        return data.substring(9);
+    public String getOriginEmail() {
+        if (this.status.equals(UserStatus.WITHDRAWN)) {
+            return this.email.substring(9);
+        }
+        return this.email;
     }
 
-    private void checkAccessibleUser() {
-        switch (status) {
-            case SUSPENDED:
-                throw new CustomException(ExceptionType.SUSPENDED);
-            case WITHDRAWN:
-                throw new CustomException(ExceptionType.NO_DATA);
+    public String getOriginName() {
+        if (this.status.equals(UserStatus.WITHDRAWN)) {
+            return this.name.substring(9);
         }
+        return this.name;
     }
 
     public Planet getPlanet() {

@@ -320,7 +320,7 @@ include::{snippets}/course/like/path-parameters.adoc[]
 ==== Response
 include::{snippets}/course/like/http-response.adoc[]
 
-=== 5. 코스 좋아요 제거
+=== 5. 코스 좋아요 취소
 
 ==== Request
 include::{snippets}/course/unlike/http-request.adoc[]

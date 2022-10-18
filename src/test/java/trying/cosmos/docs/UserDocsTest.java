@@ -41,21 +41,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 public class UserDocsTest {
 
-    @Autowired MockMvc mvc;
+    @Autowired
+    MockMvc mvc;
     @Autowired
     UserController userController;
-    @Autowired ObjectMapper objectMapper;
-    @Autowired TokenProvider tokenProvider;
+    @Autowired
+    ObjectMapper objectMapper;
+    @Autowired
+    TokenProvider tokenProvider;
     @Autowired
     UserService userService;
+
     @Autowired
     UserRepository userRepository;
     @Autowired
     CertificationService certificationService;
+
     @Autowired
     CertificationRepository certificationRepository;
 
-    @Autowired PlanetService planetService;
+    @Autowired
+    PlanetService planetService;
 
     private static final String JSON_CONTENT_TYPE = "application/json";
 

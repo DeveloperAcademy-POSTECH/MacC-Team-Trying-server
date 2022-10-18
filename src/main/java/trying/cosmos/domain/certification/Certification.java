@@ -40,7 +40,7 @@ public class Certification {
     }
 
     public void certificate(String code) {
-        if (isExpired() && isWrongCode(code)) {
+        if (isExpired() || isWrongCode(code)) {
             throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
         }
         this.isCertified = true;

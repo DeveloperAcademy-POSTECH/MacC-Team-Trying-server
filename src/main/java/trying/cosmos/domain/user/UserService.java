@@ -29,7 +29,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
 
     public boolean isExist(String email) {
-        return userRepository.existsByEmail(email);
+        return certificationRepository.existsByEmail(email) || userRepository.existsByEmail(email);
     }
 
     @Transactional
@@ -47,12 +47,15 @@ public class UserService {
     public String login(String email, String password, String deviceToken) {
         User user = userRepository.findByEmail(email).orElseThrow();
         checkPassword(password, user);
+        checkAccessibleUser(user);
         user.login(deviceToken);
         return tokenProvider.getAccessToken(user);
     }
 
     public User find(Long userId) {
-        return userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        checkAccessibleUser(user);
+        return user;
     }
 
     private static void checkPassword(String password, User user) {
@@ -65,6 +68,7 @@ public class UserService {
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         String password = random(10, true, true);
+        checkAccessibleUser(user);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
     }
@@ -80,24 +84,44 @@ public class UserService {
     @Transactional
     public void updateName(Long userId, String name) {
         User user = userRepository.findById(userId).orElseThrow();
+        checkLoginUser(user);
         user.setName(name);
     }
 
     @Transactional
     public void updatePassword(Long userId, String password) {
         User user = userRepository.findById(userId).orElseThrow();
+        checkLoginUser(user);
         user.setPassword(BCryptUtils.encrypt(password));
     }
 
     @Transactional
     public void logout(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
+        checkLoginUser(user);
         user.logout();
     }
 
     @Transactional
     public void withdraw(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
+        checkLoginUser(user);
         user.withdraw();
+    }
+
+    private void checkAccessibleUser(User user) {
+        switch (user.getStatus()) {
+            case SUSPENDED:
+                throw new CustomException(ExceptionType.SUSPENDED_USER);
+            case WITHDRAWN:
+                throw new CustomException(ExceptionType.NO_DATA);
+        }
+    }
+
+    private void checkLoginUser(User user) {
+        checkAccessibleUser(user);
+        if (!user.getStatus().equals(UserStatus.LOGIN)) {
+            throw new CustomException(ExceptionType.NOT_LOGIN);
+        }
     }
 }

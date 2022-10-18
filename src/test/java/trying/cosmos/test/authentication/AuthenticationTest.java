@@ -23,13 +23,15 @@ import static trying.cosmos.global.auth.Authority.USER;
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@DisplayName("(Interceptor) 권한 테스트")
 public class AuthenticationTest {
 
     @Autowired
     UserRepository userRepository;
     @Autowired
     UserService userService;
-    @Autowired MockMvc mvc;
+    @Autowired
+    MockMvc mvc;
 
     @Test
     @DisplayName("User 권한 사용자는 User 권한 요청이 허용된다.")
