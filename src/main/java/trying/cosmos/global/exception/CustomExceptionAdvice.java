@@ -1,5 +1,6 @@
 package trying.cosmos.global.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,13 +17,13 @@ import org.springframework.web.multipart.MultipartException;
 
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
 public class CustomExceptionAdvice {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<CustomExceptionEntity> custom(CustomException e) {
-        CustomExceptionEntity exception = new CustomExceptionEntity(e.getError(), e.getMessage(), e);
         return new ResponseEntity<>(new CustomExceptionEntity(e.getError(), e.getMessage(), e), e.getError().getStatus());
     }
 

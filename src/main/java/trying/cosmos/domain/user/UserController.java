@@ -37,7 +37,7 @@ public class UserController {
     @AuthorityOf(USER)
     @GetMapping("/me")
     public UserFindResponse findMe() {
-        return new UserFindResponse(userService.find(AuthKey.get()));
+        return new UserFindResponse(userService.find(AuthKey.getKey()));
     }
 
     @PatchMapping("/password")
@@ -48,24 +48,24 @@ public class UserController {
     @AuthorityOf(USER)
     @PutMapping("/name")
     public void updateName(@RequestBody @Validated UserUpdateNameRequest request) {
-        userService.updateName(AuthKey.get(), request.getName());
+        userService.updateName(AuthKey.getKey(), request.getName());
     }
 
     @AuthorityOf(USER)
     @PutMapping("/password")
     public void updatePassword(@RequestBody @Validated UserUpdatePasswordRequest request) {
-        userService.updatePassword(AuthKey.get(), request.getPassword());
+        userService.updatePassword(AuthKey.getKey(), request.getPassword());
     }
 
     @AuthorityOf(USER)
     @DeleteMapping("/logout")
     public void logout() {
-        userService.logout(AuthKey.get());
+        userService.logout(AuthKey.getKey());
     }
 
     @AuthorityOf(USER)
     @DeleteMapping
     public void withdraw() {
-        userService.withdraw(AuthKey.get());
+        userService.withdraw(AuthKey.getKey());
     }
 }

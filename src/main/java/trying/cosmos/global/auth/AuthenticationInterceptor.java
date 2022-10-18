@@ -34,6 +34,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (annotation == null) {
             return true;
         }
+        AuthKey.setNeed(true);
 
         String token = request.getHeader(ACCESS_TOKEN_HEADER);
         if (token == null || !tokenProvider.validateToken(token)) {
@@ -53,7 +54,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
-        AuthKey.set(user.getId());
+        AuthKey.setKey(user.getId());
         return true;
     }
 
