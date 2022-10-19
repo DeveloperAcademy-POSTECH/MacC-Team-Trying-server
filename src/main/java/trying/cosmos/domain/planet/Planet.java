@@ -39,28 +39,23 @@ public class Planet extends DateAuditingEntity {
 
     // Constructor
     public Planet(User user, String name, PlanetImageType image) {
-        setPlanet(user, this);
         this.name = name;
         this.inviteCode = UUID.randomUUID().toString();
         this.image = image;
         this.meetDate = LocalDate.now();
+        user.setPlanet(this);
+        this.owners.add(user);
     }
 
     // Convenience Method
-    public void join(User user) {
-        if (this.owners.size() >= 2 || this.owners.contains(user)) {
+    public void join(User guest) {
+        if (owners.size() != 1) {
             throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
         }
-        setPlanet(user, this);
-    }
-
-    private static void setPlanet(User user, Planet planet) {
-        user.setPlanet(planet);
-        planet.owners.add(user);
-    }
-
-    public List<String> getOwnersName() {
-        return this.owners.stream().map(User::getName).collect(Collectors.toList());
+        User owner = owners.get(0);
+        this.owners.add(guest);
+        owner.setMate(guest);
+        guest.setMate(owner);
     }
 
     public void updateDday(int days) {
@@ -69,19 +64,6 @@ public class Planet extends DateAuditingEntity {
 
     public int getDday() {
         return (int) Duration.between(this.meetDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays() + 1;
-    }
-
-    public User getMate(User me) {
-        if (!this.owners.contains(me)) {
-            throw new CustomException(ExceptionType.NO_PERMISSION);
-        }
-        if (this.owners.size() == 1) {
-            return null;
-        } else {
-            ArrayList<User> users = new ArrayList<>(this.owners);
-            users.remove(me);
-            return users.get(0);
-        }
     }
 
     public void authorize(Long userId) {

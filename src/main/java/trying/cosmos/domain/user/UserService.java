@@ -46,29 +46,20 @@ public class UserService {
     @Transactional
     public String login(String email, String password, String deviceToken) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        checkPassword(password, user);
-        checkAccessibleUser(user);
-        user.login(deviceToken);
+        user.login(password, deviceToken);
         return tokenProvider.getAccessToken(user);
     }
 
     public User find(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        checkAccessibleUser(user);
+        user.checkAccessibleUser();
         return user;
-    }
-
-    private static void checkPassword(String password, User user) {
-        if (!BCryptUtils.isMatch(password, user.getPassword())) {
-            throw new CustomException(ExceptionType.INVALID_PASSWORD);
-        }
     }
 
     @Transactional
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         String password = random(10, true, true);
-        checkAccessibleUser(user);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
     }
@@ -84,44 +75,24 @@ public class UserService {
     @Transactional
     public void updateName(Long userId, String name) {
         User user = userRepository.findById(userId).orElseThrow();
-        checkLoginUser(user);
         user.setName(name);
     }
 
     @Transactional
     public void updatePassword(Long userId, String password) {
         User user = userRepository.findById(userId).orElseThrow();
-        checkLoginUser(user);
         user.setPassword(BCryptUtils.encrypt(password));
     }
 
     @Transactional
     public void logout(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        checkLoginUser(user);
         user.logout();
     }
 
     @Transactional
     public void withdraw(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        checkLoginUser(user);
         user.withdraw();
-    }
-
-    private void checkAccessibleUser(User user) {
-        switch (user.getStatus()) {
-            case SUSPENDED:
-                throw new CustomException(ExceptionType.SUSPENDED_USER);
-            case WITHDRAWN:
-                throw new CustomException(ExceptionType.NO_DATA);
-        }
-    }
-
-    private void checkLoginUser(User user) {
-        checkAccessibleUser(user);
-        if (!user.getStatus().equals(UserStatus.LOGIN)) {
-            throw new CustomException(ExceptionType.NOT_LOGIN);
-        }
     }
 }

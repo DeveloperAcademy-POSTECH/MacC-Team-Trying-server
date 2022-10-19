@@ -61,8 +61,8 @@ public class FindTest {
         @DisplayName("행성이 없으면 hasPlanet()과 hasMate가 false")
         void not_has_planet() throws Exception {
             User user = userService.find(userId);
-            assertThat(user.hasPlanet()).isFalse();
-            assertThat(user.hasMate()).isFalse();
+            assertThat(user.getPlanet()).isNull();
+            assertThat(user.getMate()).isNull();
         }
 
         @Test
@@ -70,8 +70,8 @@ public class FindTest {
         void not_has_mate() throws Exception {
             User user = userService.find(userId);
             planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
-            assertThat(user.hasPlanet()).isTrue();
-            assertThat(user.hasMate()).isFalse();
+            assertThat(user.getPlanet()).isNotNull();
+            assertThat(user.getMate()).isNull();
         }
 
         @Test
@@ -81,8 +81,8 @@ public class FindTest {
             Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
             User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate"));
             planetService.join(mate.getId(), planet.getInviteCode());
-            assertThat(user.hasPlanet()).isTrue();
-            assertThat(user.hasMate()).isTrue();
+            assertThat(user.getPlanet()).isNotNull();
+            assertThat(user.getMate()).isNotNull();
         }
     }
 

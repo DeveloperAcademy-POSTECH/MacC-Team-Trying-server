@@ -60,7 +60,7 @@ public class CourseService {
         Planet planet = null;
         if (userId != null) {
             User user = userRepository.findById(userId).orElseThrow();
-            planet = user.hasPlanet() ? user.getPlanet() : null;
+            planet = user.getPlanet();
         }
 
         Slice<Course> courseSlice = courseRepository.findAll(planet, pageable);

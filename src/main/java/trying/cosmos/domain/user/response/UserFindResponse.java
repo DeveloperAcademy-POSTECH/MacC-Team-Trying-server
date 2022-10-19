@@ -20,7 +20,11 @@ public class UserFindResponse {
 
     public UserFindResponse(User user) {
         this.me = new UserFindContent(user);
-        this.planet = user.hasPlanet() ? new PlanetFindContent(user.getPlanet()) : null;
-        this.mate = user.hasMate() ? new UserFindContent(user.getMate()) : null;
+        if (user.getPlanet() != null) {
+            this.planet = new PlanetFindContent(user.getPlanet());
+        }
+        if (user.getMate() != null) {
+            this.mate = new UserFindContent(user.getMate());
+        }
     }
 }
