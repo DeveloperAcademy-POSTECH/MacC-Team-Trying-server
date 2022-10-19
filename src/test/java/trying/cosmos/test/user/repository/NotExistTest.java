@@ -1,6 +1,5 @@
 package trying.cosmos.test.user.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,12 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.user.UserRepository;
-import trying.cosmos.test.component.TestVariables;
 
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
-import static trying.cosmos.test.component.TestVariables.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static trying.cosmos.test.component.TestVariables.EMAIL;
 
 @SpringBootTest
 @Transactional

@@ -47,13 +47,13 @@ public class PlanetController {
     }
 
     @GetMapping
-    public PlanetListFindResponse findPlanets(@RequestParam(required = false) String query, Pageable pageable) {
-        return new PlanetListFindResponse(planetService.searchPlanets(query, pageable));
+    public PlanetListFindResponse findPlanets(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
+        return new PlanetListFindResponse(planetService.findList(query, pageable));
     }
 
     @GetMapping("/{planetId}/courses")
     public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
-        return new PlanetCourseListResponse(planetService.findPlanetCourses(AuthKey.getKey(), planetId, pageable));
+        return new PlanetCourseListResponse(planetService.findPlanetCourse(AuthKey.getKey(), planetId, pageable));
     }
 
     @AuthorityOf(Authority.USER)

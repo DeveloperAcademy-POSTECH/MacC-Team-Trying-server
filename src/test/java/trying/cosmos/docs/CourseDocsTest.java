@@ -17,7 +17,7 @@ import trying.cosmos.domain.course.Course;
 import trying.cosmos.domain.course.CourseService;
 import trying.cosmos.domain.course.request.CourseCreateRequest;
 import trying.cosmos.domain.course.request.TagCreateRequest;
-import trying.cosmos.domain.place.Place;
+import trying.cosmos.domain.place.PlaceCreateRequest;
 import trying.cosmos.domain.planet.Planet;
 import trying.cosmos.domain.planet.PlanetImageType;
 import trying.cosmos.domain.planet.PlanetService;
@@ -77,9 +77,9 @@ public class CourseDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
-        tagDto.add(new TagCreateRequest(new Place(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
-        tagDto.add(new TagCreateRequest(new Place(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto.add(new TagCreateRequest(new Place(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));;
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));;
 
         String content = objectMapper.writeValueAsString(new CourseCreateRequest(planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto));
 
@@ -100,7 +100,7 @@ public class CourseDocsTest {
                         fieldWithPath("title").description("코스 제목"),
                         fieldWithPath("body").description("코스 본문"),
                         fieldWithPath("access").description("코스 공개여부"),
-                        fieldWithPath("tags[].place.placeId").description("태그할 장소 id"),
+                        fieldWithPath("tags[].place.placeNumber").description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
@@ -121,9 +121,9 @@ public class CourseDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
-        tagDto.add(new TagCreateRequest(new Place(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
-        tagDto.add(new TagCreateRequest(new Place(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto.add(new TagCreateRequest(new Place(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
 
@@ -149,7 +149,7 @@ public class CourseDocsTest {
                         fieldWithPath("planet.planetId").description("코스가 포함된 행성 id"),
                         fieldWithPath("planet.name").description("코스가 포함된 행성 이름"),
                         fieldWithPath("planet.image").description("코스가 포함된 행성 이미지 타입"),
-                        fieldWithPath("tags[].place.placeId").description("태그할 장소 id"),
+                        fieldWithPath("tags[].place.placeNumber").description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
@@ -167,13 +167,13 @@ public class CourseDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
-        tagDto1.add(new TagCreateRequest(new Place(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
-        tagDto1.add(new TagCreateRequest(new Place(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto1.add(new TagCreateRequest(new Place(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
         List<TagCreateRequest> tagDto2 = new ArrayList<>();
-        tagDto2.add(new TagCreateRequest(new Place(4L, "그여든", 36.7, 128.5), "삐갈레 브래드"));
-        tagDto2.add(new TagCreateRequest(new Place(5L, "버거킹 포항공대점", 35.5, 126.4), "버거킹"));
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(4L, "그여든", 36.7, 128.5), "삐갈레 브래드"));
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(5L, "버거킹 포항공대점", 35.5, 126.4), "버거킹"));
 
         courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1);
         courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2);
@@ -218,9 +218,9 @@ public class CourseDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
-        tagDto.add(new TagCreateRequest(new Place(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
-        tagDto.add(new TagCreateRequest(new Place(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto.add(new TagCreateRequest(new Place(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
 
@@ -250,9 +250,9 @@ public class CourseDocsTest {
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
-        tagDto.add(new TagCreateRequest(new Place(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
-        tagDto.add(new TagCreateRequest(new Place(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto.add(new TagCreateRequest(new Place(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
 

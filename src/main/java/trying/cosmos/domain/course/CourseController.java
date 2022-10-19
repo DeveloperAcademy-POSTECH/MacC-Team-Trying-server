@@ -51,6 +51,6 @@ public class CourseController {
     @AuthorityOf(Authority.USER)
     @DeleteMapping("/{courseId}/like")
     public void dislike(@PathVariable Long courseId) {
-        courseService.dislike(AuthKey.getKey(), courseId);
+        courseService.unlike(AuthKey.getKey(), courseId);
     }
 }

@@ -14,7 +14,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
+import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
 
 @Entity
 @Getter
@@ -53,9 +55,13 @@ public class Planet extends DateAuditingEntity {
             throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
         }
         User owner = owners.get(0);
+        if (owner.equals(guest)) {
+            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
+        }
         this.owners.add(guest);
         owner.setMate(guest);
         guest.setMate(owner);
+        guest.setPlanet(this);
     }
 
     public void updateDday(int days) {
@@ -75,7 +81,22 @@ public class Planet extends DateAuditingEntity {
         throw new CustomException(ExceptionType.NO_PERMISSION);
     }
 
-    public boolean beOwnedBy(User user) {
+    public boolean isOwnedBy(User user) {
         return owners.contains(user);
+    }
+
+    public String getInviteCode(Long userId) {
+        if (owners.size() != 1) {
+            // 초대코드가 존재하지 않음
+            throw new CustomException(NO_DATA);
+        }
+        if (!owners.get(0).getId().equals(userId)) {
+            throw new CustomException(NO_PERMISSION);
+        }
+        return this.inviteCode;
+    }
+
+    public boolean isFull() {
+        return this.owners.size() > 1;
     }
 }

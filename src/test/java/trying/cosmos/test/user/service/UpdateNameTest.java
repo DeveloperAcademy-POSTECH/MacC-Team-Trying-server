@@ -12,10 +12,7 @@ import trying.cosmos.domain.user.User;
 import trying.cosmos.domain.user.UserRepository;
 import trying.cosmos.domain.user.UserService;
 
-import java.util.NoSuchElementException;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.domain.user.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.Authority.USER;
 import static trying.cosmos.test.component.TestVariables.*;

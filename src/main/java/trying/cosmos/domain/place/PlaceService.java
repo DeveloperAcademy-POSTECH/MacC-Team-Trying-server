@@ -12,8 +12,20 @@ public class PlaceService {
     private final PlaceRepository placeRepository;
 
     @Transactional
-    public Place create(Long placeId, String name, double latitude, double longitude) {
-        return placeRepository.findById(placeId).orElseGet(() -> placeRepository.save(new Place(placeId, name, latitude, longitude)));
+    public Place create(PlaceCreateRequest request) {
+        Place place = placeRepository.findByPlaceNumber(request.getPlaceNumber())
+                .orElseGet(() -> placeRepository.save(
+                        new Place(
+                                request.getPlaceNumber(),
+                                request.getName(),
+                                request.getLatitude(),
+                                request.getLongitude()
+                        )
+                ));
+        if (!place.isSame(request.getName(), request.getLatitude(), request.getLongitude())) {
+            return placeRepository.save(new Place(request.getPlaceNumber(), request.getName(), request.getLatitude(), request.getLongitude()));
+        }
+        return place;
     }
 
     public Place findById(Long placeId) {

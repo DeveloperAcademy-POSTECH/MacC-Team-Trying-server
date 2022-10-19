@@ -29,8 +29,7 @@ public class PlanetService {
 
     public String getInviteCode(Long userId, Long planetId) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
-        planet.authorize(userId);
-        return planet.getInviteCode();
+        return planet.getInviteCode(userId);
     }
 
     @Transactional
@@ -44,14 +43,18 @@ public class PlanetService {
     }
 
     public Planet find(String inviteCode) {
-        return planetRepository.findByInviteCode(inviteCode).orElseThrow();
+        Planet planet = planetRepository.findByInviteCode(inviteCode).orElseThrow();
+        if (planet.isFull()) {
+            throw new CustomException(ExceptionType.NO_DATA);
+        }
+        return planet;
     }
 
-    public Slice<Planet> searchPlanets(String query, Pageable pageable) {
+    public Slice<Planet> findList(String query, Pageable pageable) {
         return planetRepository.findByNameLike("%" + query + "%", pageable);
     }
 
-    public Slice<Course> findPlanetCourses(Long userId, Long planetId, Pageable pageable) {
+    public Slice<Course> findPlanetCourse(Long userId, Long planetId, Pageable pageable) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
         // 익명의 사용자
         if (userId == null) {
@@ -59,7 +62,7 @@ public class PlanetService {
         }
 
         User user = userRepository.findById(userId).orElseThrow();
-        if (planet.beOwnedBy(user)) {
+        if (planet.isOwnedBy(user)) {
             // 내 행성
             return courseRepository.findAllByPlanet(planet, pageable);
         } else {
@@ -72,11 +75,8 @@ public class PlanetService {
     public void follow(Long userId, Long planetId) {
         User user = userRepository.findById(userId).orElseThrow();
         Planet planet = planetRepository.findById(planetId).orElseThrow();
-        if (planet.beOwnedBy(user)) {
+        if (planet.isOwnedBy(user) || isFollow(userId, planetId)) {
             throw new CustomException(ExceptionType.PLANET_FOLLOW_FAILED);
-        }
-        if (isFollow(userId, planetId)) {
-            throw new CustomException(ExceptionType.DUPLICATED);
         }
         planetFollowRepository.save(new PlanetFollow(user, planet));
     }
