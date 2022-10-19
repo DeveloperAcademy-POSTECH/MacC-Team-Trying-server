@@ -28,7 +28,7 @@ public class Course extends DateAuditingEntity {
     private String body;
 
     @Enumerated(EnumType.STRING)
-    private trying.cosmos.domain.course.Access access;
+    private Access access;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Tag> tags = new ArrayList<>();

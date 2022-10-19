@@ -34,11 +34,13 @@ public class CourseService {
     @Transactional
     public Course create(Long userId, Long planetId, String title, String body, Access access, List<TagCreateRequest> tagDto) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
-        planet.authorize(userId);
+        if (!planet.isOwnedBy(userRepository.findById(userId).orElseThrow())) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
 
         Course course = courseRepository.save(new Course(planet, title, body, access));
         List<Tag> tags = tagDto.stream().map(tag ->
-                new Tag(course, placeService.create(tag.getPlace().getPlaceId(), tag.getPlace().getName(), tag.getPlace().getLatitude(), tag.getPlace().getLongitude()), tag.getName())
+                new Tag(course, placeService.create(tag.getPlace()), tag.getName())
         ).collect(Collectors.toList());
         return course;
     }
@@ -50,8 +52,8 @@ public class CourseService {
         }
 
         User user = userRepository.findById(userId).orElseThrow();
-        if (course.getAccess().equals(Access.PRIVATE) && !course.getPlanet().beOwnedBy(user)) {
-            throw new CustomException(ExceptionType.NO_PERMISSION);
+        if (course.getAccess().equals(Access.PRIVATE) && !course.getPlanet().isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_DATA);
         }
         return new CourseFindResponse(course, isLiked(userId, course.getId()));
     }
@@ -60,7 +62,7 @@ public class CourseService {
         Planet planet = null;
         if (userId != null) {
             User user = userRepository.findById(userId).orElseThrow();
-            planet = user.hasPlanet() ? user.getPlanet() : null;
+            planet = user.getPlanet();
         }
 
         Slice<Course> courseSlice = courseRepository.findAll(planet, pageable);
@@ -82,11 +84,16 @@ public class CourseService {
         if (courseLikeRepository.existsByUserIdAndCourseId(userId, courseId)) {
             throw new CustomException(ExceptionType.DUPLICATED);
         }
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!course.getPlanet().isOwnedBy(user) && course.getAccess().equals(Access.PRIVATE)) {
+            throw new CustomException(ExceptionType.NO_DATA);
+        }
         courseLikeRepository.save(new CourseLike(userRepository.findById(userId).orElseThrow(), courseRepository.findById(courseId).orElseThrow()));
     }
 
     @Transactional
-    public void dislike(Long userId, Long courseId) {
+    public void unlike(Long userId, Long courseId) {
         if (!courseLikeRepository.existsByUserIdAndCourseId(userId, courseId)) {
             throw new CustomException(ExceptionType.NO_DATA);
         }

@@ -29,7 +29,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
 
     public boolean isExist(String email) {
-        return userRepository.existsByEmail(email);
+        return certificationRepository.existsByEmail(email) || userRepository.existsByEmail(email);
     }
 
     @Transactional
@@ -46,19 +46,14 @@ public class UserService {
     @Transactional
     public String login(String email, String password, String deviceToken) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        checkPassword(password, user);
-        user.login(deviceToken);
+        user.login(password, deviceToken);
         return tokenProvider.getAccessToken(user);
     }
 
     public User find(Long userId) {
-        return userRepository.findById(userId).orElseThrow();
-    }
-
-    private static void checkPassword(String password, User user) {
-        if (!BCryptUtils.isMatch(password, user.getPassword())) {
-            throw new CustomException(ExceptionType.INVALID_PASSWORD);
-        }
+        User user = userRepository.findById(userId).orElseThrow();
+        user.checkAccessibleUser();
+        return user;
     }
 
     @Transactional

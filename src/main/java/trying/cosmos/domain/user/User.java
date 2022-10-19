@@ -43,6 +43,10 @@ public class User extends DateAuditingEntity {
     @JoinColumn(name = "planet_id")
     private Planet planet;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mate_id")
+    private User mate;
+
     public User(String email, String password, String name) {
         this.email = email;
         this.password = BCryptUtils.encrypt(password);
@@ -62,14 +66,15 @@ public class User extends DateAuditingEntity {
     }
 
     // Convenient Method
-    public void login(String deviceToken) {
+    public void login(String password, String deviceToken) {
+        checkPassword(password);
         checkAccessibleUser();
+
         this.status = UserStatus.LOGIN;
         this.deviceToken = deviceToken;
     }
 
     public void resetPassword(String password) {
-        checkAccessibleUser();
         this.password = password;
         this.status = UserStatus.LOGOUT;
     }
@@ -83,59 +88,63 @@ public class User extends DateAuditingEntity {
     }
 
     public void logout() {
+        checkLoginUser();
         this.status = UserStatus.LOGOUT;
     }
 
     public void withdraw() {
+        checkLoginUser();
         String prefix = createWithdrawPrefix();
         this.email = prefix + this.email;
         this.name = prefix + this.name;
         this.status = UserStatus.WITHDRAWN;
     }
 
-    public String getOriginData(String data) {
-        return data.substring(9);
+    public String getOriginEmail() {
+        if (this.status.equals(UserStatus.WITHDRAWN)) {
+            return this.email.substring(9);
+        }
+        return this.email;
     }
 
-    private void checkAccessibleUser() {
-        switch (status) {
+    public String getOriginName() {
+        if (this.status.equals(UserStatus.WITHDRAWN)) {
+            return this.name.substring(9);
+        }
+        return this.name;
+    }
+
+    public void setPlanet(Planet planet) {
+        this.planet = planet;
+    }
+
+    public void setMate(User mate) {
+        this.mate = mate;
+    }
+
+    private void checkPassword(String password) {
+        if (!BCryptUtils.isMatch(password, this.password)) {
+            throw new CustomException(ExceptionType.INVALID_PASSWORD);
+        }
+    }
+
+    private String createWithdrawPrefix() {
+        return "[" + RandomStringUtils.random(6, true, true) + "] ";
+    }
+
+    public void checkAccessibleUser() {
+        switch (getStatus()) {
             case SUSPENDED:
-                throw new CustomException(ExceptionType.SUSPENDED);
+                throw new CustomException(ExceptionType.SUSPENDED_USER);
             case WITHDRAWN:
                 throw new CustomException(ExceptionType.NO_DATA);
         }
     }
 
-    public Planet getPlanet() {
-        if (this.planet == null) {
-            throw new CustomException(ExceptionType.NO_DATA);
+    private void checkLoginUser() {
+        checkAccessibleUser();
+        if (!getStatus().equals(UserStatus.LOGIN)) {
+            throw new CustomException(ExceptionType.NOT_LOGIN);
         }
-        return planet;
-    }
-
-    public void setPlanet(Planet planet) {
-        if (this.planet != null) {
-            throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
-        }
-        this.planet = planet;
-    }
-
-    public boolean hasPlanet() {
-        return planet != null;
-    }
-
-    public boolean hasMate() {
-        return planet != null && planet.getMate(this) != null;
-    }
-
-    public User getMate() {
-        if (planet == null) {
-            return null;
-        }
-        return planet.getMate(this);
-    }
-
-    public String createWithdrawPrefix() {
-        return "[" + RandomStringUtils.random(6, true, true) + "] ";
     }
 }

@@ -33,11 +33,15 @@ import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentResponse;
 @ActiveProfiles("test")
 public class CertificationDocsTest {
 
-    @Autowired MockMvc mvc;
-    @Autowired ObjectMapper objectMapper;
+    @Autowired
+    MockMvc mvc;
+    @Autowired
+    ObjectMapper objectMapper;
 
-    @Autowired CertificationService certificationService;
-    @Autowired CertificationRepository certificationRepository;
+    @Autowired
+    CertificationService certificationService;
+    @Autowired
+    CertificationRepository certificationRepository;
 
     private static final String JSON_CONTENT_TYPE = "application/json";
 

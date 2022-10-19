@@ -26,7 +26,7 @@ public class CertificationService {
 
     public void createCertificationCode(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
+            throw new CustomException(ExceptionType.DUPLICATED);
         }
         certificationRepository.findByEmail(email).ifPresent(certificationRepository::delete);
         Certification certification = certificationRepository.save(new Certification(email));

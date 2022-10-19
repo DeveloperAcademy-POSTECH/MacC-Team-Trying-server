@@ -24,7 +24,7 @@ public enum ExceptionType {
     INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
     NO_PERMISSION(FORBIDDEN, "권한이 없습니다."),
-    SUSPENDED(FORBIDDEN, "정지된 사용자입니다."),
+    SUSPENDED_USER(FORBIDDEN, "정지된 사용자입니다."),
 
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
 
@@ -32,6 +32,8 @@ public enum ExceptionType {
     PLANET_CREATE_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
     PLANET_FOLLOW_FAILED(CONFLICT, "행성 팔로우에 실패했습니다."),
+    PLANET_INVITE_FAILED(CONFLICT, "행성 초대에 실패했습니다."),
+    NOT_LOGIN(CONFLICT, "로그인 상태가 아닙니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 

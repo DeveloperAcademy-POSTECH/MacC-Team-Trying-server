@@ -4,19 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Objects;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
-    private Long placeId;
+    private Long id;
+
+    private Long placeNumber;
 
     private String name;
 
@@ -25,23 +24,14 @@ public class Place {
     private double longitude;
 
     // Constructor
-    public Place(Long placeId, String name, double latitude, double longitude) {
-        this.placeId = placeId;
+    public Place(Long placeNumber, String name, double latitude, double longitude) {
+        this.placeNumber = placeNumber;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Place place = (Place) o;
-        return placeId.equals(place.placeId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(placeId);
+    public boolean isSame(String name, double latitude, double longitude) {
+        return this.name.equals(name) && this.latitude == latitude && this.longitude == longitude;
     }
 }
