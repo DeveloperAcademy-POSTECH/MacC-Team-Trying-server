@@ -76,8 +76,8 @@ public class LikeTest {
         Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
-        course = courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest);
-        others = courseService.create(other.getId(), othersPlanet.getId(), "others", "others", PRIVATE, tagRequest);
+        course = courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
+        others = courseService.create(other.getId(), othersPlanet.getId(), "others", "others", PRIVATE, tagRequest, null);
     }
 
     @Nested

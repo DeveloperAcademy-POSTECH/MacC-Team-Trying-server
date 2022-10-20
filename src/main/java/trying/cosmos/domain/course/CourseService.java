@@ -6,6 +6,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.request.TagCreateRequest;
 import trying.cosmos.domain.course.response.CourseFindContent;
 import trying.cosmos.domain.course.response.CourseFindResponse;
@@ -16,6 +17,7 @@ import trying.cosmos.domain.user.User;
 import trying.cosmos.domain.user.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
+import trying.cosmos.global.utils.image.S3ImageUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,9 +32,10 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final PlaceService placeService;
     private final CourseLikeRepository courseLikeRepository;
+    private final S3ImageUtils imageUtils;
 
     @Transactional
-    public Course create(Long userId, Long planetId, String title, String body, Access access, List<TagCreateRequest> tagDto) {
+    public Course create(Long userId, Long planetId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
         Planet planet = planetRepository.findById(planetId).orElseThrow();
         if (!planet.isOwnedBy(userRepository.findById(userId).orElseThrow())) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
@@ -42,6 +45,14 @@ public class CourseService {
         List<Tag> tags = tagDto.stream().map(tag ->
                 new Tag(course, placeService.create(tag.getPlace()), tag.getName())
         ).collect(Collectors.toList());
+
+        if (images != null) {
+            for (MultipartFile image : images) {
+                String imageName = imageUtils.create(image);
+                new CourseImage(course, imageName);
+            }
+        }
+
         return course;
     }
 

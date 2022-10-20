@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
@@ -30,8 +32,11 @@ public class Course extends DateAuditingEntity {
     @Enumerated(EnumType.STRING)
     private Access access;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", cascade = ALL)
     private List<Tag> tags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "course", cascade = ALL)
+    private List<CourseImage> images = new ArrayList<>();
 
     // Constructor
     public Course(Planet planet, String title, String body, Access access) {

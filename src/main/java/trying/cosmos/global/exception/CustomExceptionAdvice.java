@@ -13,6 +13,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 import java.util.NoSuchElementException;
@@ -30,6 +31,11 @@ public class CustomExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomExceptionEntity> validation(MethodArgumentNotValidException e) {
         return generalResponse(ExceptionType.INVALID_INPUT, e);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<CustomExceptionEntity> duplicated(MaxUploadSizeExceededException e) {
+        return generalResponse(ExceptionType.INPUT_SIZE_EXCEEDED, e);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

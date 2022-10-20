@@ -46,14 +46,5 @@ public class CreateTest {
             assertThat(place1).isEqualTo(place2);
             assertThat(placeRepository.count()).isEqualTo(1);
         }
-
-        @Test
-        @DisplayName("이전 장소와 정보가 다른 경우 장소 추가")
-        void different() throws Exception {
-            Place place1 = placeService.create(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE));
-            Place place2 = placeService.create(new PlaceCreateRequest(1L, "different", LATITUDE, LONGITUDE));
-            assertThat(place1).isNotEqualTo(place2);
-            assertThat(placeRepository.count()).isEqualTo(2);
-        }
     }
 }

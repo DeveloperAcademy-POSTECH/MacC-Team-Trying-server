@@ -264,8 +264,8 @@ public class PlanetDocsTest {
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(4L, "그여든", 36.7, 128.5), "삐갈레 브래드"));
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(5L, "버거킹 포항공대점", 35.5, 126.4), "버거킹"));
 
-        courseService.create(user.getId(), planet.getId(), "효자동 맛집 리스트", BODY, Access.PUBLIC, tagDto1);
-        courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PRIVATE, tagDto2);
+        courseService.create(user.getId(), planet.getId(), "효자동 맛집 리스트", BODY, Access.PUBLIC, tagDto1, null);
+        courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PRIVATE, tagDto2, null);
 
         ResultActions actions = mvc.perform(get("/planets/{planetId}/courses", planet.getId())
                 .param("page", "0")
