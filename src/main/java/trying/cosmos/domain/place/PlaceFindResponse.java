@@ -14,7 +14,7 @@ public class PlaceFindResponse {
     private double longitude;
 
     public PlaceFindResponse(Place place) {
-        this.placeNumber = place.getPlaceNumber();
+        this.placeNumber = place.getPlaceId();
         this.name = place.getName();
         this.latitude = place.getLatitude();
         this.longitude = place.getLongitude();

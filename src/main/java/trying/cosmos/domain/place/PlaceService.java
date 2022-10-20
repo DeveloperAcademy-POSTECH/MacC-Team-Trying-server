@@ -13,7 +13,7 @@ public class PlaceService {
 
     @Transactional
     public Place create(PlaceCreateRequest request) {
-        Place place = placeRepository.findByPlaceNumber(request.getPlaceId())
+        return placeRepository.findById(request.getPlaceId())
                 .orElseGet(() -> placeRepository.save(
                         new Place(
                                 request.getPlaceId(),
@@ -22,10 +22,6 @@ public class PlaceService {
                                 request.getLongitude()
                         )
                 ));
-        if (!place.isSame(request.getName(), request.getLatitude(), request.getLongitude())) {
-            return placeRepository.save(new Place(request.getPlaceId(), request.getName(), request.getLatitude(), request.getLongitude()));
-        }
-        return place;
     }
 
     public Place findById(Long placeId) {

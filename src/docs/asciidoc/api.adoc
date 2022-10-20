@@ -279,7 +279,8 @@ include::{snippets}/planet/unfollow/http-response.adoc[]
 ==== Request
 include::{snippets}/course/create/http-request.adoc[]
 include::{snippets}/course/create/request-headers.adoc[]
-include::{snippets}/course/create/request-fields.adoc[]
+include::{snippets}/course/create/request-parts.adoc[]
+include::{snippets}/course/create/request-part-data-fields.adoc[]
 
 ==== Response
 include::{snippets}/course/create/http-response.adoc[]

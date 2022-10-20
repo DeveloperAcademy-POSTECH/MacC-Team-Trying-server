@@ -2,8 +2,10 @@ package trying.cosmos.domain.course;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.request.CourseCreateRequest;
 import trying.cosmos.domain.course.response.CourseCreateResponse;
 import trying.cosmos.domain.course.response.CourseFindResponse;
@@ -11,6 +13,8 @@ import trying.cosmos.domain.course.response.CourseListFindResponse;
 import trying.cosmos.global.auth.AuthKey;
 import trying.cosmos.global.auth.Authority;
 import trying.cosmos.global.auth.AuthorityOf;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
@@ -20,16 +24,17 @@ public class CourseController {
     private final CourseService courseService;
 
     @AuthorityOf(Authority.USER)
-    @PostMapping
-    public CourseCreateResponse create(@RequestBody @Validated CourseCreateRequest request) {
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public CourseCreateResponse create(@RequestPart(name = "data") @Validated CourseCreateRequest request, List<MultipartFile> images) {
         return new CourseCreateResponse(courseService.create(
                 AuthKey.getKey(),
                 request.getPlanetId(),
                 request.getTitle(),
                 request.getBody(),
                 request.getAccess(),
-                request.getTags())
-        );
+                request.getTags(),
+                images
+        ));
     }
 
     @GetMapping("/{courseId}")

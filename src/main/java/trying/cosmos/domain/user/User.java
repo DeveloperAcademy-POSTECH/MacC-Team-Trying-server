@@ -144,7 +144,7 @@ public class User extends DateAuditingEntity {
     private void checkLoginUser() {
         checkAccessibleUser();
         if (!getStatus().equals(UserStatus.LOGIN)) {
-            throw new CustomException(ExceptionType.NOT_LOGIN);
+            throw new CustomException(ExceptionType.NOT_AUTHENTICATED);
         }
     }
 }

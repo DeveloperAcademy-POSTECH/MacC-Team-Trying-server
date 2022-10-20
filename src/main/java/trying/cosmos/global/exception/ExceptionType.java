@@ -16,10 +16,10 @@ public enum ExceptionType {
     INVALID_PARAMETER(BAD_REQUEST, "잘못된 파라미터가 입력되었습니다."),
     INVALID_HEADER(BAD_REQUEST, "필수 헤더가 입력되지 않았습니다."),
     INVALID_METHOD(BAD_REQUEST, "지원하지 않는 HTTP 메서드입니다."),
+    INPUT_SIZE_EXCEEDED(BAD_REQUEST, "최대 입력 크기를 초과했습니다."),
 
     AUTHENTICATION_FAILED(UNAUTHORIZED, "인증에 실패했습니다."),
-
-    NOT_AUTHENTICATED(UNAUTHORIZED, "로그인되지 않았습니다."),
+    NOT_AUTHENTICATED(UNAUTHORIZED, "로그인 상태가 아닙니다."),
     CERTIFICATION_FAILED(UNAUTHORIZED, "이메일 인증에 실패했습니다."),
     INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
@@ -29,11 +29,8 @@ public enum ExceptionType {
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
 
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
-    PLANET_CREATE_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
     PLANET_FOLLOW_FAILED(CONFLICT, "행성 팔로우에 실패했습니다."),
-    PLANET_INVITE_FAILED(CONFLICT, "행성 초대에 실패했습니다."),
-    NOT_LOGIN(CONFLICT, "로그인 상태가 아닙니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 

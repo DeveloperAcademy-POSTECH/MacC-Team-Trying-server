@@ -4,18 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "place_id")
-    private Long id;
-
-    private Long placeNumber;
+    private Long placeId;
 
     private String name;
 
@@ -24,8 +24,8 @@ public class Place {
     private double longitude;
 
     // Constructor
-    public Place(Long placeNumber, String name, double latitude, double longitude) {
-        this.placeNumber = placeNumber;
+    public Place(Long placeId, String name, double latitude, double longitude) {
+        this.placeId = placeId;
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;

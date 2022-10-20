@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockPart;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -27,6 +29,7 @@ import trying.cosmos.domain.user.UserService;
 import trying.cosmos.domain.user.UserStatus;
 import trying.cosmos.global.auth.Authority;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +71,8 @@ public class CourseDocsTest {
     private static final String TITLE = "효자시장 맛집코스";
     private static final String BODY = "굿";
 
+    private static final String IMAGE_PATH = "src/test/resources/image.png";
+
     @Test
     @DisplayName("코스 생성")
     void create() throws Exception {
@@ -81,12 +86,17 @@ public class CourseDocsTest {
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));;
 
-        String content = objectMapper.writeValueAsString(new CourseCreateRequest(planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto));
+        String json = objectMapper.writeValueAsString(new CourseCreateRequest(planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto));
+        MockPart data = new MockPart("data", json.getBytes(StandardCharsets.UTF_8));
+        data.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ResultActions actions = mvc.perform(post("/courses")
-                .header("accessToken", accessToken)
-                .contentType(JSON_CONTENT_TYPE)
-                .content(content))
+        MockPart image = new MockPart("images", "image", null);
+        image.getHeaders().setContentType(MediaType.IMAGE_PNG);
+
+        ResultActions actions = mvc.perform(multipart("/courses")
+                .part(data)
+                .part(image)
+                .header("accessToken", accessToken))
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/create",
@@ -95,7 +105,7 @@ public class CourseDocsTest {
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
-                requestFields(
+                requestPartFields("data",
                         fieldWithPath("planetId").description("코스를 만들 행성 id"),
                         fieldWithPath("title").description("코스 제목"),
                         fieldWithPath("body").description("코스 본문"),
@@ -105,6 +115,10 @@ public class CourseDocsTest {
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
                         fieldWithPath("tags[].name").description("태그 이름")
+                ),
+                requestParts(
+                        partWithName("data").description("코스 생성을 위한 데이터"),
+                        partWithName("images").description("업로드할 이미지 목록")
                 ),
                 responseFields(
                         fieldWithPath("courseId").description("만들어진 코스 id")
@@ -125,7 +139,7 @@ public class CourseDocsTest {
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
+        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto, null);
 
         ResultActions actions = mvc.perform(get("/courses/{courseId}", course.getId())
                 .header("accessToken", accessToken)
@@ -153,7 +167,8 @@ public class CourseDocsTest {
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
                         fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
-                        fieldWithPath("tags[].name").description("태그 이름")
+                        fieldWithPath("tags[].name").description("태그 이름"),
+                        fieldWithPath("images[]").description("이미지 이름")
                 )
         ));
     }
@@ -175,8 +190,8 @@ public class CourseDocsTest {
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(4L, "그여든", 36.7, 128.5), "삐갈레 브래드"));
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(5L, "버거킹 포항공대점", 35.5, 126.4), "버거킹"));
 
-        courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1);
-        courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2);
+        courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1, null);
+        courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2, null);
 
         ResultActions actions = mvc.perform(get("/courses")
                 .header("accessToken", accessToken)
@@ -203,6 +218,7 @@ public class CourseDocsTest {
                         fieldWithPath("courses[].title").description("코스 제목"),
                         fieldWithPath("courses[].createdDate").description("코스 생성일"),
                         fieldWithPath("courses[].liked").description("코스 좋아요 여부"),
+                        fieldWithPath("courses[].images[]").description("이미지 이름"),
                         fieldWithPath("size").description("불러온 코스 수"),
                         fieldWithPath("hasNext").description("다음 페이지 존재 여부")
                 )
@@ -222,7 +238,7 @@ public class CourseDocsTest {
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
+        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto, null);
 
         ResultActions actions = mvc.perform(post("/courses/{courseId}/like", course.getId())
                 .header("accessToken", accessToken)
@@ -254,7 +270,7 @@ public class CourseDocsTest {
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto);
+        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto, null);
 
         courseService.like(user.getId(), course.getId());
 

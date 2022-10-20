@@ -81,7 +81,7 @@ public class CreateTest {
         @Test
         @DisplayName("코스 생성 성공")
         void create() throws Exception {
-            courseService.create(userId, planetId, TITLE, BODY, PUBLIC, tagRequest);
+            courseService.create(userId, planetId, TITLE, BODY, PUBLIC, tagRequest, null);
             assertThat(planetService.findPlanetCourse(userId, planetId, pageable).getNumberOfElements()).isEqualTo(1);
         }
     }
@@ -94,7 +94,7 @@ public class CreateTest {
         @DisplayName("내 행성이 아닌 경우")
         void not_my_planet() throws Exception {
             User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
-            assertThatThrownBy(() -> courseService.create(other.getId(), planetId, TITLE, BODY, PUBLIC, tagRequest))
+            assertThatThrownBy(() -> courseService.create(other.getId(), planetId, TITLE, BODY, PUBLIC, tagRequest, null))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(NO_PERMISSION.getMessage());
         }
