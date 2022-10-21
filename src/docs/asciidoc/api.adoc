@@ -300,6 +300,8 @@ include::{snippets}/planet/unfollow/http-response.adoc[]
 == Course
 
 === 1. 코스 생성
+- 코스가 하나이거나 모든 코스가 같은 위치인 경우 (0.5, 0.5) 반환
+- 왼쪽 아래를 원점으로 설정
 
 ==== Request
 include::{snippets}/course/create/http-request.adoc[]
@@ -338,6 +340,8 @@ include::{snippets}/course/find-list/response-fields.adoc[]
 '''
 
 === 4. 코스 수정
+- 코스가 하나이거나 모든 코스가 같은 위치인 경우 (0.5, 0.5) 반환
+- 왼쪽 아래를 원점으로 설정
 
 ==== Request
 include::{snippets}/course/update/http-request.adoc[]
@@ -348,6 +352,7 @@ include::{snippets}/course/update/request-part-data-fields.adoc[]
 
 ==== Response
 include::{snippets}/course/update/http-response.adoc[]
+include::{snippets}/course/update/response-fields.adoc[]
 
 '''
 

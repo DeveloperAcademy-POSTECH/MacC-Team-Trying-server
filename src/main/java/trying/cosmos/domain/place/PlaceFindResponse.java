@@ -10,13 +10,11 @@ public class PlaceFindResponse {
 
     private Long placeNumber;
     private String name;
-    private double latitude;
-    private double longitude;
+    private Coordinate coordinate;
 
     public PlaceFindResponse(Place place) {
         this.placeNumber = place.getPlaceId();
         this.name = place.getName();
-        this.latitude = place.getLatitude();
-        this.longitude = place.getLongitude();
+        this.coordinate = place.getCoordinate();
     }
 }

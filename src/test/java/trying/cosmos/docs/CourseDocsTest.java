@@ -125,7 +125,10 @@ public class CourseDocsTest {
                         partWithName("images").description("업로드할 이미지 목록")
                 ),
                 responseFields(
-                        fieldWithPath("courseId").description("만들어진 코스 id")
+                        fieldWithPath("courseId").description("만들어진 코스 id"),
+                        fieldWithPath("stars").description("별자리 이미지에서 별 좌표"),
+                        fieldWithPath("stars[].x").description("x좌표(경도)"),
+                        fieldWithPath("stars[].y").description("y좌표(위도)")
                 )
         ));
     }
@@ -170,8 +173,8 @@ public class CourseDocsTest {
                         fieldWithPath("planet.dday").description("코스가 포함된 행성 dday"),
                         fieldWithPath("tags[].place.placeNumber").description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
-                        fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
-                        fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
+                        fieldWithPath("tags[].place.coordinate.latitude").description("태그할 장소 위도"),
+                        fieldWithPath("tags[].place.coordinate.longitude").description("태그할 장소 경도"),
                         fieldWithPath("tags[].name").description("태그 이름"),
                         fieldWithPath("images[]").description("이미지 이름")
                 )
@@ -287,6 +290,12 @@ public class CourseDocsTest {
                 requestParts(
                         partWithName("data").description("코스 생성을 위한 데이터"),
                         partWithName("images").description("업로드할 이미지 목록")
+                ),
+                responseFields(
+                        fieldWithPath("courseId").description("만들어진 코스 id"),
+                        fieldWithPath("stars").description("별자리 이미지에서 별 좌표"),
+                        fieldWithPath("stars[].x").description("x좌표(경도)"),
+                        fieldWithPath("stars[].y").description("y좌표(위도)")
                 )
         ));
     }
