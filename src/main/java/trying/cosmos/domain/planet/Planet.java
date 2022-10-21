@@ -39,12 +39,15 @@ public class Planet extends DateAuditingEntity {
 
     private String inviteCode;
 
+    private boolean isDeleted;
+
     // Constructor
     public Planet(User user, String name, PlanetImageType image) {
         this.name = name;
         this.inviteCode = UUID.randomUUID().toString();
         this.image = image;
         this.meetDate = LocalDate.now();
+        this.isDeleted = false;
         user.setPlanet(this);
         this.owners.add(user);
     }
@@ -64,21 +67,13 @@ public class Planet extends DateAuditingEntity {
         guest.setPlanet(this);
     }
 
-    public void updateDday(int days) {
-        this.meetDate = LocalDate.now().minusDays(days);
+    public void update(String name, int days) {
+        this.name = name;
+        this.meetDate = LocalDate.now().minusDays(days - 1);
     }
 
     public int getDday() {
         return (int) Duration.between(this.meetDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays() + 1;
-    }
-
-    public void authorize(Long userId) {
-        for (User owner : owners) {
-            if (owner.getId().equals(userId)) {
-                return;
-            }
-        }
-        throw new CustomException(ExceptionType.NO_PERMISSION);
     }
 
     public boolean isOwnedBy(User user) {
@@ -98,5 +93,9 @@ public class Planet extends DateAuditingEntity {
 
     public boolean isFull() {
         return this.owners.size() > 1;
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }

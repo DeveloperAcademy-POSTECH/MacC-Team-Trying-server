@@ -6,3 +6,5 @@ out
 
 src/main/resources/application-secret.yml
 src/test/java/trying/cosmos/docs/utils/ApiDocumentUtils.java
+src/docs/*
+src/main/resources/static/docs/*

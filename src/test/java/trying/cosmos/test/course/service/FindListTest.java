@@ -59,10 +59,6 @@ public class FindListTest {
     PlaceService placeService;
 
     private Long userId;
-    private Course myPrivate;
-    private Course myPublic;
-    private Course othersPrivate;
-    private Course othersPublic;
     private Pageable pageable = PageRequest.of(0, 5);
 
     @BeforeEach
@@ -70,14 +66,17 @@ public class FindListTest {
         User me = userRepository.save(new User("me@gmail.com", PASSWORD, "me", LOGIN, USER));
         this.userId = me.getId();
         User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
+
         Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH));
         Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
-        myPrivate = courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
-        myPublic = courseService.create(me.getId(), myPlanet.getId(), "myPublic", "myPublic", PUBLIC, tagRequest, null);
-        othersPrivate = courseService.create(other.getId(), othersPlanet.getId(), "othersPrivate", "othersPrivate", PRIVATE, tagRequest, null);
-        othersPublic = courseService.create(other.getId(), othersPlanet.getId(), "othersPublic", "othersPublic", PUBLIC, tagRequest, null);
+        courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
+        courseService.create(me.getId(), myPlanet.getId(), "myPublic", "myPublic", PUBLIC, tagRequest, null);
+        courseService.create(other.getId(), othersPlanet.getId(), "othersPrivate", "othersPrivate", PRIVATE, tagRequest, null);
+        courseService.create(other.getId(), othersPlanet.getId(), "othersPublic", "othersPublic", PUBLIC, tagRequest, null);
+        Course deleted = courseService.create(me.getId(), myPlanet.getId(), "deleted", "deleted", PUBLIC, tagRequest, null);
+        courseService.delete(me.getId(), deleted.getId());
     }
 
     @Nested
@@ -85,7 +84,7 @@ public class FindListTest {
     class success {
 
         @Test
-        @DisplayName("코스 조회시 다른 사람의 비공개 코스는 숨겨짐")
+        @DisplayName("코스 조회시 다른 사람의 비공개 코스는 숨겨짐, 삭제된 코스는 보이지 않음")
         void other_private() throws Exception {
             List<String> titles = courseService.findCourses(userId, pageable).getContent().stream()
                     .map(CourseFindContent::getTitle)
@@ -94,7 +93,7 @@ public class FindListTest {
         }
 
         @Test
-        @DisplayName("id가 null인 경우 비공개 코스는 숨겨짐")
+        @DisplayName("id가 null인 경우 비공개 코스는 숨겨짐, 삭제된 코스는 보이지 않음")
         void anonymous() throws Exception {
             List<String> titles = courseService.findCourses(null, pageable).getContent().stream()
                     .map(CourseFindContent::getTitle)

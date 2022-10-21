@@ -65,7 +65,7 @@ public class UnfollowTest {
         @DisplayName("팔로우 성공")
         void follow() throws Exception {
             planetService.unfollow(followerId, planetId);
-            assertThat(planetFollowRepository.findByUserIdAndPlanetId(followerId, planetId)).isEmpty();
+            assertThat(planetFollowRepository.searchByUserAndPlanet(followerId, planetId)).isEmpty();
         }
     }
 

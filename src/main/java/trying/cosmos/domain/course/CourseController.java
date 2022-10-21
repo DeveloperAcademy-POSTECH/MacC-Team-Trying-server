@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.request.CourseCreateRequest;
+import trying.cosmos.domain.course.request.CourseUpdateRequest;
 import trying.cosmos.domain.course.response.CourseCreateResponse;
 import trying.cosmos.domain.course.response.CourseFindResponse;
 import trying.cosmos.domain.course.response.CourseListFindResponse;
@@ -57,5 +58,17 @@ public class CourseController {
     @DeleteMapping("/{courseId}/like")
     public void dislike(@PathVariable Long courseId) {
         courseService.unlike(AuthKey.getKey(), courseId);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @PutMapping("/{courseId}")
+    public void update(@PathVariable Long courseId, @RequestPart(name = "data") @Validated CourseUpdateRequest request, List<MultipartFile> images) {
+        courseService.update(AuthKey.getKey(), courseId, request.getTitle(), request.getBody(), request.getAccess(), request.getTags(), images);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @DeleteMapping("/{courseId}")
+    public void delete(@PathVariable Long courseId) {
+        courseService.delete(AuthKey.getKey(), courseId);
     }
 }

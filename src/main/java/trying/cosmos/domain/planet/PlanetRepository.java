@@ -3,12 +3,19 @@ package trying.cosmos.domain.planet;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 public interface PlanetRepository extends JpaRepository<Planet, Long> {
 
-    Slice<Planet> findByNameLike(String query, Pageable pageable);
+    // searchById: soft delete된 planet은 제외하고 표시
+    @Query("select p from Planet p where p.id = :planetId and p.isDeleted = false")
+    Optional<Planet> searchById(Long planetId);
 
-    Optional<Planet> findByInviteCode(String code);
+    @Query("select p from Planet p where p.inviteCode = :code and p.isDeleted = false")
+    Optional<Planet> searchByInviteCode(String code);
+
+    @Query("select p from Planet p where p.name like :query and p.isDeleted = false")
+    Slice<Planet> searchByNameLike(String query, Pageable pageable);
 }
