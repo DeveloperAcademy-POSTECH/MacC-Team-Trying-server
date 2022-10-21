@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -19,19 +20,13 @@ public class Place {
 
     private String name;
 
-    private double latitude;
-
-    private double longitude;
+    @Embedded
+    private Coordinate coordinate;
 
     // Constructor
     public Place(Long placeId, String name, double latitude, double longitude) {
         this.placeId = placeId;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public boolean isSame(String name, double latitude, double longitude) {
-        return this.name.equals(name) && this.latitude == latitude && this.longitude == longitude;
+        this.coordinate = new Coordinate(latitude, longitude);
     }
 }

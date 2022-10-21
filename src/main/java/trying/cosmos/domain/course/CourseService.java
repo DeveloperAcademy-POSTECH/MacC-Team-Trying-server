@@ -40,7 +40,7 @@ public class CourseService {
     public Course create(Long userId, Long planetId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
-        if (!planet.isOwnedBy(userRepository.findById(userId).orElseThrow())) {
+        if (!planet.isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
 
@@ -107,25 +107,34 @@ public class CourseService {
     }
 
     @Transactional
-    public void update(Long userId, Long courseId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
-        System.out.println("title = " + title);
+    public Course update(Long userId, Long courseId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
         Course course = courseRepository.searchByIdWithTagPlace(courseId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         if (!course.getPlanet().isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
 
-        for (CourseImage image : course.getImages()) {
-            imageUtils.delete(image.getName());
-        }
-        courseRepository.deleteCourseImage(course);
-        courseRepository.deleteCourseTag(course);
+        removeCourseImage(course);
+        removeCourseTag(course);
 
         course.update(title, body, access);
         createCourseTag(tagDto, course);
         createCourseImage(images, course);
-        em.flush();
-        em.clear();
+
+        return course;
+    }
+
+    private void removeCourseTag(Course course) {
+        courseRepository.deleteCourseTag(course);
+        course.clearTag();
+    }
+
+    private void removeCourseImage(Course course) {
+        for (CourseImage image : course.getImages()) {
+            imageUtils.delete(image.getName());
+        }
+        courseRepository.deleteCourseImage(course);
+        course.clearImage();
     }
 
     @Transactional
