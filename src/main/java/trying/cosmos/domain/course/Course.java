@@ -57,11 +57,11 @@ public class Course extends DateAuditingEntity {
         this.isDeleted = true;
     }
 
-    public void replaceTag(List<Tag> tags) {
-        this.tags = tags;
+    public void clearImage() {
+        this.images.clear();
     }
 
-    public void replaceImages(List<CourseImage> images) {
-        this.images = images;
+    public void clearTag() {
+        this.tags.clear();
     }
 }
