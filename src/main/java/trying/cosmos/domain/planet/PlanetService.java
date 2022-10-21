@@ -51,24 +51,30 @@ public class PlanetService {
     }
 
     public Slice<Planet> findList(String query, Pageable pageable) {
-        return planetRepository.searchByNameLike("%" + query + "%", pageable);
+        return planetRepository.searchByName("%" + query + "%", pageable);
+    }
+
+    public Slice<Planet> findFollowPlanets(Long userId, Pageable pageable) {
+        return planetRepository.getFollowPlanets(userId, pageable);
     }
 
     public Slice<Course> findPlanetCourse(Long userId, Long planetId, Pageable pageable) {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        Planet myPlanet = userId == null ? null : userRepository.findById(userId).orElseThrow().getPlanet();
+        return courseRepository.searchByPlanet(myPlanet, planet, pageable);
         // 익명의 사용자
-        if (userId == null) {
-            return courseRepository.searchPublicByPlanet(planet, pageable);
-        }
-
-        User user = userRepository.findById(userId).orElseThrow();
-        if (planet.isOwnedBy(user)) {
-            // 내 행성
-            return courseRepository.searchAllByPlanet(planet, pageable);
-        } else {
-            // 다른 사람 행성
-            return courseRepository.searchPublicByPlanet(planet, pageable);
-        }
+//        if (userId == null) {
+//            return courseRepository.searchPublicByPlanet(planet, pageable);
+//        }
+//
+//        User user = userRepository.findById(userId).orElseThrow();
+//        if (planet.isOwnedBy(user)) {
+//            // 내 행성
+//            return courseRepository.searchByPlanet(planet, pageable);
+//        } else {
+//            // 다른 사람 행성
+//            return courseRepository.searchPublicByPlanet(planet, pageable);
+//        }
     }
 
     @Transactional

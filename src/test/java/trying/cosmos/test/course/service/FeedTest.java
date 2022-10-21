@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.course.Course;
 import trying.cosmos.domain.course.CourseRepository;
 import trying.cosmos.domain.course.CourseService;
 import trying.cosmos.domain.course.request.TagCreateRequest;
@@ -37,8 +36,8 @@ import static trying.cosmos.test.component.TestVariables.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Course.Service) 코스 목록 조회")
-public class FindListTest {
+@DisplayName("(Course.Service) 피드 조회")
+public class FeedTest {
 
     @Autowired
     UserRepository userRepository;
@@ -65,18 +64,21 @@ public class FindListTest {
     void setup() {
         User me = userRepository.save(new User("me@gmail.com", PASSWORD, "me", LOGIN, USER));
         this.userId = me.getId();
-        User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
+        User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", LOGIN, USER));
+        User notFollow = userRepository.save(new User("notfollow@gmail.com", PASSWORD, "notfollow", LOGIN, USER));
 
         Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH));
-        Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH));
+        Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, EARTH));
+        planetService.follow(me.getId(), followPlanet.getId());
+        Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, EARTH));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
-        courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
-        courseService.create(me.getId(), myPlanet.getId(), "myPublic", "myPublic", PUBLIC, tagRequest, null);
-        courseService.create(other.getId(), othersPlanet.getId(), "othersPrivate", "othersPrivate", PRIVATE, tagRequest, null);
-        courseService.create(other.getId(), othersPlanet.getId(), "othersPublic", "othersPublic", PUBLIC, tagRequest, null);
-        Course deleted = courseService.create(me.getId(), myPlanet.getId(), "deleted", "deleted", PUBLIC, tagRequest, null);
-        courseService.delete(me.getId(), deleted.getId());
+        courseService.create(me.getId(), myPlanet.getId(), "title1", "body", PRIVATE, tagRequest, null);
+        courseService.create(me.getId(), myPlanet.getId(), "title2", "body", PUBLIC, tagRequest, null);
+        courseService.create(follow.getId(), followPlanet.getId(), "title3", "body", PRIVATE, tagRequest, null);
+        courseService.create(follow.getId(), followPlanet.getId(), "title4", "body", PUBLIC, tagRequest, null);
+        courseService.create(notFollow.getId(), notFollowPlanet.getId(), "title5", "body", PRIVATE, tagRequest, null);
+        courseService.create(notFollow.getId(), notFollowPlanet.getId(), "title6", "body", PUBLIC, tagRequest, null);
     }
 
     @Nested
@@ -84,21 +86,12 @@ public class FindListTest {
     class success {
 
         @Test
-        @DisplayName("코스 조회시 다른 사람의 비공개 코스는 숨겨짐, 삭제된 코스는 보이지 않음")
-        void other_private() throws Exception {
-            List<String> titles = courseService.findCourses(userId, pageable).getContent().stream()
+        @DisplayName("내 행성은 모든 코스, 팔로우한 행성은 공개코스만 최신순으로 조회")
+        void feed() throws Exception {
+            List<String> titles = courseService.getFeeds(userId, pageable).getContent().stream()
                     .map(CourseFindContent::getTitle)
                     .collect(Collectors.toList());
-            assertThat(titles).containsExactly("myPrivate", "myPublic", "othersPublic");
-        }
-
-        @Test
-        @DisplayName("id가 null인 경우 비공개 코스는 숨겨짐, 삭제된 코스는 보이지 않음")
-        void anonymous() throws Exception {
-            List<String> titles = courseService.findCourses(null, pageable).getContent().stream()
-                    .map(CourseFindContent::getTitle)
-                    .collect(Collectors.toList());
-            assertThat(titles).containsExactly("myPublic", "othersPublic");
+            assertThat(titles).containsExactly("title4", "title2", "title1");
         }
     }
 }

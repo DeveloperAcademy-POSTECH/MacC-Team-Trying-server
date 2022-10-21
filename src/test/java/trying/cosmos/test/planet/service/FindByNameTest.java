@@ -26,8 +26,8 @@ import static trying.cosmos.test.component.TestVariables.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Planet.Service) 행성 리스트 조회")
-public class FindListTest {
+@DisplayName("(Planet.Service) 이름으로 행성 조회")
+public class FindByNameTest {
 
     @Autowired
     UserRepository userRepository;

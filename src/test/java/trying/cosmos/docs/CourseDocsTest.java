@@ -134,7 +134,7 @@ public class CourseDocsTest {
     }
 
     @Test
-    @DisplayName("코스 조회")
+    @DisplayName("아이디로 코스 조회")
     void find() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -182,7 +182,7 @@ public class CourseDocsTest {
     }
 
     @Test
-    @DisplayName("코스 목록 조회")
+    @DisplayName("이름으로 코스 조회")
     void find_list() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -203,12 +203,69 @@ public class CourseDocsTest {
 
         ResultActions actions = mvc.perform(get("/courses")
                 .header("accessToken", accessToken)
+                .param("query", "")
                 .param("page", "0")
                 .param("size", "5")
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/find-list",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                requestParameters(
+                        parameterWithName("query").description("검색어(제목)").optional(),
+                        parameterWithName("page").description("페이지 번호").optional(),
+                        parameterWithName("size").description("한 페이지 크기").optional()
+                ),
+                responseFields(
+                        fieldWithPath("courses[].courseId").description("코스 id"),
+                        fieldWithPath("courses[].planet.planetId").description("코스가 포함된 행성 id"),
+                        fieldWithPath("courses[].planet.name").description("코스가 포함된 행성 이름"),
+                        fieldWithPath("courses[].planet.image").description("코스가 포함된 행성 이미지 타입"),
+                        fieldWithPath("courses[].planet.dday").description("코스가 포함된 행성 dday"),
+                        fieldWithPath("courses[].title").description("코스 제목"),
+                        fieldWithPath("courses[].createdDate").description("코스 생성일"),
+                        fieldWithPath("courses[].liked").description("코스 좋아요 여부"),
+                        fieldWithPath("courses[].images[]").description("이미지 이름"),
+                        fieldWithPath("size").description("불러온 코스 수"),
+                        fieldWithPath("hasNext").description("다음 페이지 존재 여부")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("피드 조회")
+    void get_feed() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet followPlanet = planetService.create(follow.getId(), "follow planet", PlanetImageType.EARTH);
+
+        List<TagCreateRequest> tagDto1 = new ArrayList<>();
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+
+        List<TagCreateRequest> tagDto2 = new ArrayList<>();
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(4L, "그여든", 36.7, 128.5), "삐갈레 브래드"));
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest(5L, "버거킹 포항공대점", 35.5, 126.4), "버거킹"));
+
+        courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1, null);
+        courseService.create(follow.getId(), followPlanet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2, null);
+
+        ResultActions actions = mvc.perform(get("/courses/feed")
+                .header("accessToken", accessToken)
+                .param("page", "0")
+                .param("size", "5")
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("course/feed",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestHeaders(

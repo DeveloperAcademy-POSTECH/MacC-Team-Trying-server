@@ -52,6 +52,12 @@ public class PlanetController {
         return new PlanetListFindResponse(planetService.findList(query, pageable));
     }
 
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/follow")
+    public PlanetListFindResponse findFollowPlanets(Pageable pageable) {
+        return new PlanetListFindResponse(planetService.findFollowPlanets(AuthKey.getKey(), pageable));
+    }
+
     @GetMapping("/{planetId}/courses")
     public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
         return new PlanetCourseListResponse(planetService.findPlanetCourse(AuthKey.getKey(), planetId, pageable));
