@@ -52,7 +52,7 @@ public class CourseService {
     }
 
     public CourseFindResponse find(Long userId, Long courseId) {
-        Course course = courseRepository.searchByIdWithTagPlace(courseId).orElseThrow();
+        Course course = courseRepository.searchById(courseId).orElseThrow();
         if (userId == null) {
             return new CourseFindResponse(course, false);
         }
@@ -64,14 +64,22 @@ public class CourseService {
         return new CourseFindResponse(course, isLiked(userId, course.getId()));
     }
 
-    public Slice<CourseFindContent> findCourses(Long userId, Pageable pageable) {
+    public Slice<CourseFindContent> findByTitle(Long userId, String title, Pageable pageable) {
         Planet planet = null;
         if (userId != null) {
             User user = userRepository.findById(userId).orElseThrow();
             planet = user.getPlanet();
         }
 
-        Slice<Course> courseSlice = courseRepository.searchAll(planet, pageable);
+        Slice<Course> courseSlice = courseRepository.searchByName(planet, "%" + title + "%",pageable);
+        List<CourseFindContent> contents = courseSlice.getContent().stream()
+                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
+                .collect(Collectors.toList());
+        return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
+    }
+
+    public Slice<CourseFindContent> getFeeds(Long userId, Pageable pageable) {
+        Slice<Course> courseSlice = courseRepository.getFeed(userRepository.findById(userId).orElseThrow(), pageable);
         List<CourseFindContent> contents = courseSlice.getContent().stream()
                 .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
                 .collect(Collectors.toList());
@@ -108,7 +116,7 @@ public class CourseService {
 
     @Transactional
     public Course update(Long userId, Long courseId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
-        Course course = courseRepository.searchByIdWithTagPlace(courseId).orElseThrow();
+        Course course = courseRepository.searchById(courseId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         if (!course.getPlanet().isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);

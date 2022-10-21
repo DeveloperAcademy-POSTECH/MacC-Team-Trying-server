@@ -44,8 +44,14 @@ public class CourseController {
     }
 
     @GetMapping
-    public CourseListFindResponse findList(Pageable pageable) {
-        return new CourseListFindResponse(courseService.findCourses(AuthKey.getKey(), pageable));
+    public CourseListFindResponse findByName(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
+        return new CourseListFindResponse(courseService.findByTitle(AuthKey.getKey(), query, pageable));
+    }
+
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/feed")
+    public CourseListFindResponse getFeed(Pageable pageable) {
+        return new CourseListFindResponse(courseService.getFeeds(AuthKey.getKey(), pageable));
     }
 
     @AuthorityOf(Authority.USER)

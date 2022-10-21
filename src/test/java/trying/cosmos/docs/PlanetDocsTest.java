@@ -217,7 +217,7 @@ public class PlanetDocsTest {
     }
 
     @Test
-    @DisplayName("행성 목록 조회")
+    @DisplayName("이름으로 행성 조회")
     void find_list() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -236,6 +236,47 @@ public class PlanetDocsTest {
                 getDocumentResponse(),
                 requestParameters(
                         parameterWithName("query").description("검색하려는 행성 이름").optional(),
+                        parameterWithName("page").description("페이지 번호").optional(),
+                        parameterWithName("size").description("한 페이지 크기").optional()
+                ),
+                responseFields(
+                        fieldWithPath("planets[].planetId").description("행성 id"),
+                        fieldWithPath("planets[].name").description("행성 이름"),
+                        fieldWithPath("planets[].image").description("행성 이미지 타입"),
+                        fieldWithPath("size").description("검색결과 불러온 행성 수"),
+                        fieldWithPath("hasNext").description("다음 페이지가 있는지")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("팔로우한 행성 조회")
+    void follow_planet() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        User follow1 = userRepository.save(new User("follow1@gmail.com", PASSWORD, "follow1", UserStatus.LOGOUT, Authority.USER));
+        User follow2 = userRepository.save(new User("follow2@gmail.com", PASSWORD, "follow2", UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet followPlanet1 = planetService.create(follow1.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet followPlanet2 = planetService.create(follow2.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        planetService.follow(user.getId(), followPlanet1.getId());
+        planetService.follow(user.getId(), followPlanet2.getId());
+
+        ResultActions actions = mvc.perform(get("/planets/follow")
+                .header("accessToken", accessToken)
+                .param("page", "0")
+                .param("size", "5")
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("planet/follow-planets",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                requestParameters(
                         parameterWithName("page").description("페이지 번호").optional(),
                         parameterWithName("size").description("한 페이지 크기").optional()
                 ),
@@ -291,6 +332,9 @@ public class PlanetDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("courses[].title").description("코스 제목"),
+                        fieldWithPath("courses[].stars").description("별자리 이미지에서 별 좌표"),
+                        fieldWithPath("courses[].stars[].x").description("x좌표(경도)"),
+                        fieldWithPath("courses[].stars[].y").description("y좌표(위도)"),
                         fieldWithPath("size").description("불러온 코스 수"),
                         fieldWithPath("hasNext").description("다음 페이지 존재 여부")
                 )

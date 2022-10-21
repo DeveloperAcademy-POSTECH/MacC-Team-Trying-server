@@ -9,26 +9,25 @@ import trying.cosmos.domain.planet.Planet;
 
 import java.util.Optional;
 
-public interface CourseRepository extends JpaRepository<Course, Long> {
+public interface CourseRepository extends JpaRepository<Course, Long>, CourseRepositoryCustom {
 
-    @Query("select c from Course c join fetch c.tags t join fetch t.place where c.id = :courseId and c.isDeleted = false")
-    Optional<Course> searchByIdWithTagPlace(Long courseId);
-
-    @Query("select c from Course c where c.planet = :planet and c.planet.isDeleted = false and c.isDeleted = false")
-    Slice<Course> searchAllByPlanet(Planet planet, Pageable pageable);
+    @Query("select c from Course c join fetch c.tags t join fetch t.place " +
+            "where c.id = :courseId and c.isDeleted = false")
+    Optional<Course> searchById(Long courseId);
 
     @Query("select c from Course c " +
-            "where c.planet = :planet " +
-            "and c.access = trying.cosmos.domain.course.Access.PUBLIC " +
+            "where (c.planet = :myPlanet or c.access = trying.cosmos.domain.course.Access.PUBLIC) " +
+            "and c.title like :query " +
             "and c.planet.isDeleted = false " +
-            "and c.isDeleted = false")
-    Slice<Course> searchPublicByPlanet(Planet planet, Pageable pageable);
+            "and c.isDeleted = false " +
+            "order by c.createdDate desc")
+    Slice<Course> searchByName(Planet myPlanet, String query, Pageable pageable);
 
-    // 모든 코스 조회, 내 행성의 코스인 경우 모든 코스, 다른 행성의 코스인 경우 PUBLIC 코스만
     @Query("select c from Course c " +
-            "where (c.planet = :planet or c.access = trying.cosmos.domain.course.Access.PUBLIC)" +
-            "and c.planet.isDeleted = false and c.isDeleted = false")
-    Slice<Course> searchAll(Planet planet, Pageable pageable);
+            "where (c.planet = :myPlanet or c.access = trying.cosmos.domain.course.Access.PUBLIC) " +
+            "and c.planet = :planet " +
+            "and c.isDeleted = false ")
+    Slice<Course> searchByPlanet(Planet myPlanet, Planet planet, Pageable pageable);
 
     @Modifying
     @Query("delete from Tag t where t.course = :course")

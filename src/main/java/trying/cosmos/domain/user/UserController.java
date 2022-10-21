@@ -3,6 +3,7 @@ package trying.cosmos.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import trying.cosmos.domain.course.CourseService;
 import trying.cosmos.domain.user.request.*;
 import trying.cosmos.domain.user.response.UserEmailExistResponse;
 import trying.cosmos.domain.user.response.UserFindResponse;
@@ -18,6 +19,7 @@ import static trying.cosmos.global.auth.Authority.USER;
 public class UserController {
 
     private final UserService userService;
+    private final CourseService courseService;
 
     @GetMapping("/exist")
     public UserEmailExistResponse isEmailExist(@RequestParam String email) {
