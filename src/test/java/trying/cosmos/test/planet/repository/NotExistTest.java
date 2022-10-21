@@ -37,7 +37,7 @@ public class NotExistTest {
         @Test
         @DisplayName("초대 코드에 해당하는 행성이 존재하지 않는 경우")
         void invite_code() throws Exception {
-            assertThat(planetRepository.findByInviteCode("wrong")).isEmpty();
+            assertThat(planetRepository.searchByInviteCode("wrong")).isEmpty();
         }
     }
 }

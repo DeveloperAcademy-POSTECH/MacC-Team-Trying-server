@@ -28,22 +28,22 @@ public class PlanetService {
     }
 
     public String getInviteCode(Long userId, Long planetId) {
-        Planet planet = planetRepository.findById(planetId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
         return planet.getInviteCode(userId);
     }
 
     @Transactional
     public void join(Long userId, String code) {
-        Planet planet = planetRepository.findByInviteCode(code).orElseThrow();
+        Planet planet = planetRepository.searchByInviteCode(code).orElseThrow();
         planet.join(userRepository.findById(userId).orElseThrow());
     }
 
     public Planet find(Long planetId) {
-        return planetRepository.findById(planetId).orElseThrow();
+        return planetRepository.searchById(planetId).orElseThrow();
     }
 
     public Planet find(String inviteCode) {
-        Planet planet = planetRepository.findByInviteCode(inviteCode).orElseThrow();
+        Planet planet = planetRepository.searchByInviteCode(inviteCode).orElseThrow();
         if (planet.isFull()) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
@@ -51,30 +51,30 @@ public class PlanetService {
     }
 
     public Slice<Planet> findList(String query, Pageable pageable) {
-        return planetRepository.findByNameLike("%" + query + "%", pageable);
+        return planetRepository.searchByNameLike("%" + query + "%", pageable);
     }
 
     public Slice<Course> findPlanetCourse(Long userId, Long planetId, Pageable pageable) {
-        Planet planet = planetRepository.findById(planetId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
         // 익명의 사용자
         if (userId == null) {
-            return courseRepository.findPublicByPlanet(planet, pageable);
+            return courseRepository.searchPublicByPlanet(planet, pageable);
         }
 
         User user = userRepository.findById(userId).orElseThrow();
         if (planet.isOwnedBy(user)) {
             // 내 행성
-            return courseRepository.findAllByPlanet(planet, pageable);
+            return courseRepository.searchAllByPlanet(planet, pageable);
         } else {
             // 다른 사람 행성
-            return courseRepository.findPublicByPlanet(planet, pageable);
+            return courseRepository.searchPublicByPlanet(planet, pageable);
         }
     }
 
     @Transactional
     public void follow(Long userId, Long planetId) {
         User user = userRepository.findById(userId).orElseThrow();
-        Planet planet = planetRepository.findById(planetId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
         if (planet.isOwnedBy(user) || isFollow(userId, planetId)) {
             throw new CustomException(ExceptionType.PLANET_FOLLOW_FAILED);
         }
@@ -86,10 +86,32 @@ public class PlanetService {
         if (!isFollow(userId, planetId)) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
-        planetFollowRepository.delete(planetFollowRepository.findByUserIdAndPlanetId(userId, planetId).orElseThrow());
+        planetFollowRepository.delete(planetFollowRepository.searchByUserAndPlanet(userId, planetId).orElseThrow());
     }
 
     private boolean isFollow(Long userId, Long planetId) {
         return planetFollowRepository.existsByUserIdAndPlanetId(userId, planetId);
+    }
+
+    @Transactional
+    public void update(Long userId, Long planetId, String name, int dday) {
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+
+        planet.update(name, dday);
+    }
+
+    @Transactional
+    public void delete(Long userId, Long planetId) {
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+
+        planet.delete();
     }
 }

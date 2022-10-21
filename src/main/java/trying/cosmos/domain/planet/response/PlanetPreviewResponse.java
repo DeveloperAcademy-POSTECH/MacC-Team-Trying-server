@@ -8,17 +8,15 @@ import trying.cosmos.domain.planet.PlanetImageType;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlanetFindResponse {
+public class PlanetPreviewResponse {
 
     private Long planetId;
     private String name;
     private PlanetImageType image;
-    private int dday;
 
-    public PlanetFindResponse(Planet planet) {
+    public PlanetPreviewResponse(Planet planet) {
         this.planetId = planet.getId();
         this.name = planet.getName();
         this.image = planet.getImage();
-        this.dday = planet.getDday();
     }
 }

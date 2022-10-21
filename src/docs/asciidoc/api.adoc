@@ -6,7 +6,7 @@
 :toclevels: 2
 :toc-title: 목차
 :sectlinks:
-:postman: https://app.getpostman.com/join-team?invite_code=e37c0f099af0d6ca4ce663cd16eb0efe&target_code=596f255ccbb6696328c6c93603fbe66f
+:postman: https://app.getpostman.com/join-team?invite_code=eced301be47710dd0f768ec2b1fcea66&target_code=d5cd81a5a539ebf1ae56b87b4502e6d7
 
 ifndef::snippets[]
 :snippets: ./build/generated-snippets
@@ -250,7 +250,32 @@ include::{snippets}/planet/courses/response-fields.adoc[]
 
 '''
 
-=== 8. 행성 팔로우
+=== 8. 행성 수정
+
+==== Request
+include::{snippets}/planet/update/http-request.adoc[]
+include::{snippets}/planet/update/request-headers.adoc[]
+include::{snippets}/planet/update/path-parameters.adoc[]
+include::{snippets}/planet/update/request-fields.adoc[]
+
+==== Response
+include::{snippets}/planet/update/http-response.adoc[]
+
+'''
+
+=== 9. 행성 삭제
+
+==== Request
+include::{snippets}/planet/delete/http-request.adoc[]
+include::{snippets}/planet/delete/request-headers.adoc[]
+include::{snippets}/planet/delete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/planet/delete/http-response.adoc[]
+
+'''
+
+=== 10. 행성 팔로우
 - 자신의 행성은 팔로우 불가
 
 ==== Request
@@ -262,7 +287,7 @@ include::{snippets}/planet/follow/http-response.adoc[]
 
 '''
 
-=== 9. 행성 언팔로우
+=== 11. 행성 언팔로우
 
 ==== Request
 include::{snippets}/planet/unfollow/http-request.adoc[]
@@ -310,7 +335,35 @@ include::{snippets}/course/find-list/request-parameters.adoc[]
 include::{snippets}/course/find-list/http-response.adoc[]
 include::{snippets}/course/find-list/response-fields.adoc[]
 
-=== 4. 코스 좋아요
+'''
+
+=== 4. 코스 수정
+
+==== Request
+include::{snippets}/course/update/http-request.adoc[]
+include::{snippets}/course/update/request-headers.adoc[]
+include::{snippets}/course/update/path-parameters.adoc[]
+include::{snippets}/course/update/request-parts.adoc[]
+include::{snippets}/course/update/request-part-data-fields.adoc[]
+
+==== Response
+include::{snippets}/course/update/http-response.adoc[]
+
+'''
+
+=== 5. 코스 삭제
+
+==== Request
+include::{snippets}/course/delete/http-request.adoc[]
+include::{snippets}/course/delete/request-headers.adoc[]
+include::{snippets}/course/delete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/course/delete/http-response.adoc[]
+
+'''
+
+=== 6. 코스 좋아요
 - 내 코스에도 좋아요 가능
 
 ==== Request
@@ -321,7 +374,7 @@ include::{snippets}/course/like/path-parameters.adoc[]
 ==== Response
 include::{snippets}/course/like/http-response.adoc[]
 
-=== 5. 코스 좋아요 취소
+=== 7. 코스 좋아요 취소
 
 ==== Request
 include::{snippets}/course/unlike/http-request.adoc[]

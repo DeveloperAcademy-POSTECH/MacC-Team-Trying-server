@@ -9,15 +9,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockPart;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.docs.utils.ApiDocumentUtils;
 import trying.cosmos.domain.course.Access;
 import trying.cosmos.domain.course.Course;
 import trying.cosmos.domain.course.CourseService;
 import trying.cosmos.domain.course.request.CourseCreateRequest;
+import trying.cosmos.domain.course.request.CourseUpdateRequest;
 import trying.cosmos.domain.course.request.TagCreateRequest;
 import trying.cosmos.domain.place.PlaceCreateRequest;
 import trying.cosmos.domain.planet.Planet;
@@ -40,6 +42,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentRequest;
+import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -84,7 +88,7 @@ public class CourseDocsTest {
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
-        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));;
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
         String json = objectMapper.writeValueAsString(new CourseCreateRequest(planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto));
         MockPart data = new MockPart("data", json.getBytes(StandardCharsets.UTF_8));
@@ -100,8 +104,8 @@ public class CourseDocsTest {
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/create",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+                getDocumentRequest(),
+                getDocumentResponse(),
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
@@ -147,8 +151,8 @@ public class CourseDocsTest {
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/find",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+                getDocumentRequest(),
+                getDocumentResponse(),
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
@@ -163,6 +167,7 @@ public class CourseDocsTest {
                         fieldWithPath("planet.planetId").description("코스가 포함된 행성 id"),
                         fieldWithPath("planet.name").description("코스가 포함된 행성 이름"),
                         fieldWithPath("planet.image").description("코스가 포함된 행성 이미지 타입"),
+                        fieldWithPath("planet.dday").description("코스가 포함된 행성 dday"),
                         fieldWithPath("tags[].place.placeNumber").description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
                         fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
                         fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
@@ -201,8 +206,8 @@ public class CourseDocsTest {
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/find-list",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+                getDocumentRequest(),
+                getDocumentResponse(),
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
@@ -215,12 +220,108 @@ public class CourseDocsTest {
                         fieldWithPath("courses[].planet.planetId").description("코스가 포함된 행성 id"),
                         fieldWithPath("courses[].planet.name").description("코스가 포함된 행성 이름"),
                         fieldWithPath("courses[].planet.image").description("코스가 포함된 행성 이미지 타입"),
+                        fieldWithPath("courses[].planet.dday").description("코스가 포함된 행성 dday"),
                         fieldWithPath("courses[].title").description("코스 제목"),
                         fieldWithPath("courses[].createdDate").description("코스 생성일"),
                         fieldWithPath("courses[].liked").description("코스 좋아요 여부"),
                         fieldWithPath("courses[].images[]").description("이미지 이름"),
                         fieldWithPath("size").description("불러온 코스 수"),
                         fieldWithPath("hasNext").description("다음 페이지 존재 여부")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("코스 수정")
+    void update() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+
+        List<TagCreateRequest> tagDto = new ArrayList<>();
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+
+        Course course = courseService.create(user.getId(), planet.getId(), "updated", "updated", Access.PUBLIC, tagDto, null);
+
+        String json = objectMapper.writeValueAsString(new CourseUpdateRequest(TITLE, BODY, Access.PUBLIC, tagDto));
+        MockPart data = new MockPart("data", json.getBytes(StandardCharsets.UTF_8));
+        data.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        MockPart image = new MockPart("images", "image", null);
+        image.getHeaders().setContentType(MediaType.IMAGE_PNG);
+
+        MockMultipartHttpServletRequestBuilder builder = RestDocumentationRequestBuilders.multipart("/courses/{courseId}", course.getId());
+        builder.with(request -> {
+            request.setMethod("PUT");
+            return request;
+        });
+
+        ResultActions actions = mvc.perform(builder
+                .part(data)
+                .part(image)
+                .header("accessToken", accessToken)
+        ).andExpect(status().isOk());
+
+        actions.andDo(document("course/update",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                pathParameters(
+                        parameterWithName("courseId").description("코스 id")
+                ),
+                requestPartFields("data",
+                        fieldWithPath("title").description("코스 제목"),
+                        fieldWithPath("body").description("코스 본문"),
+                        fieldWithPath("access").description("코스 공개여부"),
+                        fieldWithPath("tags[].place.placeId").description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
+                        fieldWithPath("tags[].place.name").description("태그할 장소 이름"),
+                        fieldWithPath("tags[].place.latitude").description("태그할 장소 위도"),
+                        fieldWithPath("tags[].place.longitude").description("태그할 장소 경도"),
+                        fieldWithPath("tags[].name").description("태그 이름")
+                ),
+                requestParts(
+                        partWithName("data").description("코스 생성을 위한 데이터"),
+                        partWithName("images").description("업로드할 이미지 목록")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("코스 삭제")
+    void remove() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+
+        List<TagCreateRequest> tagDto = new ArrayList<>();
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(1L, "참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(2L, "맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto.add(new TagCreateRequest(new PlaceCreateRequest(3L, "명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+
+        Course course = courseService.create(user.getId(), planet.getId(), "updated", "updated", Access.PUBLIC, tagDto, null);
+
+        ResultActions actions = mvc.perform(delete("/courses/{courseId}", course.getId())
+                .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE)
+        ).andExpect(status().isOk());
+
+        actions.andDo(document("course/delete",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                pathParameters(
+                        parameterWithName("courseId").description("코스 id")
+                ),
+                pathParameters(
+                        parameterWithName("courseId").description("코스 id")
                 )
         ));
     }
@@ -246,8 +347,8 @@ public class CourseDocsTest {
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/like",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+                getDocumentRequest(),
+                getDocumentResponse(),
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
@@ -280,8 +381,8 @@ public class CourseDocsTest {
                 .andExpect(status().isOk());
 
         actions.andDo(document("course/unlike",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+                getDocumentRequest(),
+                getDocumentResponse(),
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),

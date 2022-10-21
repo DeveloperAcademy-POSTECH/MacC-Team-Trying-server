@@ -19,6 +19,7 @@ import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.image.S3ImageUtils;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,31 +34,25 @@ public class CourseService {
     private final PlaceService placeService;
     private final CourseLikeRepository courseLikeRepository;
     private final S3ImageUtils imageUtils;
+    private final EntityManager em;
 
     @Transactional
     public Course create(Long userId, Long planetId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
-        Planet planet = planetRepository.findById(planetId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
         if (!planet.isOwnedBy(userRepository.findById(userId).orElseThrow())) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
 
         Course course = courseRepository.save(new Course(planet, title, body, access));
-        List<Tag> tags = tagDto.stream().map(tag ->
-                new Tag(course, placeService.create(tag.getPlace()), tag.getName())
-        ).collect(Collectors.toList());
-
-        if (images != null) {
-            for (MultipartFile image : images) {
-                String imageName = imageUtils.create(image);
-                new CourseImage(course, imageName);
-            }
-        }
+        createCourseTag(tagDto, course);
+        createCourseImage(images, course);
 
         return course;
     }
 
     public CourseFindResponse find(Long userId, Long courseId) {
-        Course course = courseRepository.findByIdWithTagPlace(courseId).orElseThrow();
+        Course course = courseRepository.searchByIdWithTagPlace(courseId).orElseThrow();
         if (userId == null) {
             return new CourseFindResponse(course, false);
         }
@@ -76,7 +71,7 @@ public class CourseService {
             planet = user.getPlanet();
         }
 
-        Slice<Course> courseSlice = courseRepository.findAll(planet, pageable);
+        Slice<Course> courseSlice = courseRepository.searchAll(planet, pageable);
         List<CourseFindContent> contents = courseSlice.getContent().stream()
                 .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
                 .collect(Collectors.toList());
@@ -109,5 +104,47 @@ public class CourseService {
             throw new CustomException(ExceptionType.NO_DATA);
         }
         courseLikeRepository.delete(courseLikeRepository.findByUserIdAndCourseId(userId, courseId).orElseThrow());
+    }
+
+    @Transactional
+    public void update(Long userId, Long courseId, String title, String body, Access access, List<TagCreateRequest> tagDto, List<MultipartFile> images) {
+        System.out.println("title = " + title);
+        Course course = courseRepository.searchByIdWithTagPlace(courseId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!course.getPlanet().isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+
+        for (CourseImage image : course.getImages()) {
+            imageUtils.delete(image.getName());
+        }
+        courseRepository.deleteCourseImage(course);
+        courseRepository.deleteCourseTag(course);
+
+        course.update(title, body, access);
+        createCourseTag(tagDto, course);
+        createCourseImage(images, course);
+        em.flush();
+        em.clear();
+    }
+
+    @Transactional
+    public void delete(Long userId, Long courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!course.getPlanet().isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+        course.delete();
+    }
+
+    private void createCourseTag(List<TagCreateRequest> tagDto, Course course) {
+        tagDto.forEach(tag -> em.persist(new Tag(course, placeService.create(tag.getPlace()), tag.getName())));
+    }
+
+    private void createCourseImage(List<MultipartFile> images, Course course) {
+        if (images != null) {
+            images.forEach(image -> em.persist(new CourseImage(course, imageUtils.create(image))));
+        }
     }
 }

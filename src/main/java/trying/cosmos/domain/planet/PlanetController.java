@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import trying.cosmos.domain.planet.request.PlanetUpdateRequest;
 import trying.cosmos.domain.planet.response.*;
 import trying.cosmos.global.auth.AuthKey;
 import trying.cosmos.global.auth.Authority;
@@ -31,8 +32,8 @@ public class PlanetController {
 
     @AuthorityOf(Authority.USER)
     @GetMapping("/join")
-    public PlanetFindResponse findPlanet(@RequestParam String code) {
-        return new PlanetFindResponse(planetService.find(code));
+    public PlanetPreviewResponse findPlanet(@RequestParam String code) {
+        return new PlanetPreviewResponse(planetService.find(code));
     }
 
     @AuthorityOf(Authority.USER)
@@ -66,5 +67,17 @@ public class PlanetController {
     @DeleteMapping("/{planetId}/follow")
     public void unfollow(@PathVariable Long planetId) {
         planetService.unfollow(AuthKey.getKey(), planetId);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @PutMapping("/{planetId}")
+    public void update(@PathVariable Long planetId, @RequestBody @Validated PlanetUpdateRequest request) {
+        planetService.update(AuthKey.getKey(), planetId, request.getName(), request.getDday());
+    }
+
+    @AuthorityOf(Authority.USER)
+    @DeleteMapping("/{planetId}")
+    public void delete(@PathVariable Long planetId) {
+        planetService.delete(AuthKey.getKey(), planetId);
     }
 }

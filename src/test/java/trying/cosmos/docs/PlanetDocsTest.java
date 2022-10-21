@@ -18,6 +18,7 @@ import trying.cosmos.domain.place.PlaceCreateRequest;
 import trying.cosmos.domain.planet.Planet;
 import trying.cosmos.domain.planet.PlanetImageType;
 import trying.cosmos.domain.planet.PlanetService;
+import trying.cosmos.domain.planet.request.PlanetUpdateRequest;
 import trying.cosmos.domain.planet.response.PlanetCreateRequest;
 import trying.cosmos.domain.planet.response.PlanetJoinRequest;
 import trying.cosmos.domain.user.User;
@@ -209,7 +210,8 @@ public class PlanetDocsTest {
                 responseFields(
                         fieldWithPath("planetId").description("행성 id"),
                         fieldWithPath("name").description("행성 이름"),
-                        fieldWithPath("image").description("행성 이미지 타입")
+                        fieldWithPath("image").description("행성 이미지 타입"),
+                        fieldWithPath("dday").description("행성 dday")
                 )
         ));
     }
@@ -291,6 +293,61 @@ public class PlanetDocsTest {
                         fieldWithPath("courses[].title").description("코스 제목"),
                         fieldWithPath("size").description("불러온 코스 수"),
                         fieldWithPath("hasNext").description("다음 페이지 존재 여부")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("행성 수정")
+    void update() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+
+        String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("updated", 365));
+
+        ResultActions actions = mvc.perform(put("/planets/{planetId}", planet.getId())
+                .header("accessToken", accessToken)
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("planet/update",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                pathParameters(
+                        parameterWithName("planetId").description("업데이트할 행성 id")
+                ),
+                requestFields(
+                        fieldWithPath("name").description("행성 이름"),
+                        fieldWithPath("dday").description("변경할 dday")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("행성 삭제")
+    void remove() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+
+        ResultActions actions = mvc.perform(delete("/planets/{planetId}", planet.getId())
+                .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(document("planet/delete",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestHeaders(
+                        headerWithName("accessToken").description("인증 토큰")
+                ),
+                pathParameters(
+                        parameterWithName("planetId").description("업데이트할 행성 id")
                 )
         ));
     }
