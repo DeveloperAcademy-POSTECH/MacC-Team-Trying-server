@@ -22,6 +22,8 @@ public class TokenProvider {
     private static final String SUBJECT_KEY = "sub";
     private static final String AUTHORITY_KEY = "auth";
 
+    private static final String JWT_PREFIX = "Bearer ";
+
     private final Key key;
 
     public TokenProvider(@Value("${jwt.key}") String key) {
@@ -30,7 +32,7 @@ public class TokenProvider {
     }
 
     public String getAccessToken(User user) {
-        return Jwts.builder()
+        return JWT_PREFIX + Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim(AUTHORITY_KEY, user.getAuthority())
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -62,18 +64,26 @@ public class TokenProvider {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key).build()
-                    .parseClaimsJws(accessToken).getBody();
+                    .parseClaimsJws(removePrefix(accessToken)).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(removePrefix(accessToken));
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private static String removePrefix(String accessToken) {
+        if (!accessToken.startsWith(JWT_PREFIX)) {
+            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+        }
+
+        return accessToken.substring(JWT_PREFIX.length());
     }
 }
