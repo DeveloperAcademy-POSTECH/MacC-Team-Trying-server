@@ -12,8 +12,6 @@ ifndef::snippets[]
 :snippets: ./build/generated-snippets
 endif::[]
 
-== {postman}[API Test]
-
 [[Certification]]
 == Certification
 
@@ -22,11 +20,11 @@ endif::[]
 - 회원가입시 이메일을 인증하기 위한 코드를 전송
 
 **Request**
-include::{snippets}/certification/create-certification/http-request.adoc[]
-include::{snippets}/certification/create-certification/request-fields.adoc[]
+include::{snippets}/certification-docs-test/create_certification/http-request.adoc[]
+include::{snippets}/certification-docs-test/create_certification/request-fields.adoc[]
 
 **Response**
-include::{snippets}/certification/create-certification/http-response.adoc[]
+include::{snippets}/certification-docs-test/create_certification/http-response.adoc[]
 
 '''
 
@@ -35,11 +33,11 @@ include::{snippets}/certification/create-certification/http-response.adoc[]
 - 이메일로 받은 인증코드를 확인
 
 ==== Request
-include::{snippets}/certification/certificate/http-request.adoc[]
-include::{snippets}/certification/certificate/request-fields.adoc[]
+include::{snippets}/certification-docs-test/certificate/http-request.adoc[]
+include::{snippets}/certification-docs-test/certificate/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/certification/certificate/http-response.adoc[]
+include::{snippets}/certification-docs-test/certificate/http-response.adoc[]
 
 [[User]]
 == User
@@ -49,11 +47,11 @@ include::{snippets}/certification/certificate/http-response.adoc[]
 - 인증받은 이메일로 가입해야 한다
 
 ==== Request
-include::{snippets}/user/join/http-request.adoc[]
-include::{snippets}/user/join/request-fields.adoc[]
+include::{snippets}/user-docs-test/join/http-request.adoc[]
+include::{snippets}/user-docs-test/join/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/join/http-response.adoc[]
+include::{snippets}/user-docs-test/join/http-response.adoc[]
 
 '''
 
@@ -61,12 +59,12 @@ include::{snippets}/user/join/http-response.adoc[]
 - 로그인시 해당 이메일이 존재하는지 확인
 
 ==== Request
-include::{snippets}/user/check-email/http-request.adoc[]
-include::{snippets}/user/check-email/request-parameters.adoc[]
+include::{snippets}/user-docs-test/check_email/http-request.adoc[]
+include::{snippets}/user-docs-test/check_email/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/user/check-email/http-response.adoc[]
-include::{snippets}/user/check-email/response-fields.adoc[]
+include::{snippets}/user-docs-test/check_email/http-response.adoc[]
+include::{snippets}/user-docs-test/check_email/response-fields.adoc[]
 
 '''
 
@@ -74,34 +72,34 @@ include::{snippets}/user/check-email/response-fields.adoc[]
 - 사용자 인증을 위한 토큰 반환
 
 ==== Request
-include::{snippets}/user/login/http-request.adoc[]
-include::{snippets}/user/login/request-fields.adoc[]
+include::{snippets}/user-docs-test/login/http-request.adoc[]
+include::{snippets}/user-docs-test/login/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/login/http-response.adoc[]
-include::{snippets}/user/login/response-fields.adoc[]
+include::{snippets}/user-docs-test/login/http-response.adoc[]
+include::{snippets}/user-docs-test/login/response-fields.adoc[]
 
 '''
 
 === 4. 로그아웃
 
 ==== Request
-include::{snippets}/user/logout/http-request.adoc[]
-include::{snippets}/user/logout/request-headers.adoc[]
+include::{snippets}/user-docs-test/logout/http-request.adoc[]
+include::{snippets}/user-docs-test/logout/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/user/logout/http-response.adoc[]
+include::{snippets}/user-docs-test/logout/http-response.adoc[]
 
 '''
 
 === 5. 회원탈퇴
 
 ==== Request
-include::{snippets}/user/withdraw/http-request.adoc[]
-include::{snippets}/user/withdraw/request-headers.adoc[]
+include::{snippets}/user-docs-test/withdraw/http-request.adoc[]
+include::{snippets}/user-docs-test/withdraw/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/user/withdraw/http-response.adoc[]
+include::{snippets}/user-docs-test/withdraw/http-response.adoc[]
 
 '''
 
@@ -110,24 +108,24 @@ include::{snippets}/user/withdraw/http-response.adoc[]
 - 행성에 메이트가 초대되었으면 메이트 정보도 함께 조회
 
 ==== Request
-include::{snippets}/user/find-me/http-request.adoc[]
-include::{snippets}/user/find-me/request-headers.adoc[]
+include::{snippets}/user-docs-test/find-me/http-request.adoc[]
+include::{snippets}/user-docs-test/find-me/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/user/find-me/http-response.adoc[]
-include::{snippets}/user/find-me/response-fields.adoc[]
+include::{snippets}/user-docs-test/find-me/http-response.adoc[]
+include::{snippets}/user-docs-test/find-me/response-fields.adoc[]
 
 '''
 
 === 7. 닉네임 변경
 
 ==== Request
-include::{snippets}/user/update-name/http-request.adoc[]
-include::{snippets}/user/update-name/request-headers.adoc[]
-include::{snippets}/user/update-name/request-fields.adoc[]
+include::{snippets}/user-docs-test/update_name/http-request.adoc[]
+include::{snippets}/user-docs-test/update_name/request-headers.adoc[]
+include::{snippets}/user-docs-test/update_name/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/update-name/http-response.adoc[]
+include::{snippets}/user-docs-test/update_name/http-response.adoc[]
 
 '''
 
@@ -135,12 +133,12 @@ include::{snippets}/user/update-name/http-response.adoc[]
 === 8. 비밀번호 변경
 
 ==== Request
-include::{snippets}/user/update-password/http-request.adoc[]
-include::{snippets}/user/update-password/request-headers.adoc[]
-include::{snippets}/user/update-password/request-fields.adoc[]
+include::{snippets}/user-docs-test/update_password/http-request.adoc[]
+include::{snippets}/user-docs-test/update_password/request-headers.adoc[]
+include::{snippets}/user-docs-test/update_password/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/update-password/http-response.adoc[]
+include::{snippets}/user-docs-test/update_password/http-response.adoc[]
 
 '''
 
@@ -148,11 +146,11 @@ include::{snippets}/user/update-password/http-response.adoc[]
 - 임의의 비밀번호로 변경되고, 입력한 이메일로 메일 전송
 
 ==== Request
-include::{snippets}/user/reset-password/http-request.adoc[]
-include::{snippets}/user/reset-password/request-fields.adoc[]
+include::{snippets}/user-docs-test/reset_password/http-request.adoc[]
+include::{snippets}/user-docs-test/reset_password/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/user/reset-password/http-response.adoc[]
+include::{snippets}/user-docs-test/reset_password/http-response.adoc[]
 
 [[Planet]]
 == Planet
@@ -160,26 +158,26 @@ include::{snippets}/user/reset-password/http-response.adoc[]
 === 1. 행성 생성
 
 ==== Request
-include::{snippets}/planet/create/http-request.adoc[]
-include::{snippets}/planet/create/request-headers.adoc[]
-include::{snippets}/planet/create/request-fields.adoc[]
+include::{snippets}/planet-docs-test/create/http-request.adoc[]
+include::{snippets}/planet-docs-test/create/request-headers.adoc[]
+include::{snippets}/planet-docs-test/create/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/planet/create/http-response.adoc[]
-include::{snippets}/planet/create/response-fields.adoc[]
+include::{snippets}/planet-docs-test/create/http-response.adoc[]
+include::{snippets}/planet-docs-test/create/response-fields.adoc[]
 
 '''
 
 === 2. 초대코드 조회
 
 ==== Request
-include::{snippets}/planet/invite-code/http-request.adoc[]
-include::{snippets}/planet/invite-code/request-headers.adoc[]
-include::{snippets}/planet/invite-code/path-parameters.adoc[]
+include::{snippets}/planet-docs-test/get_invite_code/http-request.adoc[]
+include::{snippets}/planet-docs-test/get_invite_code/request-headers.adoc[]
+include::{snippets}/planet-docs-test/get_invite_code/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/invite-code/http-response.adoc[]
-include::{snippets}/planet/invite-code/response-fields.adoc[]
+include::{snippets}/planet-docs-test/get_invite_code/http-response.adoc[]
+include::{snippets}/planet-docs-test/get_invite_code/response-fields.adoc[]
 
 '''
 
@@ -187,13 +185,13 @@ include::{snippets}/planet/invite-code/response-fields.adoc[]
 - 초대코드로 행성에 참가하기 전에 정보를 조회
 
 ==== Request
-include::{snippets}/planet/find-by-code/http-request.adoc[]
-include::{snippets}/planet/find-by-code/request-headers.adoc[]
-include::{snippets}/planet/find-by-code/request-parameters.adoc[]
+include::{snippets}/planet-docs-test/find_by_invite_code/http-request.adoc[]
+include::{snippets}/planet-docs-test/find_by_invite_code/request-headers.adoc[]
+include::{snippets}/planet-docs-test/find_by_invite_code/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/find-by-code/http-response.adoc[]
-include::{snippets}/planet/find-by-code/response-fields.adoc[]
+include::{snippets}/planet-docs-test/find_by_invite_code/http-response.adoc[]
+include::{snippets}/planet-docs-test/find_by_invite_code/response-fields.adoc[]
 
 '''
 
@@ -202,47 +200,47 @@ include::{snippets}/planet/find-by-code/response-fields.adoc[]
 - 이미 행성에 2명이 참여해있다면 참가 불가
 
 ==== Request
-include::{snippets}/planet/join/http-request.adoc[]
-include::{snippets}/planet/join/request-headers.adoc[]
+include::{snippets}/planet-docs-test/join/http-request.adoc[]
+include::{snippets}/planet-docs-test/join/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/planet/join/http-response.adoc[]
+include::{snippets}/planet-docs-test/join/http-response.adoc[]
 
 '''
 
 === 5. 행성 조회
 
 ==== Request
-include::{snippets}/planet/find/http-request.adoc[]
-include::{snippets}/planet/find/path-parameters.adoc[]
+include::{snippets}/planet-docs-test/find_by_id/http-request.adoc[]
+include::{snippets}/planet-docs-test/find_by_id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/find/http-response.adoc[]
-include::{snippets}/planet/find/response-fields.adoc[]
+include::{snippets}/planet-docs-test/find_by_id/http-response.adoc[]
+include::{snippets}/planet-docs-test/find_by_id/response-fields.adoc[]
 
 '''
 
 === 6. 이름으로 행성 조회
 
 ==== Request
-include::{snippets}/planet/find-list/http-request.adoc[]
-include::{snippets}/planet/find-list/request-parameters.adoc[]
+include::{snippets}/planet-docs-test/find_by_name/http-request.adoc[]
+include::{snippets}/planet-docs-test/find_by_name/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/find-list/http-response.adoc[]
-include::{snippets}/planet/find-list/response-fields.adoc[]
+include::{snippets}/planet-docs-test/find_by_name/http-response.adoc[]
+include::{snippets}/planet-docs-test/find_by_name/response-fields.adoc[]
 
 '''
 
 === 7. 팔로우한 행성 조회
 
 ==== Request
-include::{snippets}/planet/follow-planets/http-request.adoc[]
-include::{snippets}/planet/follow-planets/request-parameters.adoc[]
+include::{snippets}/planet-docs-test/get_follow_planet/http-request.adoc[]
+include::{snippets}/planet-docs-test/get_follow_planet/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/follow-planets/http-response.adoc[]
-include::{snippets}/planet/follow-planets/response-fields.adoc[]
+include::{snippets}/planet-docs-test/get_follow_planet/http-response.adoc[]
+include::{snippets}/planet-docs-test/get_follow_planet/response-fields.adoc[]
 
 '''
 
@@ -251,39 +249,39 @@ include::{snippets}/planet/follow-planets/response-fields.adoc[]
 - 다른 사람의 행성은 공개 코스만 조회
 
 ==== Request
-include::{snippets}/planet/courses/http-request.adoc[]
-include::{snippets}/planet/courses/request-headers.adoc[]
-include::{snippets}/planet/courses/request-parameters.adoc[]
-include::{snippets}/planet/courses/path-parameters.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/http-request.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/request-headers.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/request-parameters.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/courses/http-response.adoc[]
-include::{snippets}/planet/courses/response-fields.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/http-response.adoc[]
+include::{snippets}/planet-docs-test/find_planet_course/response-fields.adoc[]
 
 '''
 
 === 9. 행성 수정
 
 ==== Request
-include::{snippets}/planet/update/http-request.adoc[]
-include::{snippets}/planet/update/request-headers.adoc[]
-include::{snippets}/planet/update/path-parameters.adoc[]
-include::{snippets}/planet/update/request-fields.adoc[]
+include::{snippets}/planet-docs-test/update/http-request.adoc[]
+include::{snippets}/planet-docs-test/update/request-headers.adoc[]
+include::{snippets}/planet-docs-test/update/path-parameters.adoc[]
+include::{snippets}/planet-docs-test/update/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/planet/update/http-response.adoc[]
+include::{snippets}/planet-docs-test/update/http-response.adoc[]
 
 '''
 
 === 10. 행성 삭제
 
 ==== Request
-include::{snippets}/planet/delete/http-request.adoc[]
-include::{snippets}/planet/delete/request-headers.adoc[]
-include::{snippets}/planet/delete/path-parameters.adoc[]
+include::{snippets}/planet-docs-test/remove/http-request.adoc[]
+include::{snippets}/planet-docs-test/remove/request-headers.adoc[]
+include::{snippets}/planet-docs-test/remove/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/planet/delete/http-response.adoc[]
+include::{snippets}/planet-docs-test/remove/http-response.adoc[]
 
 '''
 
@@ -291,22 +289,22 @@ include::{snippets}/planet/delete/http-response.adoc[]
 - 자신의 행성은 팔로우 불가
 
 ==== Request
-include::{snippets}/planet/follow/http-request.adoc[]
-include::{snippets}/planet/follow/request-headers.adoc[]
+include::{snippets}/planet-docs-test/follow/http-request.adoc[]
+include::{snippets}/planet-docs-test/follow/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/planet/follow/http-response.adoc[]
+include::{snippets}/planet-docs-test/follow/http-response.adoc[]
 
 '''
 
 === 12. 행성 언팔로우
 
 ==== Request
-include::{snippets}/planet/unfollow/http-request.adoc[]
-include::{snippets}/planet/unfollow/request-headers.adoc[]
+include::{snippets}/planet-docs-test/unfollow/http-request.adoc[]
+include::{snippets}/planet-docs-test/unfollow/request-headers.adoc[]
 
 ==== Response
-include::{snippets}/planet/unfollow/http-response.adoc[]
+include::{snippets}/planet-docs-test/unfollow/http-response.adoc[]
 
 [[Course]]
 == Course
@@ -316,26 +314,26 @@ include::{snippets}/planet/unfollow/http-response.adoc[]
 - 왼쪽 아래를 원점으로 설정
 
 ==== Request
-include::{snippets}/course/create/http-request.adoc[]
-include::{snippets}/course/create/request-headers.adoc[]
-include::{snippets}/course/create/request-parts.adoc[]
-include::{snippets}/course/create/request-part-data-fields.adoc[]
+include::{snippets}/course-docs-test/create/http-request.adoc[]
+include::{snippets}/course-docs-test/create/request-headers.adoc[]
+include::{snippets}/course-docs-test/create/request-parts.adoc[]
+include::{snippets}/course-docs-test/create/request-part-data-fields.adoc[]
 
 ==== Response
-include::{snippets}/course/create/http-response.adoc[]
-include::{snippets}/course/create/response-fields.adoc[]
+include::{snippets}/course-docs-test/create/http-response.adoc[]
+include::{snippets}/course-docs-test/create/response-fields.adoc[]
 
-=== 2. 코스 조회
+=== 2. 아이디로 코스 조회
 - 다른 사람의 코스는 공개 코스만 조회 가능
 
 ==== Request
-include::{snippets}/course/find/http-request.adoc[]
-include::{snippets}/course/find/request-headers.adoc[]
-include::{snippets}/course/find/path-parameters.adoc[]
+include::{snippets}/course-docs-test/find_by_id/http-request.adoc[]
+include::{snippets}/course-docs-test/find_by_id/request-headers.adoc[]
+include::{snippets}/course-docs-test/find_by_id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/find/http-response.adoc[]
-include::{snippets}/course/find/response-fields.adoc[]
+include::{snippets}/course-docs-test/find_by_id/http-response.adoc[]
+include::{snippets}/course-docs-test/find_by_id/response-fields.adoc[]
 
 '''
 
@@ -343,13 +341,13 @@ include::{snippets}/course/find/response-fields.adoc[]
 - 다른 사람의 코스는 공개 코스만, 내 코스는 비공개 코스도 조회
 
 ==== Request
-include::{snippets}/course/find-list/http-request.adoc[]
-include::{snippets}/course/find-list/request-headers.adoc[]
-include::{snippets}/course/find-list/request-parameters.adoc[]
+include::{snippets}/course-docs-test/find_by_name/http-request.adoc[]
+include::{snippets}/course-docs-test/find_by_name/request-headers.adoc[]
+include::{snippets}/course-docs-test/find_by_name/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/find-list/http-response.adoc[]
-include::{snippets}/course/find-list/response-fields.adoc[]
+include::{snippets}/course-docs-test/find_by_name/http-response.adoc[]
+include::{snippets}/course-docs-test/find_by_name/response-fields.adoc[]
 
 '''
 
@@ -357,13 +355,13 @@ include::{snippets}/course/find-list/response-fields.adoc[]
 - 내 모든 코스 + 다른 사람의 공개 코스를 최신순으로 조회
 
 ==== Request
-include::{snippets}/course/feed/http-request.adoc[]
-include::{snippets}/course/feed/request-headers.adoc[]
-include::{snippets}/course/feed/request-parameters.adoc[]
+include::{snippets}/course-docs-test/feed/http-request.adoc[]
+include::{snippets}/course-docs-test/feed/request-headers.adoc[]
+include::{snippets}/course-docs-test/feed/request-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/feed/http-response.adoc[]
-include::{snippets}/course/feed/response-fields.adoc[]
+include::{snippets}/course-docs-test/feed/http-response.adoc[]
+include::{snippets}/course-docs-test/feed/response-fields.adoc[]
 
 '''
 
@@ -372,27 +370,27 @@ include::{snippets}/course/feed/response-fields.adoc[]
 - 왼쪽 아래를 원점으로 설정
 
 ==== Request
-include::{snippets}/course/update/http-request.adoc[]
-include::{snippets}/course/update/request-headers.adoc[]
-include::{snippets}/course/update/path-parameters.adoc[]
-include::{snippets}/course/update/request-parts.adoc[]
-include::{snippets}/course/update/request-part-data-fields.adoc[]
+include::{snippets}/course-docs-test/update/http-request.adoc[]
+include::{snippets}/course-docs-test/update/request-headers.adoc[]
+include::{snippets}/course-docs-test/update/path-parameters.adoc[]
+include::{snippets}/course-docs-test/update/request-parts.adoc[]
+include::{snippets}/course-docs-test/update/request-part-data-fields.adoc[]
 
 ==== Response
-include::{snippets}/course/update/http-response.adoc[]
-include::{snippets}/course/update/response-fields.adoc[]
+include::{snippets}/course-docs-test/update/http-response.adoc[]
+include::{snippets}/course-docs-test/update/response-fields.adoc[]
 
 '''
 
 === 6. 코스 삭제
 
 ==== Request
-include::{snippets}/course/delete/http-request.adoc[]
-include::{snippets}/course/delete/request-headers.adoc[]
-include::{snippets}/course/delete/path-parameters.adoc[]
+include::{snippets}/course-docs-test/remove/http-request.adoc[]
+include::{snippets}/course-docs-test/remove/request-headers.adoc[]
+include::{snippets}/course-docs-test/remove/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/delete/http-response.adoc[]
+include::{snippets}/course-docs-test/remove/http-response.adoc[]
 
 '''
 
@@ -400,19 +398,71 @@ include::{snippets}/course/delete/http-response.adoc[]
 - 내 코스에도 좋아요 가능
 
 ==== Request
-include::{snippets}/course/like/http-request.adoc[]
-include::{snippets}/course/like/request-headers.adoc[]
-include::{snippets}/course/like/path-parameters.adoc[]
+include::{snippets}/course-docs-test/like/http-request.adoc[]
+include::{snippets}/course-docs-test/like/request-headers.adoc[]
+include::{snippets}/course-docs-test/like/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/like/http-response.adoc[]
+include::{snippets}/course-docs-test/like/http-response.adoc[]
 
 === 8. 코스 좋아요 취소
 
 ==== Request
-include::{snippets}/course/unlike/http-request.adoc[]
-include::{snippets}/course/unlike/request-headers.adoc[]
-include::{snippets}/course/unlike/path-parameters.adoc[]
+include::{snippets}/course-docs-test/unlike/http-request.adoc[]
+include::{snippets}/course-docs-test/unlike/request-headers.adoc[]
+include::{snippets}/course-docs-test/unlike/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/course/unlike/http-response.adoc[]
+include::{snippets}/course-docs-test/unlike/http-response.adoc[]
+
+[[Exceptions]]
+== Exceptions
+- 500번 오류 발생시 에러 ID와 함께 알려주세요
+
+|===
+|값|설명
+|id|에러 번호, 로그에서 에러 원인을 파악하는데 사용
+|code|에러 코드
+|message|에러 메세지
+|===
+
+=== 400 Bad Request
+|===
+|코드|설명
+|INVALID_INPUT|입력값이 잘못된 경우(주로 제약조건에 맞지 않는 경우)
+|INVALID_TYPE|입력값의 타입이 맞지 않는 경우(Number 자리에 String이 들어오는 경우, 존재하지 않는 Enum 값이 입력된 경우)
+|INVALID_JSON_FORMAT|JSON 입력값이 잘못된 경우
+|INVALID_PARAMETER|필수 파라미터가 입력되지 않은 경우
+|INVALID_HEADER|필수 헤더가 입력되지 않은 경우(주로 Content-Type이 잘못된 경우)
+|INPUT_SIZE_EXCEEDED|입력값이 크기를 초과한 경우(주로 이미지 사이즈 문제)
+|===
+
+=== 401 Unauthorized
+|===
+|코드|설명
+|AUTHENTICATION_FAILED|인증 실패(인증 토큰 오류)
+|NOT_AUTHENTICATED|로그인 상태가 아닌 경우
+|CERTIFICATION_FAILED|이메일 인증 실패
+|INVALID_PASSWORD|비밀번호 오류
+|===
+
+=== 403 Forbidden
+|===
+|코드|설명
+|NO_PERMISSION|권한 오류
+|SUSPENDED_USER|정지된 사용자가 로그인을 시도하는 경우
+|===
+
+=== 404 Not Found
+|===
+|코드|설명
+|NO_DATA|검색하는 데이터가 없는 경우(혹은 숨겨진 경우, HTTP 메서드가 잘못된 경우)
+|===
+
+=== 409 Conflict
+|===
+|코드|설명
+|DUPLICATED|중복 불가 제약조건을 위반하는 경우
+|PLANET_JOIN_FAILED|행성 참여 실패(내 행성에 참여, 이미 메이트가 들어온 행성에 참여)
+|PLANET_FOLLOW_FAILED|행성 팔로우 실패(내 행성 팔로우)
+|===

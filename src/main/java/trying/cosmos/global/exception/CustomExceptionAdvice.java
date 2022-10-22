@@ -13,6 +13,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
@@ -53,6 +54,12 @@ public class CustomExceptionAdvice {
         }
     }
 
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<CustomExceptionEntity> type(MethodArgumentTypeMismatchException e) {
+        return generalResponse(ExceptionType.INVALID_TYPE, e);
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<CustomExceptionEntity> parameter(MissingServletRequestParameterException e) {
         return generalResponse(ExceptionType.INVALID_PARAMETER, e);
@@ -65,7 +72,7 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<CustomExceptionEntity> method(HttpRequestMethodNotSupportedException e) {
-        return generalResponse(ExceptionType.INVALID_METHOD, e);
+        return generalResponse(ExceptionType.NO_DATA, e);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

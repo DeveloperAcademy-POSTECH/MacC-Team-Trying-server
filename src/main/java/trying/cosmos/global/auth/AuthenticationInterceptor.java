@@ -51,7 +51,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         User user = userRepository.findByEmail(userData.get(SUBJECT_KEY)).orElseThrow(() -> new CustomException(ExceptionType.AUTHENTICATION_FAILED));
 
         if (!user.getStatus().equals(UserStatus.LOGIN)) {
-            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+            throw new CustomException(ExceptionType.NOT_AUTHENTICATED);
         }
 
         AuthKey.setKey(user.getId());

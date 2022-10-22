@@ -1,17 +1,28 @@
 package trying.cosmos.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.docs.utils.ApiDocumentUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.certification.Certification;
 import trying.cosmos.domain.certification.CertificationRepository;
 import trying.cosmos.domain.certification.CertificationService;
@@ -25,18 +36,21 @@ import trying.cosmos.global.auth.TokenProvider;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
+@ExtendWith({RestDocumentationExtension.class})
 @Transactional
 @ActiveProfiles("test")
 public class UserDocsTest {
@@ -63,6 +77,9 @@ public class UserDocsTest {
     @Autowired
     PlanetService planetService;
 
+    @Autowired
+    RestDocumentationResultHandler restDocs;
+
     private static final String JSON_CONTENT_TYPE = "application/json";
 
     private static final String EMAIL = "email@gmail.com";
@@ -70,6 +87,16 @@ public class UserDocsTest {
     private static final String NAME = "name";
     private static final String DEVICE_TOKEN = "device_token";
     private static final String PLANET_NAME = "포딩행성";
+
+    @BeforeEach
+    void setUp(RestDocumentationContextProvider provider, WebApplicationContext context){
+        this.mvc= MockMvcBuilders.webAppContextSetup(context)
+                .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
+                .alwaysDo(MockMvcResultHandlers.print())
+                .alwaysDo(restDocs)
+                .addFilters(new CharacterEncodingFilter("UTF-8",true))
+                .build();
+    }
 
     @Test
     @DisplayName("회원가입")
@@ -85,13 +112,20 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/join",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestFields(
-                        fieldWithPath("email").description("이메일"),
-                        fieldWithPath("password").description("비밀번호"),
-                        fieldWithPath("name").description("닉네임")
+                        fieldWithPath("email")
+                                .type(STRING)
+                                .description("이메일")
+                                .attributes(key("constraint").value("이메일 형식")),
+                        fieldWithPath("password")
+                                .type(STRING)
+                                .description("비밀번호")
+                                .attributes(key("constraint").value("8~12자리 영어/숫자")),
+                        fieldWithPath("name")
+                                .type(STRING)
+                                .description("닉네임")
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자"))
                 )
         ));
     }
@@ -106,14 +140,16 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/check-email",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestParameters(
-                        parameterWithName("email").description("확인하려는 이메일")
+                        parameterWithName("email")
+                                .description("확인하려는 이메일")
+                                .attributes(key("type").value("String"))
+                                .attributes(key("constraint").value("이메일 형식"))
                 ),
                 responseFields(
-                        fieldWithPath("exist").description("기존 이메일 존재 여부")
+                        fieldWithPath("exist")
+                                .description("기존 이메일 존재 여부")
                 )
         ));
     }
@@ -130,16 +166,23 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/login",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestFields(
-                        fieldWithPath("email").description("이메일"),
-                        fieldWithPath("password").description("비밀번호"),
-                        fieldWithPath("deviceToken").description("푸시 알림을 위한 기기 고유 토큰")
+                        fieldWithPath("email")
+                                .type(STRING)
+                                .description("이메일")
+                                .attributes(key("constraint").value("이메일 형식")),
+                        fieldWithPath("password")
+                                .type(STRING)
+                                .description("비밀번호")
+                                .attributes(key("constraint").value("8~12자리 영어/숫자")),
+                        fieldWithPath("deviceToken")
+                                .type(STRING)
+                                .description("푸시 알림을 위한 기기 고유 토큰")
                 ),
                 responseFields(
-                        fieldWithPath("accessToken").description("인증 토큰")
+                        fieldWithPath("accessToken")
+                                .description("인증 토큰")
                 )
         ));
     }
@@ -155,11 +198,10 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/logout",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 )
         ));
     }
@@ -175,11 +217,10 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/withdraw",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 )
         ));
     }
@@ -199,18 +240,22 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/find-me",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 responseFields(
-                        fieldWithPath("me.name").description("내 닉네임"),
-                        fieldWithPath("mate.name").description("메이트 닉네임").optional(),
-                        fieldWithPath("planet.name").description("내가 속한 행성 이름").optional(),
-                        fieldWithPath("planet.dday").description("행성 디데이").optional(),
-                        fieldWithPath("planet.image").description("행성 이미지").optional()
+                        fieldWithPath("me.name")
+                                .description("내 닉네임"),
+                        fieldWithPath("mate.name")
+                                .description("메이트 닉네임").optional(),
+                        fieldWithPath("planet.name")
+                                .description("내가 속한 행성 이름").optional(),
+                        fieldWithPath("planet.dday")
+                                .description("행성 디데이").optional(),
+                        fieldWithPath("planet.image")
+                                .description("행성 이미지").optional()
                 )
         ));
     }
@@ -229,14 +274,16 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/update-name",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("name").description("변경하려는 이름")
+                        fieldWithPath("name")
+                                .type(STRING)
+                                .description("변경하려는 이름")
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자"))
                 )
         ));
     }
@@ -255,14 +302,16 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/update-password",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("password").description("변경하려는 비밀번호")
+                        fieldWithPath("password")
+                                .type(STRING)
+                                .description("변경하려는 비밀번호")
+                                .attributes(key("constraint").value("8~12자리 영어/숫자"))
                 )
         ));
     }
@@ -279,11 +328,12 @@ public class UserDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("user/reset-password",
-                ApiDocumentUtils.getDocumentRequest(),
-                ApiDocumentUtils.getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestFields(
-                        fieldWithPath("email").description("가입한 이메일")
+                        fieldWithPath("email")
+                                .type(STRING)
+                                .description("가입한 이메일")
+                                .attributes(key("constraint").value("이메일 형식"))
                 )
         ));
     }
