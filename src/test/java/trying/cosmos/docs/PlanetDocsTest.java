@@ -1,16 +1,28 @@
 package trying.cosmos.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.course.Access;
 import trying.cosmos.domain.course.CourseService;
 import trying.cosmos.domain.course.request.TagCreateRequest;
@@ -32,17 +44,18 @@ import java.util.List;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentRequest;
-import static trying.cosmos.docs.utils.ApiDocumentUtils.getDocumentResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@Import(RestDocsConfiguration.class)
+@ExtendWith({RestDocumentationExtension.class})
 @Transactional
 @ActiveProfiles("test")
 public class PlanetDocsTest {
@@ -60,6 +73,9 @@ public class PlanetDocsTest {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    RestDocumentationResultHandler restDocs;
+
     private static final String JSON_CONTENT_TYPE = "application/json";
 
     private static final String EMAIL = "email@gmail.com";
@@ -68,6 +84,16 @@ public class PlanetDocsTest {
     private static final String DEVICE_TOKEN = "device_token";
     private static final String PLANET_NAME = "포딩행성";
     private static final String BODY = "굿";
+
+    @BeforeEach
+    void setUp(RestDocumentationContextProvider provider, WebApplicationContext context){
+        this.mvc= MockMvcBuilders.webAppContextSetup(context)
+                .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
+                .alwaysDo(MockMvcResultHandlers.print())
+                .alwaysDo(restDocs)
+                .addFilters(new CharacterEncodingFilter("UTF-8",true))
+                .build();
+    }
 
     @Test
     @DisplayName("행성 생성")
@@ -83,19 +109,25 @@ public class PlanetDocsTest {
                 .content(content))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/create",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("name").description("행성 이름"),
-                        fieldWithPath("image").description("행성 이미지 타입")
+                        fieldWithPath("name")
+                                .type(STRING)
+                                .description("행성 이름")
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
+                        fieldWithPath("image")
+                                .type(VARIES)
+                                .description("행성 이미지 타입")
                 ),
                 responseFields(
-                        fieldWithPath("planetId").description("생성된 행성 id"),
-                        fieldWithPath("code").description("초대 코드")
+                        fieldWithPath("planetId")
+                                .description("생성된 행성 id"),
+                        fieldWithPath("code")
+                                .description("초대 코드")
                 )
         ));
     }
@@ -114,17 +146,19 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/invite-code",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 ),
                 responseFields(
-                        fieldWithPath("code").description("초대 코드")
+                        fieldWithPath("code")
+                                .description("초대 코드")
                 )
         ));
     }
@@ -143,19 +177,23 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/find-by-code",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestParameters(
-                        parameterWithName("code").description("초대 코드")
+                        parameterWithName("code")
+                                .description("초대 코드")
+                                .attributes(key("type").value("String"))
                 ),
                 responseFields(
-                        fieldWithPath("planetId").description("행성 id"),
-                        fieldWithPath("name").description("행성 이름"),
-                        fieldWithPath("image").description("행성 이미지 타입")
+                        fieldWithPath("planetId")
+                                .description("행성 id"),
+                        fieldWithPath("name")
+                                .description("행성 이름"),
+                        fieldWithPath("image")
+                                .description("행성 이미지 타입")
                 )
         ));
     }
@@ -177,21 +215,22 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/join",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("code").description("초대 코드")
+                        fieldWithPath("code")
+                                .type(STRING)
+                                .description("초대 코드")
                 )
         ));
     }
 
     @Test
     @DisplayName("행성 조회")
-    void find() throws Exception {
+    void find_by_id() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
@@ -201,24 +240,28 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/find",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 pathParameters(
-                        parameterWithName("planetId").description("행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 ),
                 responseFields(
-                        fieldWithPath("planetId").description("행성 id"),
-                        fieldWithPath("name").description("행성 이름"),
-                        fieldWithPath("image").description("행성 이미지 타입"),
-                        fieldWithPath("dday").description("행성 dday")
+                        fieldWithPath("planetId")
+                                .description("행성 id"),
+                        fieldWithPath("name")
+                                .description("행성 이름"),
+                        fieldWithPath("image")
+                                .description("행성 이미지 타입"),
+                        fieldWithPath("dday")
+                                .description("행성 dday")
                 )
         ));
     }
 
     @Test
     @DisplayName("이름으로 행성 조회")
-    void find_list() throws Exception {
+    void find_by_name() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
@@ -231,27 +274,39 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/find-list",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestParameters(
-                        parameterWithName("query").description("검색하려는 행성 이름").optional(),
-                        parameterWithName("page").description("페이지 번호").optional(),
-                        parameterWithName("size").description("한 페이지 크기").optional()
+                        parameterWithName("query")
+                                .description("검색하려는 행성 이름")
+                                .attributes(key("type").value("String"))
+                                .optional(),
+                        parameterWithName("page")
+                                .description("페이지 번호")
+                                .attributes(key("type").value("Number"))
+                                .optional(),
+                        parameterWithName("size")
+                                .description("한 페이지 크기")
+                                .attributes(key("type").value("Number"))
+                                .optional()
                 ),
                 responseFields(
-                        fieldWithPath("planets[].planetId").description("행성 id"),
-                        fieldWithPath("planets[].name").description("행성 이름"),
-                        fieldWithPath("planets[].image").description("행성 이미지 타입"),
-                        fieldWithPath("size").description("검색결과 불러온 행성 수"),
-                        fieldWithPath("hasNext").description("다음 페이지가 있는지")
+                        fieldWithPath("planets[].planetId")
+                                .description("행성 id"),
+                        fieldWithPath("planets[].name")
+                                .description("행성 이름"),
+                        fieldWithPath("planets[].image")
+                                .description("행성 이미지 타입"),
+                        fieldWithPath("size")
+                                .description("검색결과 불러온 행성 수"),
+                        fieldWithPath("hasNext")
+                                .description("다음 페이지가 있는지")
                 )
         ));
     }
 
     @Test
     @DisplayName("팔로우한 행성 조회")
-    void follow_planet() throws Exception {
+    void get_follow_planet() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         User follow1 = userRepository.save(new User("follow1@gmail.com", PASSWORD, "follow1", UserStatus.LOGOUT, Authority.USER));
         User follow2 = userRepository.save(new User("follow2@gmail.com", PASSWORD, "follow2", UserStatus.LOGOUT, Authority.USER));
@@ -270,29 +325,39 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/follow-planets",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 requestParameters(
-                        parameterWithName("page").description("페이지 번호").optional(),
-                        parameterWithName("size").description("한 페이지 크기").optional()
+                        parameterWithName("page")
+                                .description("페이지 번호")
+                                .attributes(key("type").value("Number"))
+                                .optional(),
+                        parameterWithName("size")
+                                .description("한 페이지 크기")
+                                .attributes(key("type").value("Number"))
+                                .optional()
                 ),
                 responseFields(
-                        fieldWithPath("planets[].planetId").description("행성 id"),
-                        fieldWithPath("planets[].name").description("행성 이름"),
-                        fieldWithPath("planets[].image").description("행성 이미지 타입"),
-                        fieldWithPath("size").description("검색결과 불러온 행성 수"),
-                        fieldWithPath("hasNext").description("다음 페이지가 있는지")
+                        fieldWithPath("planets[].planetId")
+                                .description("행성 id"),
+                        fieldWithPath("planets[].name")
+                                .description("행성 이름"),
+                        fieldWithPath("planets[].image")
+                                .description("행성 이미지 타입"),
+                        fieldWithPath("size")
+                                .description("검색결과 불러온 행성 수"),
+                        fieldWithPath("hasNext")
+                                .description("다음 페이지가 있는지")
                 )
         ));
     }
 
     @Test
     @DisplayName("행성 코스 목록 조회")
-    void findCourses() throws Exception {
+    void find_planet_course() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
@@ -317,26 +382,39 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/courses",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 코드")
+                        headerWithName("accessToken")
+                                .description("인증 코드")
                 ),
                 requestParameters(
-                        parameterWithName("page").description("페이지 번호").optional(),
-                        parameterWithName("size").description("한 페이지 크기").optional()
+                        parameterWithName("page")
+                                .description("페이지 번호")
+                                .attributes(key("type").value("Number"))
+                                .optional(),
+                        parameterWithName("size")
+                                .description("한 페이지 크기")
+                                .attributes(key("type").value("Number"))
+                                .optional()
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 ),
                 responseFields(
-                        fieldWithPath("courses[].title").description("코스 제목"),
-                        fieldWithPath("courses[].stars").description("별자리 이미지에서 별 좌표"),
-                        fieldWithPath("courses[].stars[].x").description("x좌표(경도)"),
-                        fieldWithPath("courses[].stars[].y").description("y좌표(위도)"),
-                        fieldWithPath("size").description("불러온 코스 수"),
-                        fieldWithPath("hasNext").description("다음 페이지 존재 여부")
+                        fieldWithPath("courses[].title")
+                                .description("코스 제목"),
+                        fieldWithPath("courses[].stars")
+                                .description("별자리 이미지에서 별 좌표"),
+                        fieldWithPath("courses[].stars[].x")
+                                .description("x좌표(경도)"),
+                        fieldWithPath("courses[].stars[].y")
+                                .description("y좌표(위도)"),
+                        fieldWithPath("size")
+                                .description("불러온 코스 수"),
+                        fieldWithPath("hasNext")
+                                .description("다음 페이지 존재 여부")
                 )
         ));
     }
@@ -356,18 +434,24 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/update",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("업데이트할 행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 ),
                 requestFields(
-                        fieldWithPath("name").description("행성 이름"),
-                        fieldWithPath("dday").description("변경할 dday")
+                        fieldWithPath("name")
+                                .type(STRING)
+                                .description("행성 이름")
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
+                        fieldWithPath("dday")
+                                .type(NUMBER)
+                                .description("변경할 dday")
                 )
         ));
     }
@@ -384,14 +468,15 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/delete",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("업데이트할 행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 )
         ));
     }
@@ -410,14 +495,15 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/follow",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
-                        headerWithName("accessToken").description("인증 토큰")
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("팔로우할 행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 )
         ));
     }
@@ -438,14 +524,14 @@ public class PlanetDocsTest {
                 .contentType(JSON_CONTENT_TYPE))
                 .andExpect(status().isOk());
 
-        actions.andDo(document("planet/unfollow",
-                getDocumentRequest(),
-                getDocumentResponse(),
+        actions.andDo(restDocs.document(
                 requestHeaders(
                         headerWithName("accessToken").description("인증 토큰")
                 ),
                 pathParameters(
-                        parameterWithName("planetId").description("언팔로우할 행성 id")
+                        parameterWithName("planetId")
+                                .description("행성 id")
+                                .attributes(key("type").value("Number"))
                 )
         ));
     }

@@ -8,10 +8,12 @@ import trying.cosmos.global.aop.RequestKeyInterceptor;
 @Getter
 public class CustomExceptionEntity {
 
+    private final String id;
     private final String code;
     private final String message;
 
     public CustomExceptionEntity(ExceptionType eType, String message, Exception e) {
+        this.id = RequestKeyInterceptor.getRequestKey();
         this.code = eType.toString();
         this.message = message;
         log.info("[{}] Exception {}, {}", RequestKeyInterceptor.getRequestKey(), code, message, e);
