@@ -1,5 +1,5 @@
 ## 🔍 Issue
-- #issue
+- Close #issue
 
 ## 📝 Task
 - task
