@@ -3,8 +3,8 @@ package trying.cosmos.test.authentication.component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.AuthKey;
 import trying.cosmos.global.auth.AuthorityOf;
 

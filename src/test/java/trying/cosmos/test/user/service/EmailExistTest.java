@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.certification.CertificationService;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
-import trying.cosmos.domain.user.UserService;
+import trying.cosmos.domain.certification.service.CertificationService;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.domain.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static trying.cosmos.test.component.TestVariables.*;

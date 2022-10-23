@@ -10,15 +10,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.planet.Planet;
-import trying.cosmos.domain.planet.PlanetImageType;
-import trying.cosmos.domain.planet.PlanetRepository;
-import trying.cosmos.domain.planet.PlanetService;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
+import trying.cosmos.domain.planet.entity.Planet;
+import trying.cosmos.domain.planet.entity.PlanetImageType;
+import trying.cosmos.domain.planet.repository.PlanetRepository;
+import trying.cosmos.domain.planet.service.PlanetService;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static trying.cosmos.domain.user.UserStatus.LOGIN;
+import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.Authority.USER;
 import static trying.cosmos.test.component.TestVariables.*;
 

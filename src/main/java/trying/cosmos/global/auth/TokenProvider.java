@@ -8,7 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import trying.cosmos.domain.user.User;
+import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
@@ -21,7 +21,6 @@ public class TokenProvider {
 
     private static final String SUBJECT_KEY = "sub";
     private static final String AUTHORITY_KEY = "auth";
-
     private static final String JWT_PREFIX = "Bearer ";
 
     private final Key key;

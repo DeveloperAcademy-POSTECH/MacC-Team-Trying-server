@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.certification.CertificationRepository;
-import trying.cosmos.domain.certification.CertificationService;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
+import trying.cosmos.domain.certification.repository.CertificationRepository;
+import trying.cosmos.domain.certification.service.CertificationService;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 
 import static org.assertj.core.api.Assertions.assertThat;
