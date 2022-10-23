@@ -7,7 +7,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.global.aop.AuthenticationLogInterceptor;
 import trying.cosmos.global.aop.RequestKeyInterceptor;
+import trying.cosmos.global.aop.RequestLogInterceptor;
 import trying.cosmos.global.auth.AnonymousInterceptor;
 import trying.cosmos.global.auth.AuthenticationInterceptor;
 import trying.cosmos.global.auth.TokenProvider;
@@ -25,8 +27,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestKeyInterceptor());
+        registry.addInterceptor(new RequestLogInterceptor());
         registry.addInterceptor(new AuthenticationInterceptor(userRepository, tokenProvider));
         registry.addInterceptor(new AnonymousInterceptor(userRepository, tokenProvider));
+        registry.addInterceptor(new AuthenticationLogInterceptor());
     }
 
     @Override

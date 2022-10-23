@@ -1,16 +1,18 @@
 package trying.cosmos.global.auth;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.entity.UserStatus;
+import trying.cosmos.domain.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class AnonymousInterceptor implements HandlerInterceptor {
 

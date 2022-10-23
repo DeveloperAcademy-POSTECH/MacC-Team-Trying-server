@@ -1,14 +1,12 @@
 package trying.cosmos.domain.planet.dto.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

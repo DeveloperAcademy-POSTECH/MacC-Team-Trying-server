@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import trying.cosmos.docs.utils.RestDocsConfiguration;
+import trying.cosmos.domain.certification.dto.request.CertificateRequest;
+import trying.cosmos.domain.certification.dto.request.GenerateCertificationRequest;
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
-import trying.cosmos.domain.certification.dto.request.CertificateRequest;
-import trying.cosmos.domain.certification.dto.request.GenerateCertificationRequest;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;

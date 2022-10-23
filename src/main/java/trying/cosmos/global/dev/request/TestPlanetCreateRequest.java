@@ -1,9 +1,6 @@
-package trying.cosmos.global.utils.dev.request;
+package trying.cosmos.global.dev.request;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 import javax.validation.constraints.Email;
@@ -11,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

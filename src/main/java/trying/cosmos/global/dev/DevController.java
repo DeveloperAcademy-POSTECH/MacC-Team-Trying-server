@@ -1,4 +1,4 @@
-package trying.cosmos.global.utils.dev;
+package trying.cosmos.global.dev;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.auth.TokenProvider;
-import trying.cosmos.global.utils.dev.response.DevCreateUserResponse;
-import trying.cosmos.global.utils.dev.response.DevPlanetResponse;
+import trying.cosmos.global.dev.response.DevCreateUserResponse;
+import trying.cosmos.global.dev.response.DevPlanetResponse;
 
 @RestController
 @RequestMapping("/dev")

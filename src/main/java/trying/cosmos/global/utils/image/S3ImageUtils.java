@@ -3,15 +3,18 @@ package trying.cosmos.global.utils.image;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import trying.cosmos.global.aop.LogSpace;
 
 import java.io.IOException;
 import java.util.UUID;
 
 import static trying.cosmos.global.utils.image.ImageUtils.getExtension;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class S3ImageUtils {
@@ -23,12 +26,16 @@ public class S3ImageUtils {
 
     public String create(MultipartFile file) {
         String imageName = UUID.randomUUID() + getExtension(file);
+        upload(imageName, file);
+        return imageName;
+    }
 
-        ObjectMetadata meta = new ObjectMetadata();
+    private void upload(String imageName, MultipartFile file) {
         try {
+            ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(file.getInputStream().available());
             amazonS3.putObject(bucket, imageName, file.getInputStream(), meta);
-            return imageName;
+            log.info("{}Upload image name = {}", LogSpace.getSpace(), imageName);
         } catch (IOException e) {
             throw new RuntimeException("이미지 업로드 오류", e);
         }
@@ -36,5 +43,6 @@ public class S3ImageUtils {
 
     public void delete(String name) {
         amazonS3.deleteObject(bucket, name);
+        log.info("{}Delete image name = {}", LogSpace.getSpace(), name);
     }
 }

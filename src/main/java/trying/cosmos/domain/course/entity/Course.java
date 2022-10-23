@@ -2,6 +2,7 @@ package trying.cosmos.domain.course.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.planet.entity.Planet;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class Course extends DateAuditingEntity {
 
@@ -18,6 +20,7 @@ public class Course extends DateAuditingEntity {
     @Column(name = "course_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planet_id")
     private Planet planet;
@@ -32,11 +35,25 @@ public class Course extends DateAuditingEntity {
 
     private boolean isDeleted;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "course")
     private List<Tag> tags = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "course")
     private List<CourseImage> images = new ArrayList<>();
+
+    public void setImages(List<CourseImage> images) {
+        this.images = images;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void setPlanet(Planet planet) {
+        this.planet = planet;
+    }
 
     // Constructor
     public Course(Planet planet, String title, String body, trying.cosmos.domain.course.entity.Access access) {

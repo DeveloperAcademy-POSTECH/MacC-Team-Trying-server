@@ -3,12 +3,14 @@ package trying.cosmos.domain.planet.dto.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.domain.Slice;
 import trying.cosmos.domain.course.entity.Course;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlanetCourseListResponse {

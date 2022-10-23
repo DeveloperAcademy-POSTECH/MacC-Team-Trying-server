@@ -1,12 +1,10 @@
 package trying.cosmos.domain.planet.dto.response;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.entity.PlanetImageType;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

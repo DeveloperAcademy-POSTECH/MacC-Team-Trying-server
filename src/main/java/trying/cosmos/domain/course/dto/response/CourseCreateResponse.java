@@ -3,6 +3,7 @@ package trying.cosmos.domain.course.dto.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.entity.Star;
 import trying.cosmos.domain.course.service.StarSignGenerator;
@@ -10,6 +11,7 @@ import trying.cosmos.domain.course.service.StarSignGenerator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseCreateResponse {

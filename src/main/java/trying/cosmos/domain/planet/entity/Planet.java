@@ -3,6 +3,7 @@ package trying.cosmos.domain.planet.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.exception.CustomException;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
 import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +29,7 @@ public class Planet extends DateAuditingEntity {
     @Column(name = "planet_id")
     private Long id;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "planet")
     private List<User> owners = new ArrayList<>();
 
@@ -34,6 +37,7 @@ public class Planet extends DateAuditingEntity {
 
     private LocalDate meetDate;
 
+    @ToString.Exclude
     @Enumerated(EnumType.STRING)
     private PlanetImageType image;
 

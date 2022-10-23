@@ -9,6 +9,11 @@ spring:
       hibernate:
         default_batch_fetch_size: 100
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+
 ---
 
 spring:
@@ -34,11 +39,11 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql: true
 
 logging:
   level:
-    trying.cosmos: debug
+#    trying.cosmos: debug
+    trying.cosmos: trace
 
 ---
 

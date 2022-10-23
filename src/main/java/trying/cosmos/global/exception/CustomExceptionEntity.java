@@ -2,6 +2,7 @@ package trying.cosmos.global.exception;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import trying.cosmos.global.aop.LogSpace;
 import trying.cosmos.global.aop.RequestKeyInterceptor;
 
 @Slf4j
@@ -16,6 +17,6 @@ public class CustomExceptionEntity {
         this.id = RequestKeyInterceptor.getRequestKey();
         this.code = eType.toString();
         this.message = message;
-        log.info("[{}] Exception {}, {}", RequestKeyInterceptor.getRequestKey(), code, message, e);
+        log.info("{}[{}] Exception {}, {}", LogSpace.getSpace(), RequestKeyInterceptor.getRequestKey(), code, message, e);
     }
 }

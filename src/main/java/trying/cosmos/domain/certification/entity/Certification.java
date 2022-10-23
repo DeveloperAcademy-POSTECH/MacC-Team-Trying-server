@@ -3,6 +3,7 @@ package trying.cosmos.domain.certification.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
@@ -10,6 +11,7 @@ import trying.cosmos.global.exception.ExceptionType;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@ToString
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
