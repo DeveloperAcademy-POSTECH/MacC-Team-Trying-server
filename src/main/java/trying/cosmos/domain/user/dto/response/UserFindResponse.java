@@ -1,13 +1,11 @@
 package trying.cosmos.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import trying.cosmos.domain.planet.dto.response.PlanetFindContent;
 import trying.cosmos.domain.user.entity.User;
 
+@ToString
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

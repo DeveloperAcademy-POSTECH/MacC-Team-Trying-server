@@ -1,4 +1,4 @@
-package trying.cosmos.global.utils.dev;
+package trying.cosmos.global.dev;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -9,8 +9,8 @@ import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.entity.UserStatus;
+import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.Authority;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;

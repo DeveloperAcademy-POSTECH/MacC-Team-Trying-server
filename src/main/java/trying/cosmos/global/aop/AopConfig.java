@@ -9,7 +9,12 @@ import org.springframework.context.annotation.Configuration;
 public class AopConfig {
 
     @Bean
-    public LoggerAspect loggerAspect() {
-        return new LoggerAspect();
+    public RequestLogInterceptor requestLogger() {
+        return new RequestLogInterceptor();
+    }
+
+    @Bean
+    public MethodLoggerAspect methodLogger() {
+        return new MethodLoggerAspect();
     }
 }

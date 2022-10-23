@@ -3,9 +3,11 @@ package trying.cosmos.domain.course.dto.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.course.entity.Tag;
 import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TagFindResponse {

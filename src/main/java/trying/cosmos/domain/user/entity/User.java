@@ -3,6 +3,7 @@ package trying.cosmos.domain.user.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.planet.entity.Planet;
@@ -13,6 +14,7 @@ import trying.cosmos.global.utils.cipher.BCryptUtils;
 
 import javax.persistence.*;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,10 +41,12 @@ public class User extends DateAuditingEntity {
 
     private String deviceToken;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planet_id")
     private Planet planet;
 
+    @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mate_id")
     private User mate;

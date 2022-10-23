@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.entity.UserStatus;
+import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 

@@ -1,10 +1,12 @@
 package trying.cosmos.global.utils.email;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import trying.cosmos.global.aop.LogSpace;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -17,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 public class RealEmailUtils implements EmailUtils {
 
@@ -29,7 +32,7 @@ public class RealEmailUtils implements EmailUtils {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             message.setSubject(subject);
-            message.setFrom("[Matstar] Trying <trying221216@gmail.com>");
+            message.setFrom("[맛스타] Trying <trying221216@gmail.com>");
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
             MimeMultipart multipart = new MimeMultipart("related");
@@ -50,6 +53,8 @@ public class RealEmailUtils implements EmailUtils {
             multipart.addBodyPart(imageBodyPart);
 
             message.setContent(multipart);
+
+            log.info("{}Send email to {} code = {}", LogSpace.getSpace(), to, model.get("code"));
             emailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException(e);

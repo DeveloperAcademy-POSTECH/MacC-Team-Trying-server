@@ -1,10 +1,12 @@
-package trying.cosmos.global.utils.dev.response;
+package trying.cosmos.global.dev.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.user.entity.User;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DevCreateUserResponse {

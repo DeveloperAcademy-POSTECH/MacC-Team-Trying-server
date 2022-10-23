@@ -3,11 +3,13 @@ package trying.cosmos.domain.course.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseImage {
 
@@ -15,6 +17,7 @@ public class CourseImage {
     @Column(name = "course_image_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coures_id")
     private Course course;

@@ -3,9 +3,9 @@ package trying.cosmos.domain.certification.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import trying.cosmos.domain.certification.service.CertificationService;
 import trying.cosmos.domain.certification.dto.request.CertificateRequest;
 import trying.cosmos.domain.certification.dto.request.GenerateCertificationRequest;
+import trying.cosmos.domain.certification.service.CertificationService;
 
 @RestController
 @RequestMapping("/certification")
