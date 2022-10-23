@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.domain.planet.PlanetImageType;
+import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

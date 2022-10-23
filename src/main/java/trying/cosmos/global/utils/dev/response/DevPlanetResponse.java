@@ -3,7 +3,7 @@ package trying.cosmos.global.utils.dev.response;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.domain.planet.Planet;
+import trying.cosmos.domain.planet.entity.Planet;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

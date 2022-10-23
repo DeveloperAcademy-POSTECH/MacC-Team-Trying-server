@@ -9,17 +9,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.certification.Certification;
-import trying.cosmos.domain.certification.CertificationRepository;
-import trying.cosmos.domain.certification.CertificationService;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
-import trying.cosmos.domain.user.UserService;
+import trying.cosmos.domain.certification.entity.Certification;
+import trying.cosmos.domain.certification.repository.CertificationRepository;
+import trying.cosmos.domain.certification.service.CertificationService;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.domain.user.service.UserService;
 import trying.cosmos.global.exception.CustomException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.domain.user.UserStatus.LOGOUT;
+import static trying.cosmos.domain.user.entity.UserStatus.LOGOUT;
 import static trying.cosmos.global.exception.ExceptionType.CERTIFICATION_FAILED;
 import static trying.cosmos.test.component.TestVariables.*;
 

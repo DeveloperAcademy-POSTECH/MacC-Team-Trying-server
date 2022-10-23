@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.certification.Certification;
-import trying.cosmos.domain.certification.CertificationRepository;
-import trying.cosmos.domain.certification.CertificationService;
+import trying.cosmos.domain.certification.entity.Certification;
+import trying.cosmos.domain.certification.repository.CertificationRepository;
+import trying.cosmos.domain.certification.service.CertificationService;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 

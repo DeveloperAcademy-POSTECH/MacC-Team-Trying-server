@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.course.CourseRepository;
+import trying.cosmos.domain.course.repository.CourseRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

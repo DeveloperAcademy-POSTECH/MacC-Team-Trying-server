@@ -9,10 +9,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.user.User;
-import trying.cosmos.domain.user.UserRepository;
-import trying.cosmos.domain.user.UserService;
-import trying.cosmos.domain.user.UserStatus;
+import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.domain.user.service.UserService;
+import trying.cosmos.domain.user.entity.UserStatus;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
