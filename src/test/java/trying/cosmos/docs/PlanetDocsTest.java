@@ -412,6 +412,8 @@ public class PlanetDocsTest {
                                 .attributes(key("type").value("Number"))
                 ),
                 responseFields(
+                        fieldWithPath("courses[].courseId")
+                                .description("코스 id"),
                         fieldWithPath("courses[].title")
                                 .description("코스 제목"),
                         fieldWithPath("courses[].stars")
