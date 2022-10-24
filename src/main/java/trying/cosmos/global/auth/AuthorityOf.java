@@ -1,5 +1,7 @@
 package trying.cosmos.global.auth;
 
+import trying.cosmos.global.auth.entity.Authority;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

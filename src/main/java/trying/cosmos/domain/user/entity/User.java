@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.global.auth.Authority;
+import trying.cosmos.global.auth.entity.Authority;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.cipher.BCryptUtils;

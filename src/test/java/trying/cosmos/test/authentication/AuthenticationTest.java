@@ -16,8 +16,8 @@ import trying.cosmos.domain.user.service.UserService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.global.auth.Authority.ADMIN;
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.ADMIN;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 
 @SpringBootTest
 @Transactional

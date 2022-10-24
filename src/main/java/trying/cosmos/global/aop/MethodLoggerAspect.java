@@ -25,7 +25,7 @@ public class MethodLoggerAspect {
         }
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         for (int i = 0; i < method.getParameters().length; i++) {
-            log.trace("{}- {}: {}", LogSpace.getSpace(), method.getParameters()[i].getName(), joinPoint.getArgs()[i].toString());
+            log.trace("{}- {}: {}", LogSpace.getSpace(), method.getParameters()[i].getName(), joinPoint.getArgs()[i]);
         }
 
         long startTime = System.currentTimeMillis();

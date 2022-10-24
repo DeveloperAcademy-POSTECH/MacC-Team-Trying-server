@@ -6,15 +6,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static trying.cosmos.global.auth.AuthKey.*;
+import static trying.cosmos.global.auth.entity.AuthKey.*;
 
 @Slf4j
 public class AuthenticationLogInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        log.debug("");
-        log.debug("[Authentication Info]");
+        log.debug("[Session Info]");
         log.debug("");
         getAuthenticationInfoLog();
         log.debug("");
@@ -27,7 +26,7 @@ public class AuthenticationLogInterceptor implements HandlerInterceptor {
         log.debug("- Need Authenticate: {}", needAuthenticate());
         log.debug("- Is Authenticated: {}", isAuthenticated());
         if (needAuthenticate() && isAuthenticated()) {
-            log.debug("- Authentication Key: {}", getKey());
+            log.debug("- Session Key: {}", getKey());
         }
     }
 }

@@ -1,4 +1,4 @@
-package trying.cosmos.global.auth;
+package trying.cosmos.global.auth.entity;
 
 public class AuthKey {
 
@@ -23,7 +23,7 @@ public class AuthKey {
     }
 
     public static boolean needAuthenticate() {
-        return needAuth.get();
+        return needAuth.get() != null && needAuth.get();
     }
 
     public static void setNeed(boolean need) {

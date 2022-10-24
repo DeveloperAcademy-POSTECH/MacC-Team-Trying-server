@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.auth.AuthKey;
 import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
 
-import static trying.cosmos.global.auth.Authority.ADMIN;
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.ADMIN;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 
 @RestController
 public class AuthenticationTestController {

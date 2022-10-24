@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGOUT;
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.global.exception.ExceptionType.NOT_AUTHENTICATED;
 import static trying.cosmos.test.component.TestVariables.*;
 

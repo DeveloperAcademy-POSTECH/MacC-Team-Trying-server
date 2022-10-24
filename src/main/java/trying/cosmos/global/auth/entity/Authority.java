@@ -1,4 +1,4 @@
-package trying.cosmos.global.auth;
+package trying.cosmos.global.auth.entity;
 
 public enum Authority {
     

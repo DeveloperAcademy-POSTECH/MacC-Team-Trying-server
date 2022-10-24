@@ -23,6 +23,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:
@@ -39,6 +42,9 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:
@@ -54,6 +60,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:

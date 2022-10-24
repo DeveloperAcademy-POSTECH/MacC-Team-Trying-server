@@ -12,9 +12,9 @@ import trying.cosmos.domain.course.dto.response.CourseCreateResponse;
 import trying.cosmos.domain.course.dto.response.CourseFindResponse;
 import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.global.auth.AuthKey;
-import trying.cosmos.global.auth.Authority;
 import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
+import trying.cosmos.global.auth.entity.Authority;
 
 import java.util.List;
 

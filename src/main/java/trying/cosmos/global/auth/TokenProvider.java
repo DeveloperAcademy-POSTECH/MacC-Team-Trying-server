@@ -8,7 +8,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.global.auth.entity.Session;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 @Component
 public class TokenProvider {
 
-    private static final String SUBJECT_KEY = "sub";
+    private static final String SUBJECT_KEY = "id";
     private static final String AUTHORITY_KEY = "auth";
     private static final String JWT_PREFIX = "Bearer ";
 
@@ -30,10 +30,10 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String getAccessToken(User user) {
+    public String getAccessToken(Session session) {
         return JWT_PREFIX + Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim(AUTHORITY_KEY, user.getAuthority())
+                .claim(SUBJECT_KEY, session.getId())
+                .claim(AUTHORITY_KEY, session.getAuthority())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -44,7 +44,7 @@ public class TokenProvider {
         if (claims.get(SUBJECT_KEY) == null || claims.get(AUTHORITY_KEY) == null) {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
-        data.put(SUBJECT_KEY, claims.getSubject());
+        data.put(SUBJECT_KEY, claims.get(SUBJECT_KEY, String.class));
         data.put(AUTHORITY_KEY, claims.get(AUTHORITY_KEY, String.class));
         return data;
     }
@@ -56,7 +56,7 @@ public class TokenProvider {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
-        return claims.getSubject();
+        return claims.get(SUBJECT_KEY, String.class);
     }
 
     private Claims parseClaims(String accessToken) {
@@ -79,7 +79,7 @@ public class TokenProvider {
     }
 
     private static String removePrefix(String accessToken) {
-        if (!accessToken.startsWith(JWT_PREFIX)) {
+        if (accessToken == null || !accessToken.startsWith(JWT_PREFIX)) {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 

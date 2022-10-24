@@ -6,20 +6,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.aop.AuthenticationLogInterceptor;
 import trying.cosmos.global.aop.RequestKeyInterceptor;
 import trying.cosmos.global.aop.RequestLogInterceptor;
-import trying.cosmos.global.auth.AnonymousInterceptor;
-import trying.cosmos.global.auth.AuthenticationInterceptor;
-import trying.cosmos.global.auth.TokenProvider;
+import trying.cosmos.global.auth.AuthUtils;
+import trying.cosmos.global.auth.interceptor.AnonymousInterceptor;
+import trying.cosmos.global.auth.interceptor.AuthenticationInterceptor;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final UserRepository userRepository;
-    private final TokenProvider tokenProvider;
+    private final AuthUtils authUtils;
 
     @Value("${cloud.aws.cloudfront.url}")
     private String host;
@@ -28,8 +26,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestKeyInterceptor());
         registry.addInterceptor(new RequestLogInterceptor());
-        registry.addInterceptor(new AuthenticationInterceptor(userRepository, tokenProvider));
-        registry.addInterceptor(new AnonymousInterceptor(userRepository, tokenProvider));
+        registry.addInterceptor(new AuthenticationInterceptor(authUtils));
+        registry.addInterceptor(new AnonymousInterceptor(authUtils));
         registry.addInterceptor(new AuthenticationLogInterceptor());
     }
 

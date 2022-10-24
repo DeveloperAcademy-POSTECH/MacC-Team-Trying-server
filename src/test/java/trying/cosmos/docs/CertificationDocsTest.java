@@ -1,6 +1,7 @@
 package trying.cosmos.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import trying.cosmos.domain.certification.dto.request.GenerateCertificationReque
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
+import trying.cosmos.global.auth.repository.SessionRepository;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -55,6 +57,8 @@ public class CertificationDocsTest {
     CertificationService certificationService;
     @Autowired
     CertificationRepository certificationRepository;
+    @Autowired
+    SessionRepository sessionRepository;
 
     @Autowired
     RestDocumentationResultHandler restDocs;
@@ -71,6 +75,11 @@ public class CertificationDocsTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8",true))
                 .build();
+    }
+
+    @AfterEach
+    void clear() {
+        sessionRepository.deleteAll();
     }
 
     @Test
