@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlanetCourseContent {
 
+    private Long courseId;
     private String title;
-
     private List<Star> stars;
 
     public PlanetCourseContent(Course course) {
+        this.courseId = course.getId();
         this.title = course.getTitle();
         this.stars = StarSignGenerator.generate(course.getTags().stream()
                 .map(tag -> tag.getPlace().getCoordinate())
