@@ -9,10 +9,10 @@ import trying.cosmos.domain.user.dto.response.UserEmailExistResponse;
 import trying.cosmos.domain.user.dto.response.UserFindResponse;
 import trying.cosmos.domain.user.dto.response.UserLoginResponse;
 import trying.cosmos.domain.user.service.UserService;
-import trying.cosmos.global.auth.AuthKey;
 import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
 
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 
 @RestController
 @RequestMapping("/users")

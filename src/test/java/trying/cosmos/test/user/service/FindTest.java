@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.*;
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
 import static trying.cosmos.global.exception.ExceptionType.SUSPENDED_USER;
 import static trying.cosmos.test.component.TestVariables.*;

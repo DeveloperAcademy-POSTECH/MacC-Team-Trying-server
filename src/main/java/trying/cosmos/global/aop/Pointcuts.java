@@ -19,6 +19,6 @@ public class Pointcuts {
     @Pointcut("execution(* trying.cosmos.global.utils..*(..))")
     public void utilsObject() {}
 
-    @Pointcut("domainObject() || authObject() || devObject() || utilsObject()")
+    @Pointcut("domainObject() || devObject() || utilsObject()")
     public void methodLogObject() {}
 }

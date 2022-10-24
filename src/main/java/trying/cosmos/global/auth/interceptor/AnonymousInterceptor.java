@@ -1,25 +1,22 @@
-package trying.cosmos.global.auth;
+package trying.cosmos.global.auth.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.entity.UserStatus;
-import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.global.auth.AuthUtils;
+import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
+import trying.cosmos.global.auth.entity.Session;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 public class AnonymousInterceptor implements HandlerInterceptor {
 
-    private static final String ACCESS_TOKEN_HEADER = "accessToken";
-
-    private final UserRepository userRepository;
-    private final TokenProvider tokenProvider;
+    private final AuthUtils authUtils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -34,22 +31,12 @@ public class AnonymousInterceptor implements HandlerInterceptor {
         }
         AuthKey.setNeed(false);
 
-        String token = request.getHeader(ACCESS_TOKEN_HEADER);
-        if (token == null || !tokenProvider.validateToken(token)) {
+        try {
+            Session auth = authUtils.checkAuthenticate(request);
+            AuthKey.setKey(auth.getUserId());
+            return true;
+        } catch (Exception e) {
             return true;
         }
-
-        Optional<User> optionalUser = userRepository.findByEmail(tokenProvider.getSubject(token));
-        if (optionalUser.isEmpty()) {
-            return true;
-        }
-        User user = optionalUser.get();
-
-        if (!user.getStatus().equals(UserStatus.LOGIN)) {
-            return true;
-        }
-
-        AuthKey.setKey(user.getId());
-        return true;
     }
 }

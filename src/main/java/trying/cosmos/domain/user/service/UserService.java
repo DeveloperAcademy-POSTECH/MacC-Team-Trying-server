@@ -8,6 +8,8 @@ import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.TokenProvider;
+import trying.cosmos.global.auth.entity.Session;
+import trying.cosmos.global.auth.repository.SessionRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.cipher.BCryptUtils;
@@ -25,6 +27,7 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
     private final CertificationRepository certificationRepository;
 
     private final EmailUtils emailUtils;
@@ -49,7 +52,8 @@ public class UserService {
     public String login(String email, String password, String deviceToken) {
         User user = userRepository.findByEmail(email).orElseThrow();
         user.login(password, deviceToken);
-        return tokenProvider.getAccessToken(user);
+        Session auth = sessionRepository.save(new Session(user));
+        return tokenProvider.getAccessToken(auth);
     }
 
     public User find(Long userId) {
@@ -89,12 +93,14 @@ public class UserService {
     @Transactional
     public void logout(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
+        sessionRepository.findByUserId(userId).ifPresent(sessionRepository::delete);
         user.logout();
     }
 
     @Transactional
     public void withdraw(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
+        sessionRepository.findByUserId(userId).ifPresent(sessionRepository::delete);
         user.withdraw();
     }
 }

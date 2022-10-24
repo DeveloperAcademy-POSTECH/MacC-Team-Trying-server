@@ -8,9 +8,9 @@ import trying.cosmos.domain.planet.dto.request.PlanetUpdateRequest;
 import trying.cosmos.domain.planet.dto.response.*;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.service.PlanetService;
-import trying.cosmos.global.auth.AuthKey;
-import trying.cosmos.global.auth.Authority;
 import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
+import trying.cosmos.global.auth.entity.Authority;
 
 @RestController
 @RequestMapping("/planets")

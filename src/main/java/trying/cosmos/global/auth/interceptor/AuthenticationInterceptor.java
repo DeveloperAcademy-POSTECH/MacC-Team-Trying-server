@@ -1,27 +1,24 @@
-package trying.cosmos.global.auth;
+package trying.cosmos.global.auth.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.entity.UserStatus;
-import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.global.auth.AuthUtils;
+import trying.cosmos.global.auth.AuthorityOf;
+import trying.cosmos.global.auth.entity.AuthKey;
+import trying.cosmos.global.auth.entity.Authority;
+import trying.cosmos.global.auth.entity.Session;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    private static final String ACCESS_TOKEN_HEADER = "accessToken";
-    private static final String SUBJECT_KEY = "sub";
+    private final AuthUtils authUtils;
     private static final String AUTHORITY_KEY = "auth";
-
-    private final UserRepository userRepository;
-    private final TokenProvider tokenProvider;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -36,25 +33,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         AuthKey.setNeed(true);
 
-        String token = request.getHeader(ACCESS_TOKEN_HEADER);
-        if (token == null || !tokenProvider.validateToken(token)) {
-            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
-        }
-
-        Map<String, String> userData = tokenProvider.parseToken(token);
-
+        Session auth = authUtils.checkAuthenticate(request);
         Authority authority = annotation.value();
-        if (Authority.valueOf(userData.get(AUTHORITY_KEY)).level < authority.level) {
+        if (auth.getAuthority().level < authority.level) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
 
-        User user = userRepository.findByEmail(userData.get(SUBJECT_KEY)).orElseThrow(() -> new CustomException(ExceptionType.AUTHENTICATION_FAILED));
-
-        if (!user.getStatus().equals(UserStatus.LOGIN)) {
-            throw new CustomException(ExceptionType.NOT_AUTHENTICATED);
-        }
-
-        AuthKey.setKey(user.getId());
+        AuthKey.setKey(auth.getUserId());
         return true;
     }
 

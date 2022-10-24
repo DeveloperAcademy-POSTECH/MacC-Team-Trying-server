@@ -30,7 +30,7 @@ import static trying.cosmos.domain.course.entity.Access.PRIVATE;
 import static trying.cosmos.domain.course.entity.Access.PUBLIC;
 import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
-import static trying.cosmos.global.auth.Authority.USER;
+import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.test.component.TestVariables.*;
 
 @SpringBootTest

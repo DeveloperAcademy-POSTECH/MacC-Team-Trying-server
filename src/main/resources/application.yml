@@ -39,6 +39,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+#        show_sql: true
 
 logging:
   level:

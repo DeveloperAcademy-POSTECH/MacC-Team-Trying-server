@@ -20,7 +20,7 @@ import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.auth.Authority;
+import trying.cosmos.global.auth.entity.Authority;
 import trying.cosmos.global.exception.CustomException;
 
 import java.util.List;

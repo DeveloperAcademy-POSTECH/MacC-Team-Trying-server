@@ -1,6 +1,7 @@
 package trying.cosmos.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,8 @@ import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
-import trying.cosmos.global.auth.Authority;
+import trying.cosmos.global.auth.entity.Authority;
+import trying.cosmos.global.auth.repository.SessionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,8 @@ public class PlanetDocsTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    SessionRepository sessionRepository;
+    @Autowired
     UserService userService;
     @Autowired
     PlanetService planetService;
@@ -93,6 +97,11 @@ public class PlanetDocsTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8",true))
                 .build();
+    }
+
+    @AfterEach
+    void clear() {
+        sessionRepository.deleteAll();
     }
 
     @Test

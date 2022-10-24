@@ -7,11 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
-import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.auth.Authority;
+import trying.cosmos.global.auth.entity.Authority;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;
 
@@ -23,14 +22,14 @@ public class DevService {
 
     private final UserRepository userRepository;
     private final PlanetRepository planetRepository;
-    private final PlanetService planetService;
 
     private static final String MOCK_DEVICE_TOKEN = "deviceToken";
 
     @Transactional
     public User createUser() {
         String str = randomName();
-        return userRepository.save(new User(str + "@gmail.com", "password", str, UserStatus.LOGIN, Authority.USER));
+        User user = new User(str + "@gmail.com", "password", str, UserStatus.LOGIN, Authority.USER);
+        return userRepository.save(user);
     }
 
     @Transactional
