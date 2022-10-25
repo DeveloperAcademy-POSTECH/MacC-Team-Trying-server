@@ -36,7 +36,6 @@ import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
@@ -95,6 +94,7 @@ public class CourseDocsTest {
     private static final String PLANET_NAME = "포딩행성";
     private static final String TITLE = "효자시장 맛집코스";
     private static final String BODY = "굿";
+    private static final String PLANET_IMAGE = "행성";
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider, WebApplicationContext context){
@@ -117,7 +117,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -193,7 +193,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -256,7 +256,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
         tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -331,8 +331,8 @@ public class CourseDocsTest {
         User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
-        Planet followPlanet = planetService.create(follow.getId(), "follow planet", PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
+        Planet followPlanet = planetService.create(follow.getId(), "follow planet", PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
         tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -401,7 +401,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -487,7 +487,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -525,7 +525,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -558,7 +558,7 @@ public class CourseDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));

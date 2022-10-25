@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
@@ -45,8 +44,8 @@ public class RemovedTest {
     @BeforeEach
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        this.planet = planetRepository.save(new Planet(user, "행성", PlanetImageType.EARTH, generateCode()));
-        this.deleted = planetRepository.save(new Planet(user, "삭제된 행성", PlanetImageType.EARTH, generateCode()));
+        this.planet = planetRepository.save(new Planet(user, "행성", PLANET_IMAGE, generateCode()));
+        this.deleted = planetRepository.save(new Planet(user, "삭제된 행성", PLANET_IMAGE, generateCode()));
         planetService.leave(user.getId(), deleted.getId());
     }
 

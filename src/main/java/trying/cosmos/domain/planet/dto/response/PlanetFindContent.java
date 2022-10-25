@@ -2,7 +2,6 @@ package trying.cosmos.domain.planet.dto.response;
 
 import lombok.*;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 @ToString
 @Getter
@@ -13,7 +12,7 @@ public class PlanetFindContent {
     private Long planetId;
     private String name;
     private int dday;
-    private PlanetImageType image;
+    private String image;
 
     public PlanetFindContent(Planet planet) {
         this.planetId = planet.getId();

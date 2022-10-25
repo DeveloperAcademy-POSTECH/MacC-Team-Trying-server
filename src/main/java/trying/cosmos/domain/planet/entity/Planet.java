@@ -39,16 +39,14 @@ public class Planet extends DateAuditingEntity {
 
     private LocalDate meetDate;
 
-    @ToString.Exclude
-    @Enumerated(EnumType.STRING)
-    private PlanetImageType image;
+    private String image;
 
     private String inviteCode;
 
     private boolean isDeleted;
 
     // Constructor
-    public Planet(User user, String name, PlanetImageType image, String code) {
+    public Planet(User user, String name, String image, String code) {
         this.name = name;
         this.inviteCode = code;
         this.image = image;

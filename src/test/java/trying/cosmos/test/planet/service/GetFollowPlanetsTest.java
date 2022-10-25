@@ -13,7 +13,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
@@ -50,8 +49,8 @@ public class GetFollowPlanetsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.userId = user.getId();
         User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", LOGIN, USER));
-        myPlanet = planetRepository.save(new Planet(user, "not follow", PlanetImageType.EARTH, generateCode()));
-        followPlanet = planetRepository.save(new Planet(follow, "follow", PlanetImageType.EARTH, generateCode()));
+        myPlanet = planetRepository.save(new Planet(user, "not follow", PLANET_IMAGE, generateCode()));
+        followPlanet = planetRepository.save(new Planet(follow, "follow", PLANET_IMAGE, generateCode()));
         planetService.follow(userId, followPlanet.getId());
     }
 

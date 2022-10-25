@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetFollowRepository;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
@@ -55,7 +54,7 @@ public class UnfollowTest {
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.userId = user.getId();
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
+        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
         this.planetId = planet.getId();
         User follower = userRepository.save(new User("follower@gmail.com", PASSWORD, "follow", LOGIN, USER));
         this.followerId = follower.getId();

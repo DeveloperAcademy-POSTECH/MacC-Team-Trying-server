@@ -6,7 +6,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
@@ -48,7 +47,7 @@ public class DevService {
 
     @Transactional
     public Planet createPlanet(User user) {
-        return planetService.create(user.getId(), randomName(), PlanetImageType.EARTH);
+        return planetService.create(user.getId(), randomName(), "EARTH");
     }
 
     private String randomName() {

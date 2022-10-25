@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 @ToString
 @Getter
@@ -14,7 +13,7 @@ public class PlanetListFindContent {
 
     private Long planetId;
     private String name;
-    private PlanetImageType image;
+    private String image;
 
     public PlanetListFindContent(Planet planet) {
         this.planetId = planet.getId();

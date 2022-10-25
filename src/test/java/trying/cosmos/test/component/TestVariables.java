@@ -8,6 +8,7 @@ public class TestVariables {
     public static final String DEVICE_TOKEN = "deviceToken";
 
     public static final String PLANET_NAME = "planet";
+    public static final String PLANET_IMAGE = "PLANET";
 
     public static final String TITLE = "course title";
     public static final String BODY = "course body";

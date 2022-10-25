@@ -13,7 +13,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
@@ -47,8 +46,8 @@ public class FindByNameTest {
     @BeforeEach
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        planetTrue = planetRepository.save(new Planet(user, "search_true", PlanetImageType.EARTH, generateCode()));
-        planetFalse = planetRepository.save(new Planet(user, "search_false", PlanetImageType.EARTH, generateCode()));
+        planetTrue = planetRepository.save(new Planet(user, "search_true", PLANET_IMAGE, generateCode()));
+        planetFalse = planetRepository.save(new Planet(user, "search_false", PLANET_IMAGE, generateCode()));
     }
 
     private String generateCode() {

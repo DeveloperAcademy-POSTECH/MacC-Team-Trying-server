@@ -10,7 +10,6 @@ import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.entity.PlanetFollow;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetFollowRepository;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
@@ -29,7 +28,7 @@ public class PlanetService {
     private final CourseRepository courseRepository;
 
     @Transactional
-    public Planet create(Long userId, String name, PlanetImageType type) {
+    public Planet create(Long userId, String name, String type) {
         User user = userRepository.findById(userId).orElseThrow();
         if (user.getPlanet() != null) {
             throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
