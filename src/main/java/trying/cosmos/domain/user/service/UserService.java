@@ -38,14 +38,23 @@ public class UserService {
     }
 
     @Transactional
-    public User join(String email, String password, String name) {
+    public String join(String email, String password, String name, String deviceToken) {
+        if (userRepository.existsByEmail(email)) {
+            throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
+        }
+        if (userRepository.existsByName(name)) {
+            throw new CustomException(ExceptionType.NAME_DUPLICATED);
+        }
         Certification certification = certificationRepository.findByEmail(email).orElseThrow(() -> new CustomException(ExceptionType.CERTIFICATION_FAILED));
         if (!certification.isCertified()) {
             throw new CustomException(ExceptionType.CERTIFICATION_FAILED);
         }
 
         certificationRepository.delete(certification);
-        return userRepository.save(new User(email, password, name));
+        User user = userRepository.save(new User(email, password, name));
+        user.login(password, deviceToken);
+        Session auth = sessionService.create(user);
+        return tokenProvider.getAccessToken(auth);
     }
 
     @Transactional

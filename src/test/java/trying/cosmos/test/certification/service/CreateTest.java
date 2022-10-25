@@ -17,6 +17,7 @@ import trying.cosmos.global.exception.CustomException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.global.exception.ExceptionType.DUPLICATED;
+import static trying.cosmos.global.exception.ExceptionType.EMAIL_DUPLICATED;
 import static trying.cosmos.test.component.TestVariables.*;
 
 @SpringBootTest
@@ -64,7 +65,7 @@ public class CreateTest {
             userRepository.save(new User(EMAIL, PASSWORD, USER_NAME));
             assertThatThrownBy(() -> certificationService.createCertificationCode(EMAIL))
                     .isInstanceOf(CustomException.class)
-                    .hasMessage(DUPLICATED.getMessage());
+                    .hasMessage(EMAIL_DUPLICATED.getMessage());
         }
     }
 }
