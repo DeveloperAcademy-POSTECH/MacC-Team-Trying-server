@@ -1,5 +1,6 @@
 package trying.cosmos.test.planet.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -46,8 +47,16 @@ public class FindByNameTest {
     @BeforeEach
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        planetTrue = planetRepository.save(new Planet(user, "search_true", PlanetImageType.EARTH));
-        planetFalse = planetRepository.save(new Planet(user, "search_false", PlanetImageType.EARTH));
+        planetTrue = planetRepository.save(new Planet(user, "search_true", PlanetImageType.EARTH, generateCode()));
+        planetFalse = planetRepository.save(new Planet(user, "search_false", PlanetImageType.EARTH, generateCode()));
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

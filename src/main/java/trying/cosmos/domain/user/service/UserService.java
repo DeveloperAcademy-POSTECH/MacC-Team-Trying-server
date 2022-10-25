@@ -81,7 +81,7 @@ public class UserService {
 
     private void sendResetPasswordEmail(String email, String password) {
         Map<String, String> model = new HashMap<>();
-        model.put("password", password);
+        model.put("code", password);
         model.put("body1", "임시 비밀번호가 발급되었습니다.");
         model.put("body2", "보안을 위해 로그인 후 비밀번호를 변경해주세요.");
         emailUtils.send(email, "임시 비밀번호가 발급되었습니다.", "email-template", EmailType.RESET_PASSWORD, model);

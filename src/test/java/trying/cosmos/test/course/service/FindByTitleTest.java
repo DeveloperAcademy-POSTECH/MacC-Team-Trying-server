@@ -1,5 +1,6 @@
 package trying.cosmos.test.course.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,8 +68,8 @@ public class FindByTitleTest {
         this.userId = me.getId();
         User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
 
-        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH));
-        Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH));
+        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH, generateCode()));
+        Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH, generateCode()));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
         courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
@@ -77,6 +78,14 @@ public class FindByTitleTest {
         courseService.create(other.getId(), othersPlanet.getId(), "othersPublic", "othersPublic", PUBLIC, tagRequest, null);
         Course deleted = courseService.create(me.getId(), myPlanet.getId(), "deleted", "deleted", PUBLIC, tagRequest, null);
         courseService.delete(me.getId(), deleted.getId());
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested
