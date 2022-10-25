@@ -1,5 +1,6 @@
 package trying.cosmos.test.planet.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -50,9 +51,17 @@ public class JoinTest {
         User guest = userRepository.save(new User("guest@gmail.com", PASSWORD, "guest", LOGIN, USER));
         this.guestId = guest.getId();
 
-        Planet planet = planetRepository.save(new Planet(host, PLANET_NAME, EARTH));
+        Planet planet = planetRepository.save(new Planet(host, PLANET_NAME, EARTH, generateCode()));
         this.planetId = planet.getId();
         this.inviteCode = planet.getInviteCode();
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

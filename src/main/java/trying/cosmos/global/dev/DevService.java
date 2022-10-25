@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
+import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
@@ -28,6 +29,7 @@ public class DevService {
     private final UserRepository userRepository;
     private final SessionService sessionService;
     private final PlanetRepository planetRepository;
+    private final PlanetService planetService;
     private final Environment environment;
 
     @PostConstruct
@@ -46,7 +48,7 @@ public class DevService {
 
     @Transactional
     public Planet createPlanet(User user) {
-        return planetRepository.save(new Planet(user, randomName(), PlanetImageType.EARTH));
+        return planetService.create(user.getId(), randomName(), PlanetImageType.EARTH);
     }
 
     private String randomName() {

@@ -1,6 +1,7 @@
 package trying.cosmos.domain.planet.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,15 @@ public class PlanetService {
         if (user.getPlanet() != null) {
             throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
         }
-        return planetRepository.save(new Planet(userRepository.findById(userId).orElseThrow(), name, type));
+        return planetRepository.save(new Planet(userRepository.findById(userId).orElseThrow(), name, type, generateCode()));
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     public String getInviteCode(Long userId, Long planetId) {

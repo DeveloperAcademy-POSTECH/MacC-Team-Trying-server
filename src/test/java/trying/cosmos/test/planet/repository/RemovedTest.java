@@ -1,5 +1,6 @@
 package trying.cosmos.test.planet.repository;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -44,9 +45,17 @@ public class RemovedTest {
     @BeforeEach
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        this.planet = planetRepository.save(new Planet(user, "행성", PlanetImageType.EARTH));
-        this.deleted = planetRepository.save(new Planet(user, "삭제된 행성", PlanetImageType.EARTH));
+        this.planet = planetRepository.save(new Planet(user, "행성", PlanetImageType.EARTH, generateCode()));
+        this.deleted = planetRepository.save(new Planet(user, "삭제된 행성", PlanetImageType.EARTH, generateCode()));
         planetService.leave(user.getId(), deleted.getId());
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
     
     @Nested

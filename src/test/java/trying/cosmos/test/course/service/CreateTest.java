@@ -1,5 +1,6 @@
 package trying.cosmos.test.course.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -68,10 +69,18 @@ public class CreateTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.userId = user.getId();
 
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
+        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
         this.planetId = planet.getId();
 
         tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

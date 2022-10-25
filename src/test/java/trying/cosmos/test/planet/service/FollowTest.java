@@ -1,5 +1,6 @@
 package trying.cosmos.test.planet.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -54,10 +55,18 @@ public class FollowTest {
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.userId = user.getId();
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH));
+        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
         this.planetId = planet.getId();
         User follower = userRepository.save(new User("follower@gmail.com", PASSWORD, "follow", LOGIN, USER));
         this.followerId = follower.getId();
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

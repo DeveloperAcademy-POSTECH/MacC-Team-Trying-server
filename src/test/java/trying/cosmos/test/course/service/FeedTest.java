@@ -1,5 +1,6 @@
 package trying.cosmos.test.course.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,10 +68,10 @@ public class FeedTest {
         User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", LOGIN, USER));
         User notFollow = userRepository.save(new User("notfollow@gmail.com", PASSWORD, "notfollow", LOGIN, USER));
 
-        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH));
-        Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, EARTH));
+        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH, generateCode()));
+        Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, EARTH, generateCode()));
         planetService.follow(me.getId(), followPlanet.getId());
-        Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, EARTH));
+        Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, EARTH, generateCode()));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
         courseService.create(me.getId(), myPlanet.getId(), "title1", "body", PRIVATE, tagRequest, null);
@@ -79,6 +80,14 @@ public class FeedTest {
         courseService.create(follow.getId(), followPlanet.getId(), "title4", "body", PUBLIC, tagRequest, null);
         courseService.create(notFollow.getId(), notFollowPlanet.getId(), "title5", "body", PRIVATE, tagRequest, null);
         courseService.create(notFollow.getId(), notFollowPlanet.getId(), "title6", "body", PUBLIC, tagRequest, null);
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

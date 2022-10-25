@@ -16,7 +16,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
 import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
@@ -49,9 +48,9 @@ public class Planet extends DateAuditingEntity {
     private boolean isDeleted;
 
     // Constructor
-    public Planet(User user, String name, PlanetImageType image) {
+    public Planet(User user, String name, PlanetImageType image, String code) {
         this.name = name;
-        this.inviteCode = UUID.randomUUID().toString();
+        this.inviteCode = code;
         this.image = image;
         this.meetDate = LocalDate.now();
         this.isDeleted = false;

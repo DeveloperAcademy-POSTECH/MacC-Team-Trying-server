@@ -22,4 +22,6 @@ public interface PlanetRepository extends JpaRepository<Planet, Long> {
 
     @Query("select pf.planet from PlanetFollow pf where pf.user.id = :userId and pf.planet.isDeleted = false")
     Slice<Planet> getFollowPlanets(Long userId, Pageable pageable);
+
+    boolean existsByInviteCode(String code);
 }

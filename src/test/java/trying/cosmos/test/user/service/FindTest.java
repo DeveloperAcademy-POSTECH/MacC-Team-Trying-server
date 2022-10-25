@@ -1,5 +1,6 @@
 package trying.cosmos.test.user.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -67,7 +68,7 @@ public class FindTest {
         @DisplayName("행성은 있고 메이트는 없으면 hasPlanet()는 true, hasMate는 false")
         void not_has_mate() throws Exception {
             User user = userService.find(userId);
-            planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
+            planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
             assertThat(user.getPlanet()).isNotNull();
             assertThat(user.getMate()).isNull();
         }
@@ -76,12 +77,20 @@ public class FindTest {
         @DisplayName("행성은 있고 메이트는 없으면 hasPlanet()는 true, hasMate는 false")
         void has_mate() throws Exception {
             User user = userService.find(userId);
-            Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
+            Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
             User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate"));
             planetService.join(mate.getId(), planet.getInviteCode());
             assertThat(user.getPlanet()).isNotNull();
             assertThat(user.getMate()).isNotNull();
         }
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested

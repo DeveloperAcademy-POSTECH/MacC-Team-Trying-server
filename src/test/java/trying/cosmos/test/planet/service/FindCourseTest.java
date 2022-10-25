@@ -1,5 +1,6 @@
 package trying.cosmos.test.planet.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -60,8 +61,8 @@ public class FindCourseTest {
         this.userId = user.getId();
         User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
 
-        myPlanet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH));
-        otherPlanet = planetRepository.save(new Planet(other, PLANET_NAME, PlanetImageType.EARTH));
+        myPlanet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
+        otherPlanet = planetRepository.save(new Planet(other, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
 
         myPublic = new Course(myPlanet, "my_public", "my_public", Access.PUBLIC);
         courseRepository.save(myPublic);
@@ -71,6 +72,14 @@ public class FindCourseTest {
         courseRepository.save(otherPublic);
         otherPrivate = new Course(otherPlanet, "other_private", "other_private", Access.PRIVATE);
         courseRepository.save(otherPrivate);
+    }
+
+    private String generateCode() {
+        String code = RandomStringUtils.random(6, true, true);
+        while (planetRepository.existsByInviteCode(code)) {
+            code = RandomStringUtils.random(6, true, true);
+        }
+        return code;
     }
 
     @Nested
