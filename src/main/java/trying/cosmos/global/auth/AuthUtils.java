@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.global.auth.entity.Session;
-import trying.cosmos.global.auth.repository.SessionRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +15,7 @@ public class AuthUtils {
 
     private static final String ACCESS_TOKEN_HEADER = "accessToken";
 
-    private final SessionRepository sessionRepository;
+    private final SessionService sessionService;
     private final TokenProvider tokenProvider;
 
     public Session checkAuthenticate(HttpServletRequest request) {
@@ -26,11 +24,7 @@ public class AuthUtils {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
-        Optional<Session> optionalAuth = sessionRepository.findById(tokenProvider.getSubject(token));
-        if (optionalAuth.isEmpty()) {
-            throw new CustomException(ExceptionType.NOT_AUTHENTICATED);
-        }
-        Session auth = optionalAuth.get();
+        Session auth = sessionService.findById(tokenProvider.getSubject(token)).orElseThrow(() -> new CustomException(ExceptionType.NOT_AUTHENTICATED));
 
         if (!auth.getStatus().equals(UserStatus.LOGIN)) {
             throw new CustomException(ExceptionType.NOT_AUTHENTICATED);

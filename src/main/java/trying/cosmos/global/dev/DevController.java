@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.global.auth.SessionService;
 import trying.cosmos.global.auth.TokenProvider;
 import trying.cosmos.global.auth.entity.Session;
-import trying.cosmos.global.auth.repository.SessionRepository;
 import trying.cosmos.global.dev.response.DevCreateUserResponse;
 import trying.cosmos.global.dev.response.DevPlanetResponse;
 
@@ -20,19 +20,19 @@ public class DevController {
 
     private final DevService devService;
     private final TokenProvider tokenProvider;
-    private final SessionRepository sessionRepository;
+    private final SessionService sessionService;
 
     @PostMapping("/users")
     public DevCreateUserResponse createUser() {
         User user = devService.createUser();
-        Session auth = sessionRepository.save(new Session(user));
+        Session auth = sessionService.create(user);
         return new DevCreateUserResponse(user, tokenProvider.getAccessToken(auth));
     }
 
     @PostMapping("/planets")
     public DevPlanetResponse createPlanet() {
         User user = devService.createUser();
-        Session auth = sessionRepository.save(new Session(user));
+        Session auth = sessionService.create(user);
         return new DevPlanetResponse(devService.createPlanet(user), tokenProvider.getAccessToken(auth));
     }
 }
