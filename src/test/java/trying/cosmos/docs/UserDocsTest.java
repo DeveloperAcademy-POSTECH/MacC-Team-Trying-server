@@ -263,6 +263,8 @@ public class UserDocsTest {
                                 .description("내 닉네임"),
                         fieldWithPath("mate.name")
                                 .description("메이트 닉네임").optional(),
+                        fieldWithPath("planet.planetId")
+                                .description("내 행성 Id").optional(),
                         fieldWithPath("planet.name")
                                 .description("내가 속한 행성 이름").optional(),
                         fieldWithPath("planet.dday")

@@ -416,6 +416,8 @@ public class PlanetDocsTest {
                                 .description("코스 id"),
                         fieldWithPath("courses[].title")
                                 .description("코스 제목"),
+                        fieldWithPath("courses[].createdDate")
+                                .description("코스 생성일"),
                         fieldWithPath("courses[].stars")
                                 .description("별자리 이미지에서 별 좌표"),
                         fieldWithPath("courses[].stars[].x")
