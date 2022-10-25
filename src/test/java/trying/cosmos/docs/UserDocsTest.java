@@ -36,9 +36,9 @@ import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
+import trying.cosmos.global.auth.SessionService;
 import trying.cosmos.global.auth.TokenProvider;
 import trying.cosmos.global.auth.entity.Authority;
-import trying.cosmos.global.auth.repository.SessionRepository;
 
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -66,7 +66,7 @@ public class UserDocsTest {
     @Autowired
     UserController userController;
     @Autowired
-    SessionRepository sessionRepository;
+    SessionService sessionService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -108,7 +108,7 @@ public class UserDocsTest {
 
     @AfterEach
     void clear() {
-        sessionRepository.deleteAll();
+        sessionService.clear();
     }
 
     @Test

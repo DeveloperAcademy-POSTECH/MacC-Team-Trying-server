@@ -15,7 +15,7 @@ import trying.cosmos.domain.user.dto.request.UserLoginRequest;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
-import trying.cosmos.global.auth.repository.SessionRepository;
+import trying.cosmos.global.auth.SessionService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -33,7 +33,7 @@ public class SessionTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    SessionRepository sessionRepository;
+    SessionService sessionService;
     @Autowired
     UserService userService;
     @Autowired
@@ -43,7 +43,7 @@ public class SessionTest {
 
     @AfterEach
     void clear() {
-        sessionRepository.deleteAll();
+        sessionService.clear();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class SessionTest {
                         .contentType("application/json"));
 
         actions.andExpect(status().isOk());
-        assertThat(sessionRepository.findByUserId(user.getId())).isPresent();
+        assertThat(sessionService.findByUserId(user.getId())).isPresent();
     }
 
     @Test
@@ -71,7 +71,7 @@ public class SessionTest {
                         .contentType("application/json"));
 
         actions.andExpect(status().isOk());
-        assertThat(sessionRepository.findByUserId(user.getId())).isEmpty();
+        assertThat(sessionService.findByUserId(user.getId())).isEmpty();
     }
 
     @Test
@@ -85,6 +85,6 @@ public class SessionTest {
                         .contentType("application/json"));
 
         actions.andExpect(status().isOk());
-        assertThat(sessionRepository.findByUserId(user.getId())).isEmpty();
+        assertThat(sessionService.findByUserId(user.getId())).isEmpty();
     }
 }

@@ -29,7 +29,7 @@ import trying.cosmos.domain.certification.dto.request.GenerateCertificationReque
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
-import trying.cosmos.global.auth.repository.SessionRepository;
+import trying.cosmos.global.auth.SessionService;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -58,7 +58,7 @@ public class CertificationDocsTest {
     @Autowired
     CertificationRepository certificationRepository;
     @Autowired
-    SessionRepository sessionRepository;
+    SessionService sessionService;
 
     @Autowired
     RestDocumentationResultHandler restDocs;
@@ -79,7 +79,7 @@ public class CertificationDocsTest {
 
     @AfterEach
     void clear() {
-        sessionRepository.deleteAll();
+        sessionService.clear();
     }
 
     @Test

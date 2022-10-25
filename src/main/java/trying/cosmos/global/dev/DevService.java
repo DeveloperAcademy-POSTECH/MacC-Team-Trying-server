@@ -10,7 +10,10 @@ import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
+import trying.cosmos.global.auth.SessionService;
 import trying.cosmos.global.auth.entity.Authority;
+
+import javax.annotation.PostConstruct;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;
 
@@ -21,9 +24,13 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 public class DevService {
 
     private final UserRepository userRepository;
+    private final SessionService sessionService;
     private final PlanetRepository planetRepository;
 
-    private static final String MOCK_DEVICE_TOKEN = "deviceToken";
+    @PostConstruct
+    public void clearSession() {
+        sessionService.clear();
+    }
 
     @Transactional
     public User createUser() {
