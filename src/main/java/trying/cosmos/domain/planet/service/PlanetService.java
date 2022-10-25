@@ -106,12 +106,9 @@ public class PlanetService {
     }
 
     @Transactional
-    public void delete(Long userId, Long planetId) {
+    public void leave(Long userId, Long planetId) {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
-        if (!planet.isOwnedBy(user)) {
-            throw new CustomException(ExceptionType.NO_PERMISSION);
-        }
-        planet.delete();
+        planet.leave(user);
     }
 }

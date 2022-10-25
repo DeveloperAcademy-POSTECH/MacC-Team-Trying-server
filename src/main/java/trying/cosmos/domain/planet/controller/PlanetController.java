@@ -85,7 +85,7 @@ public class PlanetController {
 
     @AuthorityOf(Authority.USER)
     @DeleteMapping("/{planetId}")
-    public void delete(@PathVariable Long planetId) {
-        planetService.delete(AuthKey.getKey(), planetId);
+    public void leave(@PathVariable Long planetId) {
+        planetService.leave(AuthKey.getKey(), planetId);
     }
 }

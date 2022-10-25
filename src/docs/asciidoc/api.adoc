@@ -273,7 +273,8 @@ include::{snippets}/planet-docs-test/update/http-response.adoc[]
 
 '''
 
-=== 10. 행성 삭제
+=== 10. 행성 나가기
+- 행성에 남아있는 사용자가 없으면 행성이 삭제됨
 
 ==== Request
 include::{snippets}/planet-docs-test/remove/http-request.adoc[]

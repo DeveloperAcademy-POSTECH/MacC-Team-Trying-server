@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.user.entity.User;
+import trying.cosmos.global.aop.LogSpace;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
 import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
 
+@Slf4j
 @ToString
 @Entity
 @Getter
@@ -99,7 +102,15 @@ public class Planet extends DateAuditingEntity {
         return this.owners.size() > 1;
     }
 
-    public void delete() {
-        this.isDeleted = true;
+    public void leave(User user) {
+        if (!owners.contains(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+        this.owners.remove(user);
+        user.setPlanet(null);
+        if (this.owners.isEmpty()) {
+            log.info("{}Delete Planet {}", LogSpace.getSpace(),id);
+            this.isDeleted = true;
+        }
     }
 }
