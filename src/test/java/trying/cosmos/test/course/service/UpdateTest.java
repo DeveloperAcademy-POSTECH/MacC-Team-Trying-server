@@ -56,7 +56,7 @@ public class UpdateTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, UserStatus.LOGIN, Authority.USER));
         this.userId = user.getId();
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagRequest, null);
         this.courseId = course.getId();
     }
@@ -69,8 +69,8 @@ public class UpdateTest {
         @DisplayName("코스 수정")
         void update() throws Exception {
             List<TagCreateRequest> updateTag = List.of(
-                    new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
-                    new TagCreateRequest(new PlaceCreateRequest(2L, "new place", 1.0, 1.0), "new tag")
+                    new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
+                    new TagCreateRequest(new PlaceCreateRequest("new place", 1.0, 1.0), "new tag")
             );
             courseService.update(userId, courseId, "updated", "updated", Access.PRIVATE, updateTag, null);
             assertThat(courseRepository.findById(courseId).orElseThrow().getTitle()).isEqualTo("updated");
@@ -89,8 +89,8 @@ public class UpdateTest {
         void not_my_course() throws Exception {
             User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGIN, Authority.USER));
             List<TagCreateRequest> updateTag = List.of(
-                    new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
-                    new TagCreateRequest(new PlaceCreateRequest(2L, "new place", 1.0, 1.0), "new tag")
+                    new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
+                    new TagCreateRequest(new PlaceCreateRequest("new place", 1.0, 1.0), "new tag")
             );
             assertThatThrownBy(() -> courseService.update(other.getId(), courseId, "updated", "updated", Access.PRIVATE, updateTag, null))
                     .isInstanceOf(CustomException.class)

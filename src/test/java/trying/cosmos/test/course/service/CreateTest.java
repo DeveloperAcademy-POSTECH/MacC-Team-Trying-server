@@ -71,7 +71,7 @@ public class CreateTest {
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH));
         this.planetId = planet.getId();
 
-        tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
     }
 
     @Nested

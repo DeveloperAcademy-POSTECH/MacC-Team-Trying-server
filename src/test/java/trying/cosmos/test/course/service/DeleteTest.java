@@ -56,7 +56,7 @@ public class DeleteTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, UserStatus.LOGIN, Authority.USER));
         this.userId = user.getId();
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagRequest, null);
         this.courseId = course.getId();
     }

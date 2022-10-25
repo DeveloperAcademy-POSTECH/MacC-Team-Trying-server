@@ -8,7 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 public class PlaceCreateRequest {
 
-    private Long placeId;
     private String name;
     private double latitude;
     private double longitude;

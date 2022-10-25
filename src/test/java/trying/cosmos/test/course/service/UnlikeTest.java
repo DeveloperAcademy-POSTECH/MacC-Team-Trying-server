@@ -74,7 +74,7 @@ public class UnlikeTest {
         User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
         Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH));
         Planet othersPlanet = planetRepository.save(new Planet(other, PLANET_NAME, EARTH));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
         course = courseService.create(me.getId(), myPlanet.getId(), "myPrivate", "myPrivate", PRIVATE, tagRequest, null);
         courseService.like(userId, course.getId());
