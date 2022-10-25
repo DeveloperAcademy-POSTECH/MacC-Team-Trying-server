@@ -2,6 +2,7 @@ package trying.cosmos.global.utils.email;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.thymeleaf.TemplateEngine;
@@ -26,6 +27,9 @@ public class RealEmailUtils implements EmailUtils {
     private final JavaMailSender emailSender;
     private final TemplateEngine templateEngine;
 
+    @Value("${image.logo}")
+    private String logo;
+
     @Async
     @Override
     public void send(String to, String subject, String template, EmailType type, Map<String, String> model) {
@@ -46,7 +50,7 @@ public class RealEmailUtils implements EmailUtils {
             multipart.addBodyPart(messageBodyPart);
 
             BodyPart imageBodyPart = new MimeBodyPart();
-            FileDataSource dataSource = new FileDataSource("src/main/resources/static/logo.png");
+            FileDataSource dataSource = new FileDataSource(logo);
             imageBodyPart.setDataHandler(new DataHandler(dataSource));
             imageBodyPart.setHeader("Content-ID", "<image>");
 
