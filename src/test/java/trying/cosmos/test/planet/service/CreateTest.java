@@ -15,7 +15,6 @@ import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.test.component.TestVariables.*;
@@ -50,7 +49,7 @@ public class CreateTest {
         @Test
         @DisplayName("행성 생성시 user.getPlanet()시 행성 반환, planet.isOwnedBy(user) true")
         void create() throws Exception {
-            Planet planet = planetService.create(userId, PLANET_NAME, EARTH);
+            Planet planet = planetService.create(userId, PLANET_NAME, PLANET_IMAGE);
             User user = userRepository.findById(userId).orElseThrow();
 
             assertThat(user.getPlanet()).isEqualTo(planet);

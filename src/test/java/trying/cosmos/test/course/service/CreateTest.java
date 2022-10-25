@@ -28,7 +28,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.domain.course.entity.Access.PUBLIC;
-import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
@@ -69,7 +68,7 @@ public class CreateTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.userId = user.getId();
 
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
+        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
         this.planetId = planet.getId();
 
         tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));

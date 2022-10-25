@@ -18,7 +18,6 @@ import trying.cosmos.global.exception.CustomException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.global.exception.ExceptionType.PLANET_JOIN_FAILED;
@@ -51,7 +50,7 @@ public class JoinTest {
         User guest = userRepository.save(new User("guest@gmail.com", PASSWORD, "guest", LOGIN, USER));
         this.guestId = guest.getId();
 
-        Planet planet = planetRepository.save(new Planet(host, PLANET_NAME, EARTH, generateCode()));
+        Planet planet = planetRepository.save(new Planet(host, PLANET_NAME, PLANET_IMAGE, generateCode()));
         this.planetId = planet.getId();
         this.inviteCode = planet.getInviteCode();
     }

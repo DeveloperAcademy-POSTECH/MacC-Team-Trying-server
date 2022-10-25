@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static trying.cosmos.domain.course.entity.Access.PRIVATE;
 import static trying.cosmos.domain.course.entity.Access.PUBLIC;
-import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.test.component.TestVariables.*;
@@ -68,10 +67,10 @@ public class FeedTest {
         User follow = userRepository.save(new User("follow@gmail.com", PASSWORD, "follow", LOGIN, USER));
         User notFollow = userRepository.save(new User("notfollow@gmail.com", PASSWORD, "notfollow", LOGIN, USER));
 
-        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, EARTH, generateCode()));
-        Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, EARTH, generateCode()));
+        Planet myPlanet = planetRepository.save(new Planet(me, PLANET_NAME, PLANET_IMAGE, generateCode()));
+        Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, PLANET_IMAGE, generateCode()));
         planetService.follow(me.getId(), followPlanet.getId());
-        Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, EARTH, generateCode()));
+        Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, PLANET_IMAGE, generateCode()));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
         courseService.create(me.getId(), myPlanet.getId(), "title1", "body", PRIVATE, tagRequest, null);

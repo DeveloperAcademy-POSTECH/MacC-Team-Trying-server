@@ -28,7 +28,6 @@ import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.controller.UserController;
 import trying.cosmos.domain.user.dto.request.*;
@@ -247,7 +246,7 @@ public class UserDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
         User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate", UserStatus.LOGIN, Authority.USER));
         planetService.join(mate.getId(), planet.getInviteCode());
 

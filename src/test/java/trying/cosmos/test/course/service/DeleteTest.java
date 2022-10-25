@@ -16,7 +16,6 @@ import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
@@ -56,7 +55,7 @@ public class DeleteTest {
     void setup() {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, UserStatus.LOGIN, Authority.USER));
         this.userId = user.getId();
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
+        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
         List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
         Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagRequest, null);
         this.courseId = course.getId();

@@ -15,7 +15,6 @@ import trying.cosmos.domain.course.entity.Access;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
@@ -61,8 +60,8 @@ public class FindCourseTest {
         this.userId = user.getId();
         User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
 
-        myPlanet = planetRepository.save(new Planet(user, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
-        otherPlanet = planetRepository.save(new Planet(other, PLANET_NAME, PlanetImageType.EARTH, generateCode()));
+        myPlanet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
+        otherPlanet = planetRepository.save(new Planet(other, PLANET_NAME, PLANET_IMAGE, generateCode()));
 
         myPublic = new Course(myPlanet, "my_public", "my_public", Access.PUBLIC);
         courseRepository.save(myPublic);

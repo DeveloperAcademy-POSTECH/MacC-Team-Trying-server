@@ -1,7 +1,6 @@
 package trying.cosmos.domain.planet.dto.response;
 
 import lombok.*;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -16,5 +15,5 @@ public class PlanetCreateRequest {
     private String name;
 
     @NotNull
-    private PlanetImageType image;
+    private String image;
 }

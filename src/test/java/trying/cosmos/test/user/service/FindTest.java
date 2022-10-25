@@ -19,7 +19,6 @@ import trying.cosmos.global.exception.CustomException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.domain.planet.entity.PlanetImageType.EARTH;
 import static trying.cosmos.domain.user.entity.UserStatus.*;
 import static trying.cosmos.global.auth.entity.Authority.USER;
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
@@ -68,7 +67,7 @@ public class FindTest {
         @DisplayName("행성은 있고 메이트는 없으면 hasPlanet()는 true, hasMate는 false")
         void not_has_mate() throws Exception {
             User user = userService.find(userId);
-            planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
+            planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
             assertThat(user.getPlanet()).isNotNull();
             assertThat(user.getMate()).isNull();
         }
@@ -77,7 +76,7 @@ public class FindTest {
         @DisplayName("행성은 있고 메이트는 없으면 hasPlanet()는 true, hasMate는 false")
         void has_mate() throws Exception {
             User user = userService.find(userId);
-            Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, EARTH, generateCode()));
+            Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
             User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate"));
             planetService.join(mate.getId(), planet.getInviteCode());
             assertThat(user.getPlanet()).isNotNull();

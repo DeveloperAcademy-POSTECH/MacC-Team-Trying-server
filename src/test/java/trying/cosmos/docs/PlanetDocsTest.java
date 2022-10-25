@@ -32,7 +32,6 @@ import trying.cosmos.domain.planet.dto.request.PlanetUpdateRequest;
 import trying.cosmos.domain.planet.dto.response.PlanetCreateRequest;
 import trying.cosmos.domain.planet.dto.response.PlanetJoinRequest;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetImageType;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
@@ -110,7 +109,7 @@ public class PlanetDocsTest {
         userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        String content = objectMapper.writeValueAsString(new PlanetCreateRequest(PLANET_NAME, PlanetImageType.EARTH));
+        String content = objectMapper.writeValueAsString(new PlanetCreateRequest(PLANET_NAME, "PLANET"));
 
         ResultActions actions = mvc.perform(post("/planets")
                 .header("accessToken", accessToken)
@@ -147,7 +146,7 @@ public class PlanetDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
         Long id = planet.getId();
 
         ResultActions actions = mvc.perform(get("/planets/{planetId}/code", id)
@@ -178,7 +177,7 @@ public class PlanetDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         ResultActions actions = mvc.perform(get("/planets/join")
                 .header("accessToken", accessToken)
@@ -215,7 +214,7 @@ public class PlanetDocsTest {
         userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(host.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(host.getId(), PLANET_NAME, "PLANET");
         String content = objectMapper.writeValueAsString(new PlanetJoinRequest(planet.getInviteCode()));
 
         ResultActions actions = mvc.perform(post("/planets/join")
@@ -243,7 +242,7 @@ public class PlanetDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         ResultActions actions = mvc.perform(get("/planets/{planetId}", planet.getId())
                 .contentType(JSON_CONTENT_TYPE))
@@ -274,7 +273,7 @@ public class PlanetDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         ResultActions actions = mvc.perform(get("/planets")
                 .param("query", "행성")
@@ -321,9 +320,9 @@ public class PlanetDocsTest {
         User follow2 = userRepository.save(new User("follow2@gmail.com", PASSWORD, "follow2", UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
-        Planet followPlanet1 = planetService.create(follow1.getId(), PLANET_NAME, PlanetImageType.EARTH);
-        Planet followPlanet2 = planetService.create(follow2.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        planetService.create(user.getId(), PLANET_NAME, "PLANET");
+        Planet followPlanet1 = planetService.create(follow1.getId(), PLANET_NAME, "PLANET");
+        Planet followPlanet2 = planetService.create(follow2.getId(), PLANET_NAME, "PLANET");
         planetService.follow(user.getId(), followPlanet1.getId());
         planetService.follow(user.getId(), followPlanet2.getId());
 
@@ -370,7 +369,7 @@ public class PlanetDocsTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
         tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -437,7 +436,7 @@ public class PlanetDocsTest {
     void update() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("updated", 365));
 
@@ -474,7 +473,7 @@ public class PlanetDocsTest {
     void remove() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         ResultActions actions = mvc.perform(delete("/planets/{planetId}", planet.getId())
                 .header("accessToken", accessToken)
@@ -498,7 +497,7 @@ public class PlanetDocsTest {
     @DisplayName("행성 팔로우")
     void follow() throws Exception {
         User user = userRepository.save(new User("host@gmail", PASSWORD, "host", UserStatus.LOGOUT, Authority.USER));
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -525,7 +524,7 @@ public class PlanetDocsTest {
     @DisplayName("행성 언팔로우")
     void unfollow() throws Exception {
         User user = userRepository.save(new User("host@gmail", PASSWORD, "host", UserStatus.LOGOUT, Authority.USER));
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PlanetImageType.EARTH);
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
         User follower = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
