@@ -34,7 +34,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
 
     public boolean isExist(String email) {
-        return certificationRepository.existsByEmail(email) || userRepository.existsByEmail(email);
+        return userRepository.existsByEmail(email);
     }
 
     @Transactional

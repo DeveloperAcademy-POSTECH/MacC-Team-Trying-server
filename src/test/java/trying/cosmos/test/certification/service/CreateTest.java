@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
@@ -16,7 +15,6 @@ import trying.cosmos.global.exception.CustomException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.global.exception.ExceptionType.DUPLICATED;
 import static trying.cosmos.global.exception.ExceptionType.EMAIL_DUPLICATED;
 import static trying.cosmos.test.component.TestVariables.*;
 
@@ -50,14 +48,6 @@ public class CreateTest {
     @Nested
     @DisplayName("실패")
     class fail {
-
-        @Test
-        @DisplayName("중복된 이메일의 인증 코드가 존재하는 경우")
-        void duplicate_email_certification() throws Exception {
-            certificationService.createCertificationCode(EMAIL);
-            assertThatThrownBy(() -> certificationService.createCertificationCode(EMAIL))
-                    .isInstanceOf(DataIntegrityViolationException.class);
-        }
 
         @Test
         @DisplayName("중복된 이메일의 사용자가 존재하는 경우")

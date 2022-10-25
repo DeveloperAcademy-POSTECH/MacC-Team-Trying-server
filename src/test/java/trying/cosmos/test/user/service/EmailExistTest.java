@@ -35,13 +35,6 @@ public class EmailExistTest {
     class success {
 
         @Test
-        @DisplayName("인증코드로 등록된 이메일이 존재하는 경우 true")
-        void email_in_certification() throws Exception {
-            certificationService.createCertificationCode(EMAIL);
-            assertThat(userService.isExist(EMAIL)).isTrue();
-        }
-
-        @Test
         @DisplayName("같은 이메일의 유저가 존재하는 경우 true")
         void email_in_user() throws Exception {
             userRepository.save(new User(EMAIL, PASSWORD, USER_NAME));
