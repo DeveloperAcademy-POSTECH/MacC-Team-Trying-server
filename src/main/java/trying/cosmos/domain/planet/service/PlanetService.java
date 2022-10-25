@@ -29,6 +29,10 @@ public class PlanetService {
 
     @Transactional
     public Planet create(Long userId, String name, PlanetImageType type) {
+        User user = userRepository.findById(userId).orElseThrow();
+        if (user.getPlanet() != null) {
+            throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
+        }
         return planetRepository.save(new Planet(userRepository.findById(userId).orElseThrow(), name, type));
     }
 
@@ -67,19 +71,6 @@ public class PlanetService {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
         Planet myPlanet = userId == null ? null : userRepository.findById(userId).orElseThrow().getPlanet();
         return courseRepository.searchByPlanet(myPlanet, planet, pageable);
-        // 익명의 사용자
-//        if (userId == null) {
-//            return courseRepository.searchPublicByPlanet(planet, pageable);
-//        }
-//
-//        User user = userRepository.findById(userId).orElseThrow();
-//        if (planet.isOwnedBy(user)) {
-//            // 내 행성
-//            return courseRepository.searchByPlanet(planet, pageable);
-//        } else {
-//            // 다른 사람 행성
-//            return courseRepository.searchPublicByPlanet(planet, pageable);
-//        }
     }
 
     @Transactional
@@ -111,7 +102,6 @@ public class PlanetService {
         if (!planet.isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
-
         planet.update(name, dday);
     }
 
@@ -122,7 +112,6 @@ public class PlanetService {
         if (!planet.isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
-
         planet.delete();
     }
 }
