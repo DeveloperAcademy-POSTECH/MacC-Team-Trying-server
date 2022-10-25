@@ -118,7 +118,7 @@ public class UserDocsTest {
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         certificationService.certificate(certification.getEmail(), certification.getCode());
 
-        String content = objectMapper.writeValueAsString(new UserJoinRequest(EMAIL, PASSWORD, NAME));
+        String content = objectMapper.writeValueAsString(new UserJoinRequest(EMAIL, PASSWORD, NAME, DEVICE_TOKEN));
 
         ResultActions actions = mvc.perform(post("/users")
                 .content(content)
@@ -138,7 +138,10 @@ public class UserDocsTest {
                         fieldWithPath("name")
                                 .type(STRING)
                                 .description("닉네임")
-                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자"))
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
+                        fieldWithPath("deviceToken")
+                                .type(STRING)
+                                .description("푸시 알림을 위한 기기 고유 토큰")
                 )
         ));
     }

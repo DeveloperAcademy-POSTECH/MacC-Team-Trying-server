@@ -29,6 +29,8 @@ public enum ExceptionType {
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
 
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
+    EMAIL_DUPLICATED(CONFLICT, "중복된 이메일이 존재합니다."),
+    NAME_DUPLICATED(CONFLICT, "중복된 닉네임이 존재합니다."),
     PLANET_CREATE_FAILED(CONFLICT, "참여한 행성이 존재합니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
     PLANET_FOLLOW_FAILED(CONFLICT, "행성 팔로우에 실패했습니다."),

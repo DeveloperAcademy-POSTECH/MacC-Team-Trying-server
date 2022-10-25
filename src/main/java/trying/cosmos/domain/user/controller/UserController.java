@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping
-    public void join(@RequestBody @Validated UserJoinRequest request) {
-        userService.join(request.getEmail(), request.getPassword(), request.getName());
+    public UserLoginResponse join(@RequestBody @Validated UserJoinRequest request) {
+        return new UserLoginResponse(userService.join(request.getEmail(), request.getPassword(), request.getName(), request.getDeviceToken()));
     }
 
     @PostMapping("/login")
