@@ -59,7 +59,7 @@ public class DeleteTest {
         @Test
         @DisplayName("삭제")
         void update_dday() throws Exception {
-            planetService.delete(userId, planetId);
+            planetService.leave(userId, planetId);
             assertThat(planetRepository.searchById(planetId)).isEmpty();
         }
     }
@@ -71,7 +71,7 @@ public class DeleteTest {
         @Test
         @DisplayName("유저의 행성이 아닌 경우")
         void dday_not_positive() throws Exception {
-            assertThatThrownBy(() -> planetService.delete(guestId, planetId))
+            assertThatThrownBy(() -> planetService.leave(guestId, planetId))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(NO_PERMISSION.getMessage());
         }

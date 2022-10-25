@@ -46,7 +46,7 @@ public class RemovedTest {
         User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
         this.planet = planetRepository.save(new Planet(user, "행성", PlanetImageType.EARTH));
         this.deleted = planetRepository.save(new Planet(user, "삭제된 행성", PlanetImageType.EARTH));
-        planetService.delete(user.getId(), deleted.getId());
+        planetService.leave(user.getId(), deleted.getId());
     }
     
     @Nested
