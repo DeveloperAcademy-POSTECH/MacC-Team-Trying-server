@@ -1,6 +1,7 @@
 package trying.cosmos.domain.certification.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.email.EmailType;
 import trying.cosmos.global.utils.email.EmailUtils;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,14 +28,16 @@ public class CertificationService {
     private final CertificationRepository certificationRepository;
     private final UserRepository userRepository;
     private final EmailUtils emailUtils;
+    private final EntityManager em;
 
     public void createCertificationCode(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
         }
         certificationRepository.findByEmail(email).ifPresent(certificationRepository::delete);
-        Certification certification = certificationRepository.save(new Certification(email));
-        sendCertificationEmail(certification.getEmail(), certification.getCode());
+        em.flush();
+        Certification newCertification = certificationRepository.save(new Certification(email));
+        sendCertificationEmail(newCertification.getEmail(), newCertification.getCode());
     }
 
     private void sendCertificationEmail(String email, String code) {
