@@ -485,13 +485,17 @@ include::{snippets}/course-docs-test/unlike/http-response.adoc[]
 |코드|설명
 |DUPLICATED|중복 불가 제약조건을 위반하는 경우
 
+|PLANET_CREATE_FAILED|행성 생성 실패
+
+- 이미 행성이 존재할 때 행성을 생성하는 경우
+
 |PLANET_JOIN_FAILED|행성 참여 실패
 
-- 내 행성에 참여
+- 내 행성에 참여하는 경우
 
-- 이미 메이트가 들어온 행성에 참여
+- 이미 메이트가 들어온 행성에 참여하는 경우
 
 |PLANET_FOLLOW_FAILED|행성 팔로우 실패
 
-- 내 행성 팔로우
+- 내 행성을 팔로우하는 경우
 |===

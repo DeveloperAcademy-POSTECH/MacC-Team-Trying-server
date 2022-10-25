@@ -34,15 +34,15 @@ public class CreateTest {
         @Test
         @DisplayName("장소 첫 사용시 장소 추가")
         void create() throws Exception {
-            placeService.create(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE));
+            placeService.create(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE));
             assertThat(placeRepository.count()).isEqualTo(1);
         }
 
         @Test
         @DisplayName("장소 재 사용시 이전 장소 이용")
         void find() throws Exception {
-            Place place1 = placeService.create(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE));
-            Place place2 = placeService.create(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE));
+            Place place1 = placeService.create(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE));
+            Place place2 = placeService.create(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE));
             assertThat(place1).isEqualTo(place2);
             assertThat(placeRepository.count()).isEqualTo(1);
         }

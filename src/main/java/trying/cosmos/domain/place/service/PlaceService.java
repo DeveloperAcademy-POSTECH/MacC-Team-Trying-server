@@ -16,10 +16,9 @@ public class PlaceService {
 
     @Transactional
     public Place create(PlaceCreateRequest request) {
-        return placeRepository.findById(request.getPlaceId())
+        return placeRepository.find(request.getName(), request.getLatitude(), request.getLongitude())
                 .orElseGet(() -> placeRepository.save(
                         new Place(
-                                request.getPlaceId(),
                                 request.getName(),
                                 request.getLatitude(),
                                 request.getLongitude()

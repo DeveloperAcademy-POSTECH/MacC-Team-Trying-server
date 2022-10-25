@@ -71,7 +71,7 @@ public class FeedTest {
         Planet followPlanet = planetRepository.save(new Planet(follow, PLANET_NAME, EARTH));
         planetService.follow(me.getId(), followPlanet.getId());
         Planet notFollowPlanet = planetRepository.save(new Planet(notFollow, PLANET_NAME, EARTH));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(1L, PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
 
         courseService.create(me.getId(), myPlanet.getId(), "title1", "body", PRIVATE, tagRequest, null);
         courseService.create(me.getId(), myPlanet.getId(), "title2", "body", PUBLIC, tagRequest, null);

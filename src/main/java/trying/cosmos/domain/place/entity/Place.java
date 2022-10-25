@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @ToString
 @Entity
@@ -16,7 +13,7 @@ import javax.persistence.Id;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
     private Long placeId;
 
@@ -26,8 +23,7 @@ public class Place {
     private Coordinate coordinate;
 
     // Constructor
-    public Place(Long placeId, String name, double latitude, double longitude) {
-        this.placeId = placeId;
+    public Place(String name, double latitude, double longitude) {
         this.name = name;
         this.coordinate = new Coordinate(latitude, longitude);
     }
