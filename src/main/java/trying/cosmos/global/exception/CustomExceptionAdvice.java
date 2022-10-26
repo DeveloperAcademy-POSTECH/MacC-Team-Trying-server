@@ -1,6 +1,7 @@
 package trying.cosmos.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,7 +18,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -31,7 +34,15 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomExceptionEntity> validation(MethodArgumentNotValidException e) {
-        return generalResponse(ExceptionType.INVALID_INPUT, e);
+        return generalResponse(ExceptionType.INVALID_INPUT, getBindingMessage(e), e);
+    }
+
+    private String getBindingMessage(MethodArgumentNotValidException e) {
+        StringBuilder builder = new StringBuilder();
+        e.getBindingResult().getFieldErrors().forEach(error ->
+                builder.append(error.getDefaultMessage()).append(" ")
+        );
+        return builder.substring(0, builder.length() - 1);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -53,7 +64,6 @@ public class CustomExceptionAdvice {
             return generalResponse(ExceptionType.UNKNOWN_EXCEPTION, e);
         }
     }
-
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<CustomExceptionEntity> type(MethodArgumentTypeMismatchException e) {
@@ -96,5 +106,9 @@ public class CustomExceptionAdvice {
 
     private static ResponseEntity<CustomExceptionEntity> generalResponse(ExceptionType type, Exception e) {
         return new ResponseEntity<>(new CustomExceptionEntity(type, type.getMessage(), e), type.getStatus());
+    }
+
+    private static ResponseEntity<CustomExceptionEntity> generalResponse(ExceptionType type, String message, Exception e) {
+        return new ResponseEntity<>(new CustomExceptionEntity(type, message, e), type.getStatus());
     }
 }
