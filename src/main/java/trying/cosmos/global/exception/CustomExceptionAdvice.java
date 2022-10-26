@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.NoSuchElementException;
 
@@ -69,6 +70,11 @@ public class CustomExceptionAdvice {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<CustomExceptionEntity> parameter(MissingServletRequestParameterException e) {
+        return generalResponse(ExceptionType.INVALID_PARAMETER, e);
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<CustomExceptionEntity> parameter(MissingServletRequestPartException e) {
         return generalResponse(ExceptionType.INVALID_PARAMETER, e);
     }
 

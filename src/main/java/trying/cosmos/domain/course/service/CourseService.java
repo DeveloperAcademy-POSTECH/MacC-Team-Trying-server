@@ -51,9 +51,15 @@ public class CourseService {
 
         Course course = courseRepository.save(new Course(planet, title, body, access));
         createCourseTag(tagDto, course);
-        createCourseImage(images, course);
+        if (!isEmptyImage(images)) {
+            createCourseImage(images, course);
+        }
 
         return course;
+    }
+
+    private boolean isEmptyImage(List<MultipartFile> images) {
+        return images == null || (images.size() == 1 && images.get(0).getSize() == 0);
     }
 
     public CourseFindResponse find(Long userId, Long courseId) {

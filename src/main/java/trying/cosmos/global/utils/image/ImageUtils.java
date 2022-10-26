@@ -1,6 +1,8 @@
 package trying.cosmos.global.utils.image;
 
 import org.springframework.web.multipart.MultipartFile;
+import trying.cosmos.global.exception.CustomException;
+import trying.cosmos.global.exception.ExceptionType;
 
 public interface ImageUtils {
 
@@ -10,7 +12,7 @@ public interface ImageUtils {
 
     static String getExtension(MultipartFile file) {
         if (file.getContentType() == null) {
-            throw new RuntimeException("이미지 타입이 없습니다.");
+            throw new CustomException(ExceptionType.INVALID_IMAGE_TYPE);
         }
 
         switch (file.getContentType()) {
@@ -22,7 +24,7 @@ public interface ImageUtils {
             case "image/heif":
                 return ".heic";
             default:
-                throw new RuntimeException("지원하지 않는 이미지 타입입니다.");
+                throw new CustomException(ExceptionType.INVALID_IMAGE_TYPE);
         }
     }
 }
