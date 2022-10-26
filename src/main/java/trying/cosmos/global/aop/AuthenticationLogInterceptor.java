@@ -13,7 +13,7 @@ public class AuthenticationLogInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.debug("[Session Info]");
+        log.debug("[Authentication Info]");
         log.debug("");
         getAuthenticationInfoLog();
         log.debug("");
@@ -25,8 +25,8 @@ public class AuthenticationLogInterceptor implements HandlerInterceptor {
     private static void getAuthenticationInfoLog() {
         log.debug("- Need Authenticate: {}", needAuthenticate());
         log.debug("- Is Authenticated: {}", isAuthenticated());
-        if (needAuthenticate() && isAuthenticated()) {
-            log.debug("- Session Key: {}", getKey());
+        if (isAuthenticated()) {
+            log.debug("- Authentication Key: {}", getKey());
         }
     }
 }

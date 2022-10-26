@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private final AuthUtils authUtils;
-    private static final String AUTHORITY_KEY = "auth";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
