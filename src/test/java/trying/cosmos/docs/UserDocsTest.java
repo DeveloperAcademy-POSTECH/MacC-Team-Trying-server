@@ -113,7 +113,7 @@ public class UserDocsTest {
     @Test
     @DisplayName("회원가입")
     void join() throws Exception {
-        certificationService.createCertificationCode(EMAIL);
+        certificationService.generate(EMAIL);
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         certificationService.certificate(certification.getEmail(), certification.getCode());
 

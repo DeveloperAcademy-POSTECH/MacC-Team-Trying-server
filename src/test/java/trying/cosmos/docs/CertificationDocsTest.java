@@ -105,7 +105,7 @@ public class CertificationDocsTest {
     @Test
     @DisplayName("인증코드 확인")
     void certificate() throws Exception {
-        certificationService.createCertificationCode(EMAIL);
+        certificationService.generate(EMAIL);
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         String content = objectMapper.writeValueAsString(new CertificateRequest(EMAIL, certification.getCode()));
 

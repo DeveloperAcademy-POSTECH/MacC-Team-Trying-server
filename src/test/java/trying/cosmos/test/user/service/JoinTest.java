@@ -42,7 +42,7 @@ public class JoinTest {
 
     @BeforeEach
     void setup() {
-        certificationService.createCertificationCode(EMAIL);
+        certificationService.generate(EMAIL);
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         certificationService.certificate(EMAIL, certification.getCode());
     }
@@ -75,7 +75,7 @@ public class JoinTest {
         @Test
         @DisplayName("이메일이 아직 인증되지 않은 경우")
         void email_not_certified() throws Exception {
-            certificationService.createCertificationCode("before@gmail.com");
+            certificationService.generate("before@gmail.com");
             assertThatThrownBy(() -> userService.join("before@gmail.com", PASSWORD, USER_NAME, DEVICE_TOKEN))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(CERTIFICATION_FAILED.getMessage());
