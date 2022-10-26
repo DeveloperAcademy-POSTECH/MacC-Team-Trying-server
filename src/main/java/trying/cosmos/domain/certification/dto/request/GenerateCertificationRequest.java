@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank;
 public class GenerateCertificationRequest {
 
     @NotBlank
-    @Email
+    @Email(message = "이메일 형식이 아닙니다.")
     String email;
 }
