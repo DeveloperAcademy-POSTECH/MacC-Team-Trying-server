@@ -15,6 +15,9 @@ import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
+import trying.cosmos.global.utils.date.DateUtils;
+
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -67,10 +70,10 @@ public class UpdateTest {
         @Test
         @DisplayName("수정")
         void update_dday() throws Exception {
-            planetService.update(userId, planetId, "updated", 10);
+            planetService.update(userId, planetId, "updated", LocalDate.now().minusDays(3), PLANET_IMAGE);
             Planet planet = planetRepository.findById(planetId).orElseThrow();
             assertThat(planet.getName()).isEqualTo("updated");
-            assertThat(planet.getDday()).isEqualTo(10);
+            assertThat(planet.getDday()).isEqualTo(4);
         }
     }
 
@@ -81,7 +84,7 @@ public class UpdateTest {
         @Test
         @DisplayName("유저의 행성이 아닌 경우")
         void dday_not_positive() throws Exception {
-            assertThatThrownBy(() -> planetService.update(guestId, planetId, "updated", 10))
+            assertThatThrownBy(() -> planetService.update(guestId, planetId, "updated", DateUtils.stringToDate("2020-01-04"), PLANET_IMAGE))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(NO_PERMISSION.getMessage());
         }

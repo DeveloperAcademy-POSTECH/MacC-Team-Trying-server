@@ -1,10 +1,20 @@
 package trying.cosmos.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
+import trying.cosmos.domain.course.dto.response.CourseFindContent;
+import trying.cosmos.domain.course.entity.Course;
+import trying.cosmos.domain.course.repository.CourseLikeRepository;
+import trying.cosmos.domain.course.repository.CourseRepository;
+import trying.cosmos.domain.planet.entity.Planet;
+import trying.cosmos.domain.planet.repository.PlanetFollowRepository;
+import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.SessionService;
@@ -17,7 +27,9 @@ import trying.cosmos.global.utils.email.EmailType;
 import trying.cosmos.global.utils.email.EmailUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;
 
@@ -29,6 +41,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final SessionService sessionService;
     private final CertificationRepository certificationRepository;
+    private final CourseRepository courseRepository;
+    private final PlanetFollowRepository planetFollowRepository;
+    private final CourseLikeRepository courseLikeRepository;
 
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;
@@ -69,6 +84,40 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow();
         user.checkAccessibleUser();
         return user;
+    }
+
+    public UserActivityResponse findActivity(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        if (user.getPlanet() == null) {
+            throw new CustomException(ExceptionType.NO_PLANET);
+        }
+        if (user.getMate() == null) {
+            throw new CustomException(ExceptionType.NO_MATE);
+        }
+        return new UserActivityResponse(
+                courseRepository.countByPlanet(user.getPlanet()),
+                planetFollowRepository.countByUser(user),
+                courseLikeRepository.countByUser(user)
+        );
+    }
+
+    public Slice<CourseFindContent> findLikedCourses(Long userId, Pageable pageable) {
+        Slice<Course> courseSlice = courseLikeRepository.searchCourseByUserId(userId, pageable);
+        User user = userRepository.findById(userId).orElseThrow();
+        List<CourseFindContent> contents = courseSlice.getContent().stream()
+                .map(course -> new CourseFindContent(course, true, isFollowed(user, course.getPlanet())))
+                .collect(Collectors.toList());
+        return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
+    }
+
+    private Boolean isFollowed(User user, Planet planet) {
+        if (user == null) {
+            return false;
+        }
+        if (planet.isOwnedBy(user)) {
+            return null;
+        }
+        return planetFollowRepository.existsByUserIdAndPlanetId(user.getId(), planet.getId());
     }
 
     @Transactional

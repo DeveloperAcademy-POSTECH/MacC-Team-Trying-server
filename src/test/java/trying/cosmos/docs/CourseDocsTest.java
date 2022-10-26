@@ -191,16 +191,17 @@ public class CourseDocsTest {
     @DisplayName("아이디로 코스 조회")
     void find_by_id() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
+        Planet planet = planetService.create(other.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto = new ArrayList<>();
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("맥도날드 포항점", 37.0, 125.3), "맥도날드"));
         tagDto.add(new TagCreateRequest(new PlaceCreateRequest("명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
 
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto, null);
+        Course course = courseService.create(other.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto, null);
 
         ResultActions actions = mvc.perform(get("/courses/{courseId}", course.getId())
                 .header("accessToken", accessToken)
@@ -231,9 +232,11 @@ public class CourseDocsTest {
                         fieldWithPath("planet.name")
                                 .description("코스가 포함된 행성 이름"),
                         fieldWithPath("planet.image")
-                                .description("코스가 포함된 행성 이미지 타입"),
+                                .description("코스가 포함된 행성 이미지 이름"),
                         fieldWithPath("planet.dday")
                                 .description("코스가 포함된 행성 dday"),
+                        fieldWithPath("planet.followed")
+                                .description("코스가 포함된 행성 팔로우 여부").optional(),
                         fieldWithPath("tags[].place.placeNumber")
                                 .description("태그할 장소 번호(지도 API에서 제공하는 ID)"),
                         fieldWithPath("tags[].place.name")
@@ -254,9 +257,10 @@ public class CourseDocsTest {
     @DisplayName("이름으로 코스 조회")
     void find_by_name() throws Exception {
         User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGOUT, Authority.USER));
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
+        Planet planet = planetService.create(other.getId(), PLANET_NAME, PLANET_IMAGE);
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
         tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -267,8 +271,7 @@ public class CourseDocsTest {
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest("그여든", 36.7, 128.5), "삐갈레 브래드"));
         tagDto2.add(new TagCreateRequest(new PlaceCreateRequest("버거킹 포항공대점", 35.5, 126.4), "버거킹"));
 
-        courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1, null);
-        courseService.create(user.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2, null);
+        courseService.create(other.getId(), planet.getId(), "한번쯤 가볼만한 식당 리스트", BODY, Access.PUBLIC, tagDto2, null);
 
         ResultActions actions = mvc.perform(get("/courses")
                 .header("accessToken", accessToken)
@@ -305,9 +308,11 @@ public class CourseDocsTest {
                         fieldWithPath("courses[].planet.name")
                                 .description("코스가 포함된 행성 이름"),
                         fieldWithPath("courses[].planet.image")
-                                .description("코스가 포함된 행성 이미지 타입"),
+                                .description("코스가 포함된 행성 이미지 이름"),
                         fieldWithPath("courses[].planet.dday")
                                 .description("코스가 포함된 행성 dday"),
+                        fieldWithPath("courses[].planet.followed")
+                                .description("코스가 포함된 행성 팔로우 여부").optional(),
                         fieldWithPath("courses[].title")
                                 .description("코스 제목"),
                         fieldWithPath("courses[].createdDate")
@@ -333,6 +338,8 @@ public class CourseDocsTest {
 
         Planet planet = planetService.create(user.getId(), PLANET_NAME, PLANET_IMAGE);
         Planet followPlanet = planetService.create(follow.getId(), "follow planet", PLANET_IMAGE);
+
+        planetService.follow(user.getId(), followPlanet.getId());
 
         List<TagCreateRequest> tagDto1 = new ArrayList<>();
         tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
@@ -376,9 +383,11 @@ public class CourseDocsTest {
                         fieldWithPath("courses[].planet.name")
                                 .description("코스가 포함된 행성 이름"),
                         fieldWithPath("courses[].planet.image")
-                                .description("코스가 포함된 행성 이미지 타입"),
+                                .description("코스가 포함된 행성 이미지 이름"),
                         fieldWithPath("courses[].planet.dday")
                                 .description("코스가 포함된 행성 dday"),
+                        fieldWithPath("courses[].planet.followed")
+                                .description("코스가 포함된 행성 팔로우 여부").optional(),
                         fieldWithPath("courses[].title")
                                 .description("코스 제목"),
                         fieldWithPath("courses[].createdDate")

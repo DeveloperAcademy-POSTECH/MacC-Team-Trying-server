@@ -71,9 +71,10 @@ public class Planet extends DateAuditingEntity {
         guest.setPlanet(this);
     }
 
-    public void update(String name, int days) {
+    public void update(String name, LocalDate date, String image) {
         this.name = name;
-        this.meetDate = LocalDate.now().minusDays(days - 1);
+        this.meetDate = date;
+        this.image = image;
     }
 
     public int getDday() {

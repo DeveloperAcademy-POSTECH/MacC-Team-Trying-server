@@ -46,11 +46,13 @@ import java.util.List;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.JsonFieldType.*;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.VARIES;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static trying.cosmos.test.component.TestVariables.PLANET_IMAGE;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -129,7 +131,7 @@ public class PlanetDocsTest {
                                 .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
                         fieldWithPath("image")
                                 .type(VARIES)
-                                .description("행성 이미지 타입")
+                                .description("행성 이미지 이름")
                 ),
                 responseFields(
                         fieldWithPath("planetId")
@@ -201,7 +203,7 @@ public class PlanetDocsTest {
                         fieldWithPath("name")
                                 .description("행성 이름"),
                         fieldWithPath("image")
-                                .description("행성 이미지 타입")
+                                .description("행성 이미지 이름")
                 )
         ));
     }
@@ -260,7 +262,7 @@ public class PlanetDocsTest {
                         fieldWithPath("name")
                                 .description("행성 이름"),
                         fieldWithPath("image")
-                                .description("행성 이미지 타입"),
+                                .description("행성 이미지 이름"),
                         fieldWithPath("dday")
                                 .description("행성 dday"),
                         fieldWithPath("followed")
@@ -305,7 +307,7 @@ public class PlanetDocsTest {
                         fieldWithPath("planets[].name")
                                 .description("행성 이름"),
                         fieldWithPath("planets[].image")
-                                .description("행성 이미지 타입"),
+                                .description("행성 이미지 이름"),
                         fieldWithPath("planets[].followed")
                                 .description("행성 팔로우 여부(내 행성인 경우 필드 없음)"),
                         fieldWithPath("size")
@@ -358,7 +360,7 @@ public class PlanetDocsTest {
                         fieldWithPath("planets[].name")
                                 .description("행성 이름"),
                         fieldWithPath("planets[].image")
-                                .description("행성 이미지 타입"),
+                                .description("행성 이미지 이름"),
                         fieldWithPath("planets[].followed")
                                 .description("행성 팔로우 여부(내 행성인 경우 필드 없음)"),
                         fieldWithPath("size")
@@ -444,7 +446,7 @@ public class PlanetDocsTest {
         String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
         Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
 
-        String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("updated", 365));
+        String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("updated", "2020-01-04", PLANET_IMAGE));
 
         ResultActions actions = mvc.perform(put("/planets/{planetId}", planet.getId())
                 .header("accessToken", accessToken)
@@ -467,9 +469,13 @@ public class PlanetDocsTest {
                                 .type(STRING)
                                 .description("행성 이름")
                                 .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
-                        fieldWithPath("dday")
-                                .type(NUMBER)
-                                .description("변경할 dday")
+                        fieldWithPath("date")
+                                .type(STRING)
+                                .description("변경할 날짜")
+                                .attributes(key("constraint").value("yyyy-MM-dd")),
+                        fieldWithPath("image")
+                                .type(STRING)
+                                .description("행성 이미지 이름")
                 )
         ));
     }

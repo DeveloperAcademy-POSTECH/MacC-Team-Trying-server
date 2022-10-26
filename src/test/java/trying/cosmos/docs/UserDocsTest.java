@@ -27,6 +27,11 @@ import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
+import trying.cosmos.domain.course.dto.request.TagCreateRequest;
+import trying.cosmos.domain.course.entity.Access;
+import trying.cosmos.domain.course.entity.Course;
+import trying.cosmos.domain.course.service.CourseService;
+import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.controller.UserController;
@@ -39,6 +44,9 @@ import trying.cosmos.global.auth.SessionService;
 import trying.cosmos.global.auth.TokenProvider;
 import trying.cosmos.global.auth.entity.Authority;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
@@ -50,6 +58,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static trying.cosmos.test.component.TestVariables.BODY;
+import static trying.cosmos.test.component.TestVariables.TITLE;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -83,6 +93,9 @@ public class UserDocsTest {
 
     @Autowired
     PlanetService planetService;
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     RestDocumentationResultHandler restDocs;
@@ -273,6 +286,100 @@ public class UserDocsTest {
                                 .description("행성 디데이").optional(),
                         fieldWithPath("planet.image")
                                 .description("행성 이미지").optional()
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("내 활동 조회")
+    void find_activity() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(user.getId(), PLANET_NAME, "PLANET");
+        User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate", UserStatus.LOGIN, Authority.USER));
+        planetService.join(mate.getId(), planet.getInviteCode());
+
+        ResultActions actions = mvc.perform(get("/users/me/activity")
+                        .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(restDocs.document(
+                requestHeaders(
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("courseCount")
+                                .description("내 별자리 수"),
+                        fieldWithPath("followCount")
+                                .description("내 위성 수"),
+                        fieldWithPath("likedCount")
+                                .description("찜한 별자리 ")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("좋아요한 코스 조회")
+    void find_liked_course() throws Exception {
+        User user = userRepository.save(new User(EMAIL, PASSWORD, NAME, UserStatus.LOGOUT, Authority.USER));
+        User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGOUT, Authority.USER));
+        String accessToken = userService.login(EMAIL, PASSWORD, DEVICE_TOKEN);
+
+        Planet planet = planetService.create(other.getId(), PLANET_NAME, "PLANET");
+        User mate = userRepository.save(new User("mate@gmail.com", PASSWORD, "mate", UserStatus.LOGIN, Authority.USER));
+        planetService.join(mate.getId(), planet.getInviteCode());
+
+        List<TagCreateRequest> tagDto1 = new ArrayList<>();
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("참뼈 효자시장점", 36.4, 124.0), "참뼈"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("맥도날드 포항점", 37.0, 125.3), "맥도날드"));
+        tagDto1.add(new TagCreateRequest(new PlaceCreateRequest("명륜진사갈비", 35.1, 122.1), "명륜진사갈비"));
+
+        List<TagCreateRequest> tagDto2 = new ArrayList<>();
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest("그여든", 36.7, 128.5), "삐갈레 브래드"));
+        tagDto2.add(new TagCreateRequest(new PlaceCreateRequest("버거킹 포항공대점", 35.5, 126.4), "버거킹"));
+
+        Course course = courseService.create(other.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagDto1, null);
+
+        courseService.like(user.getId(), course.getId());
+
+        ResultActions actions = mvc.perform(get("/users/me/liked")
+                        .header("accessToken", accessToken)
+                .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(restDocs.document(
+                requestHeaders(
+                        headerWithName("accessToken")
+                                .description("인증 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("courses[].courseId")
+                                .description("코스 id"),
+                        fieldWithPath("courses[].planet.planetId")
+                                .description("코스가 포함된 행성 id"),
+                        fieldWithPath("courses[].planet.name")
+                                .description("코스가 포함된 행성 이름"),
+                        fieldWithPath("courses[].planet.image")
+                                .description("코스가 포함된 행성 이미지 이름"),
+                        fieldWithPath("courses[].planet.dday")
+                                .description("코스가 포함된 행성 dday"),
+                        fieldWithPath("courses[].planet.followed")
+                                .description("코스가 포함된 행성 팔로우 여부"),
+                        fieldWithPath("courses[].title")
+                                .description("코스 제목"),
+                        fieldWithPath("courses[].createdDate")
+                                .description("코스 생성일"),
+                        fieldWithPath("courses[].liked")
+                                .description("코스 좋아요 여부"),
+                        fieldWithPath("courses[].images[]")
+                                .description("이미지 이름"),
+                        fieldWithPath("size")
+                                .description("불러온 코스 수"),
+                        fieldWithPath("hasNext")
+                                .description("다음 페이지 존재 여부")
                 )
         ));
     }
