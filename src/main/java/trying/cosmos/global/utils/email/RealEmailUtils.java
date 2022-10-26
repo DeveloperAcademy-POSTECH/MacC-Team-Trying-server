@@ -61,7 +61,7 @@ public class RealEmailUtils implements EmailUtils {
             log.info("{}Send email to {} code = {}", LogSpace.getSpace(), to, model.get("code"));
             emailSender.send(message);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("메일 전송 실패", e);
         }
     }
 }
