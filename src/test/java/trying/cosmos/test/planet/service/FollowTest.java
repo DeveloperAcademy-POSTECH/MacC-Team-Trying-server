@@ -17,12 +17,12 @@ import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
+import trying.cosmos.global.exception.ExceptionType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
 import static trying.cosmos.global.auth.entity.Authority.USER;
-import static trying.cosmos.global.exception.ExceptionType.PLANET_FOLLOW_FAILED;
 import static trying.cosmos.test.component.TestVariables.*;
 
 @SpringBootTest
@@ -89,7 +89,7 @@ public class FollowTest {
         void follow_my_planet() throws Exception {
             assertThatThrownBy(() -> planetService.follow(userId, planetId))
                     .isInstanceOf(CustomException.class)
-                    .hasMessage(PLANET_FOLLOW_FAILED.getMessage());
+                    .hasMessage(ExceptionType.DUPLICATED.getMessage());
         }
 
         @Test
@@ -98,7 +98,7 @@ public class FollowTest {
             planetService.follow(followerId, planetId);
             assertThatThrownBy(() -> planetService.follow(followerId, planetId))
                     .isInstanceOf(CustomException.class)
-                    .hasMessage(PLANET_FOLLOW_FAILED.getMessage());
+                    .hasMessage(ExceptionType.DUPLICATED.getMessage());
         }
     }
 }

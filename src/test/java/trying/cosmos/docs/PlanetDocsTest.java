@@ -262,7 +262,9 @@ public class PlanetDocsTest {
                         fieldWithPath("image")
                                 .description("행성 이미지 타입"),
                         fieldWithPath("dday")
-                                .description("행성 dday")
+                                .description("행성 dday"),
+                        fieldWithPath("followed")
+                                .description("행성 팔로우 여부(내 행성인 경우 필드 없음)")
                 )
         ));
     }
@@ -304,6 +306,8 @@ public class PlanetDocsTest {
                                 .description("행성 이름"),
                         fieldWithPath("planets[].image")
                                 .description("행성 이미지 타입"),
+                        fieldWithPath("planets[].followed")
+                                .description("행성 팔로우 여부(내 행성인 경우 필드 없음)"),
                         fieldWithPath("size")
                                 .description("검색결과 불러온 행성 수"),
                         fieldWithPath("hasNext")
@@ -355,6 +359,8 @@ public class PlanetDocsTest {
                                 .description("행성 이름"),
                         fieldWithPath("planets[].image")
                                 .description("행성 이미지 타입"),
+                        fieldWithPath("planets[].followed")
+                                .description("행성 팔로우 여부(내 행성인 경우 필드 없음)"),
                         fieldWithPath("size")
                                 .description("검색결과 불러온 행성 수"),
                         fieldWithPath("hasNext")
