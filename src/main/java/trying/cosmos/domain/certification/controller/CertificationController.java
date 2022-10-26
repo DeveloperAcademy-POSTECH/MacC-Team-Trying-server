@@ -15,8 +15,8 @@ public class CertificationController {
     private final CertificationService certificationService;
 
     @PostMapping
-    public void generateCertificateCode(@RequestBody @Validated GenerateCertificationRequest request) {
-        certificationService.createCertificationCode(request.getEmail());
+    public void generate(@RequestBody @Validated GenerateCertificationRequest request) {
+        certificationService.generate(request.getEmail());
     }
 
     @PatchMapping

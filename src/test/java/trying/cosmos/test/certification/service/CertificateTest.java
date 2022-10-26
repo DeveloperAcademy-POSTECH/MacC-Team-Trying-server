@@ -36,7 +36,7 @@ public class CertificateTest {
 
     @BeforeEach
     void setup() {
-        certificationService.createCertificationCode(EMAIL);
+        certificationService.generate(EMAIL);
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         this.code = certification.getCode();
     }

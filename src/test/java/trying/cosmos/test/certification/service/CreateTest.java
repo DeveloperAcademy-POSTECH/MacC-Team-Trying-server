@@ -40,7 +40,7 @@ public class CreateTest {
         @Test
         @DisplayName("인증코드 생성")
         void create() throws Exception {
-            certificationService.createCertificationCode(EMAIL);
+            certificationService.generate(EMAIL);
             assertThat(certificationRepository.findByEmail(EMAIL)).isPresent();
         }
     }
@@ -53,7 +53,7 @@ public class CreateTest {
         @DisplayName("중복된 이메일의 사용자가 존재하는 경우")
         void duplicate_email_user() throws Exception {
             userRepository.save(new User(EMAIL, PASSWORD, USER_NAME));
-            assertThatThrownBy(() -> certificationService.createCertificationCode(EMAIL))
+            assertThatThrownBy(() -> certificationService.generate(EMAIL))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(EMAIL_DUPLICATED.getMessage());
         }

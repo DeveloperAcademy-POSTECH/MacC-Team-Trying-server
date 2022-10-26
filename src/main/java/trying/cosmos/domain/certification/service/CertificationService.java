@@ -30,7 +30,7 @@ public class CertificationService {
     private final EmailUtils emailUtils;
     private final EntityManager em;
 
-    public void createCertificationCode(String email) {
+    public void generate(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
         }
