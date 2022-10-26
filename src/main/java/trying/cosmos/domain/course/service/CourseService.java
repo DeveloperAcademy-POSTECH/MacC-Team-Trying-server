@@ -15,6 +15,7 @@ import trying.cosmos.domain.course.repository.CourseLikeRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
+import trying.cosmos.domain.planet.repository.PlanetFollowRepository;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
@@ -36,6 +37,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final PlaceService placeService;
     private final CourseLikeRepository courseLikeRepository;
+    private final PlanetFollowRepository planetFollowRepository;
     private final S3ImageUtils imageUtils;
     private final EntityManager em;
 
@@ -57,14 +59,14 @@ public class CourseService {
     public CourseFindResponse find(Long userId, Long courseId) {
         Course course = courseRepository.searchById(courseId).orElseThrow();
         if (userId == null) {
-            return new CourseFindResponse(course, false);
+            return new CourseFindResponse(course, false, isFollowed(userId, course.getPlanet().getId()));
         }
 
         User user = userRepository.findById(userId).orElseThrow();
         if (course.getAccess().equals(Access.PRIVATE) && !course.getPlanet().isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
-        return new CourseFindResponse(course, isLiked(userId, course.getId()));
+        return new CourseFindResponse(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId()));
     }
 
     public Slice<CourseFindContent> findByTitle(Long userId, String title, Pageable pageable) {
@@ -76,7 +78,7 @@ public class CourseService {
 
         Slice<Course> courseSlice = courseRepository.searchByName(planet, "%" + title + "%",pageable);
         List<CourseFindContent> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
+                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId())))
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
@@ -84,7 +86,7 @@ public class CourseService {
     public Slice<CourseFindContent> getFeeds(Long userId, Pageable pageable) {
         Slice<Course> courseSlice = courseRepository.getFeed(userRepository.findById(userId).orElseThrow(), pageable);
         List<CourseFindContent> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId())))
+                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId())))
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
@@ -168,5 +170,15 @@ public class CourseService {
         }
         courseRepository.deleteCourseImage(course);
         course.clearImage();
+    }
+
+    private Boolean isFollowed(Long userId, Long planetId) {
+        if (userId == null) {
+            return false;
+        }
+        if (userId == planetId) {
+            return null;
+        }
+        return planetFollowRepository.existsByUserIdAndPlanetId(userId, planetId);
     }
 }

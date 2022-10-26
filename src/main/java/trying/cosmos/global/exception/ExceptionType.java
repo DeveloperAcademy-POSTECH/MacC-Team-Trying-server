@@ -33,7 +33,6 @@ public enum ExceptionType {
     NAME_DUPLICATED(CONFLICT, "중복된 닉네임이 존재합니다."),
     PLANET_CREATE_FAILED(CONFLICT, "참여한 행성이 존재합니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
-    PLANET_FOLLOW_FAILED(CONFLICT, "행성 팔로우에 실패했습니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 

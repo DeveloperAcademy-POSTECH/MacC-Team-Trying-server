@@ -26,12 +26,12 @@ public class CourseFindResponse {
 
     private List<String> images;
 
-    public CourseFindResponse(Course course, boolean liked) {
+    public CourseFindResponse(Course course, boolean liked, Boolean followed) {
         this.title = course.getTitle();
         this.body = course.getBody();
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
         this.liked = liked;
-        this.planet = new PlanetFindResponse(course.getPlanet());
+        this.planet = new PlanetFindResponse(course.getPlanet(), followed);
         this.tags = course.getTags().stream().map(TagFindResponse::new).collect(Collectors.toList());
         this.images = course.getImages().stream().map(CourseImage::getName).collect(Collectors.toList());
     }

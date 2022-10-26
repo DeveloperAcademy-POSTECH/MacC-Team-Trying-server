@@ -5,11 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.domain.Slice;
-import trying.cosmos.domain.planet.entity.Planet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -20,10 +18,8 @@ public class PlanetListFindResponse {
     private int size;
     private boolean hasNext;
 
-    public PlanetListFindResponse(Slice<Planet> planetSlice) {
-        this.planets = planetSlice.getContent().stream()
-                .map(PlanetListFindContent::new)
-                .collect(Collectors.toList());
+    public PlanetListFindResponse(Slice<PlanetListFindContent> planetSlice) {
+        this.planets = planetSlice.getContent();
         this.size = planetSlice.getNumberOfElements();
         this.hasNext = planetSlice.hasNext();
     }

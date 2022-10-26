@@ -24,9 +24,9 @@ public class CourseFindContent {
     private boolean liked;
     private List<String> images;
 
-    public CourseFindContent(Course course, boolean liked) {
+    public CourseFindContent(Course course, boolean liked, Boolean followed) {
         this.courseId = course.getId();
-        this.planet = new PlanetFindResponse(course.getPlanet());
+        this.planet = new PlanetFindResponse(course.getPlanet(), followed);
         this.title = course.getTitle();
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
         this.liked = liked;

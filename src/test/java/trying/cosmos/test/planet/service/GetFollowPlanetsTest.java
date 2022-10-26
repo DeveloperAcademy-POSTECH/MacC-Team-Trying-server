@@ -9,14 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import trying.cosmos.domain.planet.dto.response.PlanetListFindContent;
+import trying.cosmos.domain.planet.dto.response.PlanetListFindResponse;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
+
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
@@ -69,8 +72,8 @@ public class GetFollowPlanetsTest {
         @Test
         @DisplayName("팔로우한 행성 조회")
         void find_all() throws Exception {
-            Slice<Planet> list = planetService.findFollowPlanets(userId, pageable);
-            assertThat(list.getContent()).containsExactly(followPlanet);
+            PlanetListFindResponse followPlanets = planetService.findFollowPlanets(userId, pageable);
+            assertThat(followPlanets.getPlanets().stream().map(PlanetListFindContent::getName).collect(Collectors.toList())).containsExactly("follow");
         }
     }
 }

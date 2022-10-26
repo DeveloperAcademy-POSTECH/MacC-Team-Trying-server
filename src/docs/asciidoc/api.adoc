@@ -6,7 +6,6 @@
 :toclevels: 2
 :toc-title: 목차
 :sectlinks:
-:postman: https://app.getpostman.com/join-team?invite_code=eced301be47710dd0f768ec2b1fcea66&target_code=d5cd81a5a539ebf1ae56b87b4502e6d7
 
 ifndef::snippets[]
 :snippets: ./build/generated-snippets
@@ -208,7 +207,7 @@ include::{snippets}/planet-docs-test/join/http-response.adoc[]
 
 '''
 
-=== 5. 행성 조회
+=== 5. 아이디로 행성 조회
 
 ==== Request
 include::{snippets}/planet-docs-test/find_by_id/http-request.adoc[]
@@ -485,6 +484,8 @@ include::{snippets}/course-docs-test/unlike/http-response.adoc[]
 |===
 |코드|설명
 |DUPLICATED|중복 불가 제약조건을 위반하는 경우
+|EMAIL_DUPLICATED|중복된 이메일이 존재하는 경우
+|NAME_DUPLICATED|중복된 닉네임이 존재하는 경우
 
 |PLANET_CREATE_FAILED|행성 생성 실패
 

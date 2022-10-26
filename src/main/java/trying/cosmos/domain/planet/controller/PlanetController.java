@@ -46,18 +46,18 @@ public class PlanetController {
 
     @GetMapping("/{planetId}")
     public PlanetFindResponse findPlanet(@PathVariable Long planetId) {
-        return new PlanetFindResponse(planetService.find(planetId));
+        return planetService.find(AuthKey.getKey(), planetId);
     }
 
     @GetMapping
     public PlanetListFindResponse findPlanets(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
-        return new PlanetListFindResponse(planetService.findList(query, pageable));
+        return planetService.findList(AuthKey.getKey(), query, pageable);
     }
 
     @AuthorityOf(Authority.USER)
     @GetMapping("/follow")
     public PlanetListFindResponse findFollowPlanets(Pageable pageable) {
-        return new PlanetListFindResponse(planetService.findFollowPlanets(AuthKey.getKey(), pageable));
+        return planetService.findFollowPlanets(AuthKey.getKey(), pageable);
     }
 
     @GetMapping("/{planetId}/courses")
