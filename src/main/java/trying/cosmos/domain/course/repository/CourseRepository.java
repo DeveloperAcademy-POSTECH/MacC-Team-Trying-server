@@ -39,4 +39,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
     @Modifying
     @Query("delete from CourseImage i where i.course = :course")
     void deleteCourseImage(Course course);
+
+    @Query("select count(c) from Course c where c.planet = :planet and c.isDeleted = false")
+    int countByPlanet(Planet planet);
 }

@@ -116,7 +116,34 @@ include::{snippets}/user-docs-test/find-me/response-fields.adoc[]
 
 '''
 
-=== 7. 닉네임 변경
+=== 7. 내 활동 조회
+- 행성이나 메이트가 없으면 오류
+
+==== Request
+include::{snippets}/user-docs-test/find_activity/http-request.adoc[]
+include::{snippets}/user-docs-test/find_activity/request-headers.adoc[]
+
+==== Response
+include::{snippets}/user-docs-test/find_activity/http-response.adoc[]
+include::{snippets}/user-docs-test/find_activity/response-fields.adoc[]
+
+'''
+
+=== 8. 좋아요한 코스 조회
+- 행성을 만들었으면 만든 행성 정보도 함께 조회
+- 행성에 메이트가 초대되었으면 메이트 정보도 함께 조회
+
+==== Request
+include::{snippets}/user-docs-test/find_liked_course/http-request.adoc[]
+include::{snippets}/user-docs-test/find_liked_course/request-headers.adoc[]
+
+==== Response
+include::{snippets}/user-docs-test/find_liked_course/http-response.adoc[]
+include::{snippets}/user-docs-test/find_liked_course/response-fields.adoc[]
+
+'''
+
+=== 9. 닉네임 변경
 
 ==== Request
 include::{snippets}/user-docs-test/update_name/http-request.adoc[]
@@ -129,7 +156,7 @@ include::{snippets}/user-docs-test/update_name/http-response.adoc[]
 '''
 
 
-=== 8. 비밀번호 변경
+=== 10. 비밀번호 변경
 
 ==== Request
 include::{snippets}/user-docs-test/update_password/http-request.adoc[]
@@ -141,7 +168,7 @@ include::{snippets}/user-docs-test/update_password/http-response.adoc[]
 
 '''
 
-=== 9. 비밀번호 재설정
+=== 11. 비밀번호 재설정
 - 임의의 비밀번호로 변경되고, 입력한 이메일로 메일 전송
 
 ==== Request
@@ -478,6 +505,9 @@ include::{snippets}/course-docs-test/unlike/http-response.adoc[]
 - 숨겨진 데이터인 경우
 
 - HTTP 메서드가 잘못된 경우
+
+|NO_PLANET|행성이 없는 경우
+|NO_MATE|메이트가 없는 경우
 |===
 
 === 409 Conflict

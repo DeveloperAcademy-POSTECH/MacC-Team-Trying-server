@@ -65,34 +65,41 @@ public class CourseService {
     public CourseFindResponse find(Long userId, Long courseId) {
         Course course = courseRepository.searchById(courseId).orElseThrow();
         if (userId == null) {
-            return new CourseFindResponse(course, false, isFollowed(userId, course.getPlanet().getId()));
+            return new CourseFindResponse(course, false, false);
         }
 
         User user = userRepository.findById(userId).orElseThrow();
         if (course.getAccess().equals(Access.PRIVATE) && !course.getPlanet().isOwnedBy(user)) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
-        return new CourseFindResponse(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId()));
+        return new CourseFindResponse(course, isLiked(userId, course.getId()), isFollowed(user, course.getPlanet()));
     }
 
     public Slice<CourseFindContent> findByTitle(Long userId, String title, Pageable pageable) {
-        Planet planet = null;
-        if (userId != null) {
-            User user = userRepository.findById(userId).orElseThrow();
-            planet = user.getPlanet();
-        }
+        if (userId == null) {
+            Slice<Course> courseSlice = courseRepository.searchByName(null, "%" + title + "%", pageable);
 
-        Slice<Course> courseSlice = courseRepository.searchByName(planet, "%" + title + "%",pageable);
-        List<CourseFindContent> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId())))
-                .collect(Collectors.toList());
-        return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
+            List<CourseFindContent> contents = courseSlice.getContent().stream()
+                    .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), false))
+                    .collect(Collectors.toList());
+            return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
+        } else {
+            User user = userRepository.findById(userId).orElseThrow();
+            Planet planet = user.getPlanet();
+            Slice<Course> courseSlice = courseRepository.searchByName(planet, "%" + title + "%",pageable);
+
+            List<CourseFindContent> contents = courseSlice.getContent().stream()
+                    .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(user, course.getPlanet())))
+                    .collect(Collectors.toList());
+            return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
+        }
     }
 
     public Slice<CourseFindContent> getFeeds(Long userId, Pageable pageable) {
         Slice<Course> courseSlice = courseRepository.getFeed(userRepository.findById(userId).orElseThrow(), pageable);
+        User user = userRepository.findById(userId).orElseThrow();
         List<CourseFindContent> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(userId, course.getPlanet().getId())))
+                .map(course -> new CourseFindContent(course, isLiked(userId, course.getId()), isFollowed(user, course.getPlanet())))
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
@@ -178,13 +185,13 @@ public class CourseService {
         course.clearImage();
     }
 
-    private Boolean isFollowed(Long userId, Long planetId) {
-        if (userId == null) {
+    private Boolean isFollowed(User user, Planet planet) {
+        if (user == null) {
             return false;
         }
-        if (userId == planetId) {
+        if (planet.isOwnedBy(user)) {
             return null;
         }
-        return planetFollowRepository.existsByUserIdAndPlanetId(userId, planetId);
+        return planetFollowRepository.existsByUserIdAndPlanetId(user.getId(), planet.getId());
     }
 }

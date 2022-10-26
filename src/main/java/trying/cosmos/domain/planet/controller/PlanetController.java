@@ -11,6 +11,7 @@ import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.global.auth.AuthorityOf;
 import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
+import trying.cosmos.global.utils.date.DateUtils;
 
 @RestController
 @RequestMapping("/planets")
@@ -79,8 +80,8 @@ public class PlanetController {
 
     @AuthorityOf(Authority.USER)
     @PutMapping("/{planetId}")
-    public void update(@PathVariable Long planetId, @RequestBody @Validated PlanetUpdateRequest request) {
-        planetService.update(AuthKey.getKey(), planetId, request.getName(), request.getDday());
+    public PlanetFindResponse update(@PathVariable Long planetId, @RequestBody @Validated PlanetUpdateRequest request) {
+        return new PlanetFindResponse(planetService.update(AuthKey.getKey(), planetId, request.getName(), DateUtils.stringToDate(request.getDate()), request.getImage()), null);
     }
 
     @AuthorityOf(Authority.USER)

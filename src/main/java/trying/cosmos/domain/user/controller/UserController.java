@@ -1,10 +1,13 @@
 package trying.cosmos.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.user.dto.request.*;
+import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.dto.response.UserEmailExistResponse;
 import trying.cosmos.domain.user.dto.response.UserFindResponse;
 import trying.cosmos.domain.user.dto.response.UserLoginResponse;
@@ -41,6 +44,18 @@ public class UserController {
     @GetMapping("/me")
     public UserFindResponse findMe() {
         return new UserFindResponse(userService.find(AuthKey.getKey()));
+    }
+
+    @AuthorityOf(USER)
+    @GetMapping("/me/activity")
+    public UserActivityResponse findActivity() {
+        return userService.findActivity(AuthKey.getKey());
+    }
+
+    @AuthorityOf(USER)
+    @GetMapping("/me/liked")
+    public CourseListFindResponse findLikedCourse(Pageable pageable) {
+        return new CourseListFindResponse(userService.findLikedCourses(AuthKey.getKey(), pageable));
     }
 
     @PatchMapping("/password")

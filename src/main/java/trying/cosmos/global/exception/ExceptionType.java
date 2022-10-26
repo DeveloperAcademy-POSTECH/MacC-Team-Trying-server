@@ -27,6 +27,8 @@ public enum ExceptionType {
     SUSPENDED_USER(FORBIDDEN, "정지된 사용자입니다."),
 
     NO_DATA(NOT_FOUND, "데이터가 존재하지 않습니다."),
+    NO_PLANET(NOT_FOUND, "참여한 행성이 없습니다."),
+    NO_MATE(NOT_FOUND, "메이트가 없습니다."),
 
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
     EMAIL_DUPLICATED(CONFLICT, "중복된 이메일이 존재합니다."),
