@@ -5,11 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.entity.Star;
-import trying.cosmos.domain.course.service.StarSignGenerator;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -18,12 +13,13 @@ public class CourseCreateResponse {
 
     private Long courseId;
 
-    private List<Star> stars;
+//    추후 사용
+//    private List<Star> stars;
 
     public CourseCreateResponse(Course course) {
         this.courseId = course.getId();
-        this.stars = StarSignGenerator.generate(course.getTags().stream()
-                .map(tag -> tag.getPlace().getCoordinate())
-                .collect(Collectors.toList()));
+//        this.stars = StarSignGenerator.generate(course.getTags().stream()
+//                .map(tag -> tag.getPlace().getCoordinate())
+//                .collect(Collectors.toList()));
     }
 }

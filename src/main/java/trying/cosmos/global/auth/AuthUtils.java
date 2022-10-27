@@ -24,7 +24,8 @@ public class AuthUtils {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
-        Session auth = sessionService.findById(tokenProvider.getSubject(token)).orElseThrow(() -> new CustomException(ExceptionType.NOT_AUTHENTICATED));
+        Session auth = sessionService.findById(tokenProvider.getSubject(token))
+                .orElseThrow(() -> new CustomException(ExceptionType.NOT_AUTHENTICATED));
 
         if (!auth.getStatus().equals(UserStatus.LOGIN)) {
             throw new CustomException(ExceptionType.NOT_AUTHENTICATED);

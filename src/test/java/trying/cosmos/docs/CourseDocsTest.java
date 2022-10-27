@@ -176,13 +176,13 @@ public class CourseDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("courseId")
-                                .description("만들어진 코스 id"),
-                        fieldWithPath("stars")
-                                .description("별자리 이미지에서 별 좌표"),
-                        fieldWithPath("stars[].x")
-                                .description("x좌표(경도)"),
-                        fieldWithPath("stars[].y")
-                                .description("y좌표(위도)")
+                                .description("만들어진 코스 id")
+//                        fieldWithPath("stars")
+//                                .description("별자리 이미지에서 별 좌표"),
+//                        fieldWithPath("stars[].x")
+//                                .description("x좌표(경도)"),
+//                        fieldWithPath("stars[].y")
+//                                .description("y좌표(위도)")
                 )
         ));
     }
@@ -479,13 +479,13 @@ public class CourseDocsTest {
                 ),
                 responseFields(
                         fieldWithPath("courseId")
-                                .description("만들어진 코스 id"),
-                        fieldWithPath("stars")
-                                .description("별자리 이미지에서 별 좌표"),
-                        fieldWithPath("stars[].x")
-                                .description("x좌표(경도)"),
-                        fieldWithPath("stars[].y")
-                                .description("y좌표(위도)")
+                                .description("만들어진 코스 id")
+//                        fieldWithPath("stars")
+//                                .description("별자리 이미지에서 별 좌표"),
+//                        fieldWithPath("stars[].x")
+//                                .description("x좌표(경도)"),
+//                        fieldWithPath("stars[].y")
+//                                .description("y좌표(위도)")
                 )
         ));
     }

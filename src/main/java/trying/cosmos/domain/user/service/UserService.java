@@ -123,7 +123,7 @@ public class UserService {
     @Transactional
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        String password = random(10, true, true);
+        String password = random(6, true, true);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
     }

@@ -102,6 +102,14 @@ public class User extends DateAuditingEntity {
         this.email = prefix + this.email;
         this.name = prefix + this.name;
         this.status = UserStatus.WITHDRAWN;
+        if (this.planet != null) {
+            this.planet.leave(this);
+            this.planet = null;
+        }
+        if (this.mate != null) {
+            this.mate.setMate(null);
+            this.mate = null;
+        }
     }
 
     public String getOriginEmail() {
