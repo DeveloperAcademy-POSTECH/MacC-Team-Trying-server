@@ -2,7 +2,6 @@ package trying.cosmos.domain.user.dto.request;
 
 import lombok.*;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @ToString
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 public class UserLoginRequest {
 
     @NotBlank
-    @Email(message = "이메일 형식이 아닙니다.")
     private String email;
 
     @NotBlank

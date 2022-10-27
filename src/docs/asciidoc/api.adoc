@@ -130,8 +130,6 @@ include::{snippets}/user-docs-test/find_activity/response-fields.adoc[]
 '''
 
 === 8. 좋아요한 코스 조회
-- 행성을 만들었으면 만든 행성 정보도 함께 조회
-- 행성에 메이트가 초대되었으면 메이트 정보도 함께 조회
 
 ==== Request
 include::{snippets}/user-docs-test/find_liked_course/http-request.adoc[]
@@ -143,7 +141,7 @@ include::{snippets}/user-docs-test/find_liked_course/response-fields.adoc[]
 
 '''
 
-=== 9. 닉네임 변경
+=== 9. 이름 변경
 
 ==== Request
 include::{snippets}/user-docs-test/update_name/http-request.adoc[]

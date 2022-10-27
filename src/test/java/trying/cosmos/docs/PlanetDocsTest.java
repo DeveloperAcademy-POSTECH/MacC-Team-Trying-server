@@ -425,12 +425,16 @@ public class PlanetDocsTest {
                                 .description("코스 제목"),
                         fieldWithPath("courses[].createdDate")
                                 .description("코스 생성일"),
-                        fieldWithPath("courses[].stars")
-                                .description("별자리 이미지에서 별 좌표"),
-                        fieldWithPath("courses[].stars[].x")
-                                .description("x좌표(경도)"),
-                        fieldWithPath("courses[].stars[].y")
-                                .description("y좌표(위도)"),
+                        fieldWithPath("courses[].coordinates[].latitude")
+                                .description("장소의 위도"),
+                        fieldWithPath("courses[].coordinates[].longitude")
+                                .description("장소의 경도"),
+//                        fieldWithPath("courses[].stars")
+//                                .description("별자리 이미지에서 별 좌표"),
+//                        fieldWithPath("courses[].stars[].x")
+//                                .description("x좌표(경도)"),
+//                        fieldWithPath("courses[].stars[].y")
+//                                .description("y좌표(위도)"),
                         fieldWithPath("size")
                                 .description("불러온 코스 수"),
                         fieldWithPath("hasNext")

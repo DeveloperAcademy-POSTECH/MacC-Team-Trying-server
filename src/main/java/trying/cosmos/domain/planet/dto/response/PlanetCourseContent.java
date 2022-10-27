@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.entity.Star;
-import trying.cosmos.domain.course.service.StarSignGenerator;
+import trying.cosmos.domain.place.entity.Coordinate;
 import trying.cosmos.global.utils.date.DateUtils;
 
 import java.util.List;
@@ -20,14 +19,20 @@ public class PlanetCourseContent {
     private Long courseId;
     private String createdDate;
     private String title;
-    private List<Star> stars;
+    private List<Coordinate> coordinates ;
+
+//    앱에서 위도, 경도를 이용해 변환
+//    private List<Star> stars;
 
     public PlanetCourseContent(Course course) {
         this.courseId = course.getId();
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
         this.title = course.getTitle();
-        this.stars = StarSignGenerator.generate(course.getTags().stream()
+        this.coordinates = course.getTags().stream()
                 .map(tag -> tag.getPlace().getCoordinate())
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+//        this.stars = StarSignGenerator.generate(course.getTags().stream()
+//                .map(tag -> tag.getPlace().getCoordinate())
+//                .collect(Collectors.toList()));
     }
 }
