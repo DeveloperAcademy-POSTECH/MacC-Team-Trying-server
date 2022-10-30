@@ -1,14 +1,17 @@
 package trying.cosmos.global.auth;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import trying.cosmos.domain.user.entity.UserStatus;
+import trying.cosmos.global.aop.LogSpace;
 import trying.cosmos.global.auth.entity.Session;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthUtils {
@@ -20,7 +23,11 @@ public class AuthUtils {
 
     public Session checkAuthenticate(HttpServletRequest request) {
         String token = request.getHeader(ACCESS_TOKEN_HEADER);
-        if (token == null || !tokenProvider.validateToken(token)) {
+        if (token == null) {
+            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
+        }
+        if (!tokenProvider.validateToken(token)) {
+            log.debug("{}token: {}", LogSpace.getSpace(), token);
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 

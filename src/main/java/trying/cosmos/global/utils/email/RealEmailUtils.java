@@ -36,7 +36,7 @@ public class RealEmailUtils implements EmailUtils {
         try {
             MimeMessage message = emailSender.createMimeMessage();
             message.setSubject(subject);
-            message.setFrom("[맛스타] Trying <trying221216@gmail.com>");
+            message.setFrom("[Come It] Trying <trying221216@gmail.com>");
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
             MimeMultipart multipart = new MimeMultipart("related");
