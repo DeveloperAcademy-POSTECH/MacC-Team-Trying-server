@@ -22,15 +22,21 @@ import javax.persistence.*;
 public class User extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private boolean isSocialAccount;
 
     private String password;
 
     @Column(unique = true)
+    private String identifier;
+
+    @Column(unique = true, nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -58,6 +64,7 @@ public class User extends DateAuditingEntity {
         this.status = UserStatus.LOGOUT;
         this.authority = Authority.USER;
         this.deviceToken = "";
+        this.isSocialAccount = false;
     }
 
     public User(String email, String password, String name, UserStatus status, Authority authority) {
@@ -67,13 +74,38 @@ public class User extends DateAuditingEntity {
         this.status = status;
         this.authority = authority;
         this.deviceToken = "";
+        this.isSocialAccount = false;
     }
 
     // Convenient Method
-    public void login(String password, String deviceToken) {
-        checkPassword(password);
-        checkAccessibleUser();
+    public static User createEmailUser(String email, String password, String name, String deviceToken) {
+        User user = new User();
+        user.email = email;
+        user.isSocialAccount = false;
+        user.password = BCryptUtils.encrypt(password);
+        user.identifier = null;
+        user.name = name;
+        user.status = UserStatus.LOGIN;
+        user.authority = Authority.USER;
+        user.deviceToken = deviceToken;
+        return user;
+    }
 
+    public static User createSocialUser(String identifier, String email, String name, String deviceToken) {
+        User user = new User();
+        user.email = email;
+        user.isSocialAccount = true;
+        user.password = null;
+        user.identifier = identifier;
+        user.name = name;
+        user.status = UserStatus.LOGIN;
+        user.authority = Authority.USER;
+        user.deviceToken = deviceToken;
+        return user;
+    }
+
+    public void login(String deviceToken) {
+        checkAccessibleUser();
         this.status = UserStatus.LOGIN;
         this.deviceToken = deviceToken;
     }
@@ -134,7 +166,7 @@ public class User extends DateAuditingEntity {
         this.mate = mate;
     }
 
-    private void checkPassword(String password) {
+    public void checkPassword(String password) {
         if (!BCryptUtils.isMatch(password, this.password)) {
             throw new CustomException(ExceptionType.INVALID_PASSWORD);
         }

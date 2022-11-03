@@ -66,8 +66,8 @@ public class UserService {
         }
 
         certificationRepository.delete(certification);
-        User user = userRepository.save(new User(email, password, name));
-        user.login(password, deviceToken);
+        User user = userRepository.save(User.createEmailUser(email, password, name, deviceToken));
+        user.checkPassword(password);
         Session auth = sessionService.create(user);
         return tokenProvider.getAccessToken(auth);
     }
@@ -75,7 +75,8 @@ public class UserService {
     @Transactional
     public String login(String email, String password, String deviceToken) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        user.login(password, deviceToken);
+        user.checkPassword(password);
+        user.login(deviceToken);
         Session auth = sessionService.create(user);
         return tokenProvider.getAccessToken(auth);
     }
@@ -123,6 +124,10 @@ public class UserService {
     @Transactional
     public void resetPassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
+        if (user.isSocialAccount()) {
+            throw new CustomException(ExceptionType.SOCIAL_ACCOUNT);
+        }
+
         String password = random(6, true, true);
         user.resetPassword(BCryptUtils.encrypt(password));
         sendResetPasswordEmail(email, password);
@@ -145,6 +150,9 @@ public class UserService {
     @Transactional
     public void updatePassword(Long userId, String password) {
         User user = userRepository.findById(userId).orElseThrow();
+        if (user.isSocialAccount()) {
+            throw new CustomException(ExceptionType.SOCIAL_ACCOUNT);
+        }
         user.setPassword(BCryptUtils.encrypt(password));
     }
 

@@ -38,6 +38,34 @@ include::{snippets}/certification-docs-test/certificate/request-fields.adoc[]
 ==== Response
 include::{snippets}/certification-docs-test/certificate/http-response.adoc[]
 
+[[OAuth]]
+== OAuth
+
+[[Apple-Join]]
+=== 1. 애플 회원가입
+
+==== Request
+include::{snippets}/o-auth-docs-test/join/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/join/request-fields.adoc[]
+
+==== Response
+include::{snippets}/o-auth-docs-test/join/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/join/response-fields.adoc[]
+
+'''
+
+=== 2. 애플 로그인
+
+==== Request
+include::{snippets}/o-auth-docs-test/login/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/login/request-fields.adoc[]
+
+==== Response
+include::{snippets}/o-auth-docs-test/login/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/login/response-fields.adoc[]
+
+'''
+
 [[User]]
 == User
 
@@ -51,6 +79,7 @@ include::{snippets}/user-docs-test/join/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/user-docs-test/join/http-response.adoc[]
+include::{snippets}/user-docs-test/join/response-fields.adoc[]
 
 '''
 
