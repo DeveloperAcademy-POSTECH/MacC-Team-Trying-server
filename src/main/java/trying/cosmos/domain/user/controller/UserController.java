@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
-import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.user.dto.request.*;
 import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.dto.response.UserEmailExistResponse;
@@ -23,7 +22,6 @@ import static trying.cosmos.global.auth.entity.Authority.USER;
 public class UserController {
 
     private final UserService userService;
-    private final CourseService courseService;
 
     @GetMapping("/exist")
     public UserEmailExistResponse isEmailExist(@RequestParam String email) {

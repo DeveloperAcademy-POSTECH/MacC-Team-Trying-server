@@ -154,6 +154,10 @@ public class UserDocsTest {
                         fieldWithPath("deviceToken")
                                 .type(STRING)
                                 .description("푸시 알림을 위한 기기 고유 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("accessToken")
+                                .description("인증 토큰")
                 )
         ));
     }

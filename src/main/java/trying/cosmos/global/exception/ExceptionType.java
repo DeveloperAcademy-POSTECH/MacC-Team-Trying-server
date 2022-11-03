@@ -36,6 +36,7 @@ public enum ExceptionType {
     PLANET_CREATE_FAILED(CONFLICT, "참여한 행성이 존재합니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
     INVALID_IMAGE_TYPE(CONFLICT, "지원하지 않는 이미지 타입입니다."),
+    SOCIAL_ACCOUNT(CONFLICT, "소셜 계정은 비밀번호를 변경할 수 없습니다."),
 
     UNKNOWN_EXCEPTION(INTERNAL_SERVER_ERROR, "알 수 없는 오류가 발생했습니다.");
 
