@@ -28,8 +28,8 @@ import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.certification.service.CertificationService;
 import trying.cosmos.domain.user.controller.UserController;
-import trying.cosmos.domain.user.dto.request.AppleJoinRequest;
-import trying.cosmos.domain.user.dto.request.AppleLoginRequest;
+import trying.cosmos.domain.user.dto.request.SocialJoinRequest;
+import trying.cosmos.domain.user.dto.request.SocialLoginRequest;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.SocialAccountService;
@@ -94,13 +94,13 @@ public class OAuthDocsTest {
     }
 
     @Test
-    @DisplayName("회원가입")
-    void join() throws Exception {
+    @DisplayName("애플 회원가입")
+    void join_apple() throws Exception {
         certificationService.generate(EMAIL);
         Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
         certificationService.certificate(certification.getEmail(), certification.getCode());
 
-        String content = objectMapper.writeValueAsString(new AppleJoinRequest(IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
 
         ResultActions actions = mvc.perform(post("/oauth/apple")
                         .content(content)
@@ -114,7 +114,7 @@ public class OAuthDocsTest {
                                 .description("애플 로그인 시 반환되는 user identifier"),
                         fieldWithPath("email")
                                 .type(STRING)
-                                .description("이메일")
+                                .description("애플 회원가입 시 반환되는 user email")
                                 .attributes(key("constraint").value("이메일 형식")),
                         fieldWithPath("name")
                                 .type(STRING)
@@ -132,11 +132,11 @@ public class OAuthDocsTest {
     }
 
     @Test
-    @DisplayName("로그인")
-    void login() throws Exception {
-        userRepository.save(User.createSocialUser(IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
+    @DisplayName("애플 로그인")
+    void login_apple() throws Exception {
+        userRepository.save(User.createSocialUser("APPLE " + IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
 
-        String content = objectMapper.writeValueAsString(new AppleLoginRequest(IDENTIFIER, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
 
         ResultActions actions = mvc.perform(post("/oauth/apple/login")
                         .content(content)
@@ -148,6 +148,72 @@ public class OAuthDocsTest {
                         fieldWithPath("identifier")
                                 .type(STRING)
                                 .description("애플 로그인 시 반환되는 user identifier"),
+                        fieldWithPath("deviceToken")
+                                .type(STRING)
+                                .description("푸시 알림을 위한 기기 고유 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("accessToken")
+                                .description("인증 토큰")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("카카오 회원가입")
+    void join_kakao() throws Exception {
+        certificationService.generate(EMAIL);
+        Certification certification = certificationRepository.findByEmail(EMAIL).orElseThrow();
+        certificationService.certificate(certification.getEmail(), certification.getCode());
+
+        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
+
+        ResultActions actions = mvc.perform(post("/oauth/kakao")
+                        .content(content)
+                        .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(restDocs.document(
+                requestFields(
+                        fieldWithPath("identifier")
+                                .type(STRING)
+                                .description("카카오 로그인 후 사용자 정보 조회시 반환되는 id"),
+                        fieldWithPath("email")
+                                .type(STRING)
+                                .description("카카오 로그인 후 사용자 정보 조회시 반환되는 이메일")
+                                .attributes(key("constraint").value("이메일 형식")),
+                        fieldWithPath("name")
+                                .type(STRING)
+                                .description("닉네임")
+                                .attributes(key("constraint").value("2~8자리 한글/영어/숫자")),
+                        fieldWithPath("deviceToken")
+                                .type(STRING)
+                                .description("푸시 알림을 위한 기기 고유 토큰")
+                ),
+                responseFields(
+                        fieldWithPath("accessToken")
+                                .description("인증 토큰")
+                )
+        ));
+    }
+
+    @Test
+    @DisplayName("카카오 로그인")
+    void login_kakao() throws Exception {
+        userRepository.save(User.createSocialUser("KAKAO " + IDENTIFIER, EMAIL, NAME, DEVICE_TOKEN));
+
+        String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
+
+        ResultActions actions = mvc.perform(post("/oauth/kakao/login")
+                        .content(content)
+                        .contentType(JSON_CONTENT_TYPE))
+                .andExpect(status().isOk());
+
+        actions.andDo(restDocs.document(
+                requestFields(
+                        fieldWithPath("identifier")
+                                .type(STRING)
+                                .description("카카오 로그인 후 사용자 정보 조회시 반환되는 id"),
                         fieldWithPath("deviceToken")
                                 .type(STRING)
                                 .description("푸시 알림을 위한 기기 고유 토큰")

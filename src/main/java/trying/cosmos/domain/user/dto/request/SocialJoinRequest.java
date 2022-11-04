@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AppleJoinRequest {
+public class SocialJoinRequest {
 
     @NotBlank
     private String identifier;
