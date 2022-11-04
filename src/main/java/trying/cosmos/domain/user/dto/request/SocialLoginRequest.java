@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AppleLoginRequest {
+public class SocialLoginRequest {
 
     private String identifier;
 

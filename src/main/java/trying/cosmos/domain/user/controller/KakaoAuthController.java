@@ -12,16 +12,16 @@ import trying.cosmos.domain.user.dto.response.UserLoginResponse;
 import trying.cosmos.domain.user.service.SocialAccountService;
 
 @RestController
-@RequestMapping("/oauth/apple")
+@RequestMapping("/oauth/kakao")
 @RequiredArgsConstructor
-public class AppleAuthController {
+public class KakaoAuthController {
 
     private final SocialAccountService socialAccountService;
 
     @PostMapping
     public UserLoginResponse join(@RequestBody @Validated SocialJoinRequest request) {
         return new UserLoginResponse(socialAccountService.join(
-                "APPLE " + request.getIdentifier(),
+                "KAKAO " + request.getIdentifier(),
                 request.getEmail(),
                 request.getName(),
                 request.getDeviceToken())
@@ -31,7 +31,7 @@ public class AppleAuthController {
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody @Validated SocialLoginRequest request) {
         return new UserLoginResponse(socialAccountService.login(
-                "APPLE " + request.getIdentifier(),
+                "KAKAO " + request.getIdentifier(),
                 request.getDeviceToken())
         );
     }

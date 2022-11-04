@@ -45,24 +45,49 @@ include::{snippets}/certification-docs-test/certificate/http-response.adoc[]
 === 1. 애플 회원가입
 
 ==== Request
-include::{snippets}/o-auth-docs-test/join/http-request.adoc[]
-include::{snippets}/o-auth-docs-test/join/request-fields.adoc[]
+include::{snippets}/o-auth-docs-test/join_apple/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/join_apple/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/o-auth-docs-test/join/http-response.adoc[]
-include::{snippets}/o-auth-docs-test/join/response-fields.adoc[]
+include::{snippets}/o-auth-docs-test/join_apple/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/join_apple/response-fields.adoc[]
 
 '''
 
 === 2. 애플 로그인
 
 ==== Request
-include::{snippets}/o-auth-docs-test/login/http-request.adoc[]
-include::{snippets}/o-auth-docs-test/login/request-fields.adoc[]
+include::{snippets}/o-auth-docs-test/login_apple/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/login_apple/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/o-auth-docs-test/login/http-response.adoc[]
-include::{snippets}/o-auth-docs-test/login/response-fields.adoc[]
+include::{snippets}/o-auth-docs-test/login_apple/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/login_apple/response-fields.adoc[]
+
+'''
+
+[[Kakao-Join]]
+=== 3. 카카오 회원가입
+
+==== Request
+include::{snippets}/o-auth-docs-test/join_kakao/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/join_kakao/request-fields.adoc[]
+
+==== Response
+include::{snippets}/o-auth-docs-test/join_kakao/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/join_kakao/response-fields.adoc[]
+
+'''
+
+=== 4. 카카오 로그인
+
+==== Request
+include::{snippets}/o-auth-docs-test/login_kakao/http-request.adoc[]
+include::{snippets}/o-auth-docs-test/login_kakao/request-fields.adoc[]
+
+==== Response
+include::{snippets}/o-auth-docs-test/login_kakao/http-response.adoc[]
+include::{snippets}/o-auth-docs-test/login_kakao/response-fields.adoc[]
 
 '''
 
