@@ -3,38 +3,33 @@ package trying.cosmos.domain.course.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import trying.cosmos.domain.place.entity.Place;
 
 import javax.persistence.*;
 
-@ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class CoursePlace {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
+    @Column(name = "course_place_id")
     private Long id;
 
-    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private String name;
+    private String memo;
 
-    // Constructor
-    public Tag(Course course, Place place, String name) {
+    public CoursePlace(Course course, Place place, String memo) {
         this.course = course;
         this.place = place;
-        this.name = name;
-        course.getTags().add(this);
+        this.memo = memo;
+        course.getPlaces().add(this);
     }
 }

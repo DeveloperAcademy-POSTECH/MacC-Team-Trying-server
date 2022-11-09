@@ -45,16 +45,19 @@ public class PlanetController {
         planetService.join(AuthKey.getKey(), request.getCode());
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping("/{planetId}")
     public PlanetFindResponse findPlanet(@PathVariable Long planetId) {
         return planetService.find(AuthKey.getKey(), planetId);
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping
     public PlanetListFindResponse findPlanets(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
         return planetService.findList(AuthKey.getKey(), query, pageable);
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping("/{planetId}/courses")
     public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
         return new PlanetCourseListResponse(planetService.findPlanetCourse(AuthKey.getKey(), planetId, pageable));

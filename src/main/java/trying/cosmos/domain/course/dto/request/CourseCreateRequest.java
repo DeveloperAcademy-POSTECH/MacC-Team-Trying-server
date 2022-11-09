@@ -1,15 +1,16 @@
 package trying.cosmos.domain.course.dto.request;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CourseCreateRequest {
 
     @NotNull
@@ -19,7 +20,15 @@ public class CourseCreateRequest {
     private String title;
 
     @NotBlank
-    private String body;
+    private String date;
 
-    private List<TagCreateRequest> tags = new ArrayList<>();
+    @NotNull
+    private List<CoursePlaceRequest> places;
+
+    public CourseCreateRequest(Long planetId, String title, String date, List<CoursePlaceRequest> places) {
+        this.planetId = planetId;
+        this.title = title;
+        this.date = date;
+        this.places = places;
+    }
 }

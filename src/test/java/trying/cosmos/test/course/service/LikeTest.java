@@ -11,10 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.course.dto.request.TagCreateRequest;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.repository.CourseLikeRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
+import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.place.service.PlaceService;
@@ -60,7 +59,7 @@ public class LikeTest {
     PlaceService placeService;
 
     @Autowired
-    CourseLikeRepository courseLikeRepository;
+    CourseReviewLikeRepository courseReviewLikeRepository;
 
     private Long userId;
     private Course course;
@@ -96,7 +95,7 @@ public class LikeTest {
         @DisplayName("코스 좋아요")
         void like() throws Exception {
             courseService.like(userId, course.getId());
-            assertThat(courseLikeRepository.existsByUserIdAndCourseId(userId, course.getId())).isTrue();
+            assertThat(courseReviewLikeRepository.existsByUserIdAndCourseId(userId, course.getId())).isTrue();
         }
     }
 

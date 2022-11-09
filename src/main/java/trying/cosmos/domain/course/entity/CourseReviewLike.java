@@ -12,10 +12,10 @@ import javax.persistence.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CourseLike {
+public class CourseReviewLike {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
+    @Column(name = "course_review_like_id")
     private Long id;
 
     @ToString.Exclude
@@ -28,7 +28,7 @@ public class CourseLike {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public CourseLike(User user, Course course) {
+    public CourseReviewLike(User user, Course course) {
         this.user = user;
         this.course = course;
     }

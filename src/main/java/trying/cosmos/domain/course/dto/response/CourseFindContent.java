@@ -5,12 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.entity.CourseImage;
-import trying.cosmos.domain.planet.dto.response.PlanetFindResponse;
 import trying.cosmos.global.utils.date.DateUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -18,18 +13,16 @@ import java.util.stream.Collectors;
 public class CourseFindContent {
 
     private Long courseId;
-    private PlanetFindResponse planet;
     private String title;
+    private String date;
     private String createdDate;
     private boolean liked;
-    private List<String> images;
 
     public CourseFindContent(Course course, boolean liked) {
         this.courseId = course.getId();
-        this.planet = new PlanetFindResponse(course.getPlanet());
         this.title = course.getTitle();
+        this.date = DateUtils.getFormattedDate(course.getDate());
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
         this.liked = liked;
-        this.images = course.getImages().stream().map(CourseImage::getName).collect(Collectors.toList());
     }
 }

@@ -1,4 +1,4 @@
-package trying.cosmos.domain.common;
+package trying.cosmos.global.auditing;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

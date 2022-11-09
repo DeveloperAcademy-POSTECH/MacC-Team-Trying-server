@@ -10,8 +10,8 @@ import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.course.dto.response.CourseFindContent;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.repository.CourseLikeRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
+import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
@@ -40,7 +40,7 @@ public class UserService {
     private final SessionService sessionService;
     private final CertificationRepository certificationRepository;
     private final CourseRepository courseRepository;
-    private final CourseLikeRepository courseLikeRepository;
+    private final CourseReviewLikeRepository courseReviewLikeRepository;
 
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;
@@ -94,12 +94,12 @@ public class UserService {
         }
         return new UserActivityResponse(
                 courseRepository.countByPlanet(user.getPlanet()),
-                courseLikeRepository.countByUser(user)
+                courseReviewLikeRepository.countByUser(user)
         );
     }
 
     public Slice<CourseFindContent> findLikedCourses(Long userId, Pageable pageable) {
-        Slice<Course> courseSlice = courseLikeRepository.searchCourseByUserId(userId, pageable);
+        Slice<Course> courseSlice = courseReviewLikeRepository.searchCourseByUserId(userId, pageable);
         User user = userRepository.findById(userId).orElseThrow();
         List<CourseFindContent> contents = courseSlice.getContent().stream()
                 .map(course -> new CourseFindContent(course, true))

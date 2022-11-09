@@ -61,13 +61,12 @@ public class PlanetService {
     }
 
     public PlanetFindResponse find(Long userId, Long planetId) {
-        if (userId == null) {
-            return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow());
-        } else {
-            User user = userRepository.findById(userId).orElseThrow();
-            Planet planet = planetRepository.searchById(planetId).orElseThrow();
-            return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow());
+        User user = userRepository.findById(userId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
         }
+        return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow());
     }
 
     public Planet find(String inviteCode) {
@@ -100,8 +99,11 @@ public class PlanetService {
 
     public Slice<Course> findPlanetCourse(Long userId, Long planetId, Pageable pageable) {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
-        Planet myPlanet = userId == null ? null : userRepository.findById(userId).orElseThrow().getPlanet();
-        return courseRepository.searchByPlanet(myPlanet, planet, pageable);
+        User user = userRepository.findById(userId).orElseThrow();
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
+        }
+        return courseRepository.searchByPlanet(planet, pageable);
     }
 
     @Transactional

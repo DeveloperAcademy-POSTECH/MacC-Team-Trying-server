@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.course.dto.request.TagCreateRequest;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
