@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 public class UserActivityResponse {
 
     private int courseCount;
-    private int followCount;
     private int likedCount;
 }

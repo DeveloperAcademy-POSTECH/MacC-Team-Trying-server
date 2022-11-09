@@ -1,7 +1,6 @@
 package trying.cosmos.domain.course.dto.request;
 
 import lombok.*;
-import trying.cosmos.domain.course.entity.Access;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,9 +20,6 @@ public class CourseCreateRequest {
 
     @NotBlank
     private String body;
-
-    @NotNull
-    private Access access;
 
     private List<TagCreateRequest> tags = new ArrayList<>();
 }

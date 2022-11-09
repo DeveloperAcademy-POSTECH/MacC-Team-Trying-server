@@ -19,7 +19,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
     Optional<Course> searchById(Long courseId);
 
     @Query("select c from Course c " +
-            "where (c.planet = :myPlanet or c.access = trying.cosmos.domain.course.entity.Access.PUBLIC) " +
+            "where c.planet = :myPlanet " +
             "and c.title like :query " +
             "and c.planet.isDeleted = false " +
             "and c.isDeleted = false " +
@@ -27,7 +27,7 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
     Slice<Course> searchByName(Planet myPlanet, String query, Pageable pageable);
 
     @Query("select c from Course c " +
-            "where (c.planet = :myPlanet or c.access = trying.cosmos.domain.course.entity.Access.PUBLIC) " +
+            "where c.planet = :myPlanet " +
             "and c.planet = :planet " +
             "and c.isDeleted = false ")
     Slice<Course> searchByPlanet(Planet myPlanet, Planet planet, Pageable pageable);

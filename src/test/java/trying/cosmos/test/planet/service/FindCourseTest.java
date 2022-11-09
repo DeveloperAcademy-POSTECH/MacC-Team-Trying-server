@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.course.entity.Access;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.planet.entity.Planet;

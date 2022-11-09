@@ -1,10 +1,8 @@
 package trying.cosmos.domain.course.dto.request;
 
 import lombok.*;
-import trying.cosmos.domain.course.entity.Access;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +17,6 @@ public class CourseUpdateRequest {
 
     @NotBlank
     private String body;
-
-    @NotNull
-    private Access access;
 
     private List<TagCreateRequest> tags = new ArrayList<>();
 }

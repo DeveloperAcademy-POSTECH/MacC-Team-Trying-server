@@ -16,12 +16,10 @@ public class PlanetListFindContent {
     private Long planetId;
     private String name;
     private String image;
-    private Boolean followed;
 
-    public PlanetListFindContent(Planet planet, Boolean followed) {
+    public PlanetListFindContent(Planet planet) {
         this.planetId = planet.getId();
         this.name = planet.getName();
         this.image = planet.getImage();
-        this.followed = followed;
     }
 }

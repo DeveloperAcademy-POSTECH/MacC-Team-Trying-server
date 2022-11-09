@@ -33,7 +33,6 @@ public class CourseController {
                 request.getPlanetId(),
                 request.getTitle(),
                 request.getBody(),
-                request.getAccess(),
                 request.getTags(),
                 images
         ));
@@ -70,7 +69,7 @@ public class CourseController {
     @AuthorityOf(Authority.USER)
     @PutMapping("/{courseId}")
     public CourseCreateResponse update(@PathVariable Long courseId, @RequestPart(name = "data") @Validated CourseUpdateRequest request, List<MultipartFile> images) {
-        return new CourseCreateResponse(courseService.update(AuthKey.getKey(), courseId, request.getTitle(), request.getBody(), request.getAccess(), request.getTags(), images));
+        return new CourseCreateResponse(courseService.update(AuthKey.getKey(), courseId, request.getTitle(), request.getBody(), request.getTags(), images));
     }
 
     @AuthorityOf(Authority.USER)

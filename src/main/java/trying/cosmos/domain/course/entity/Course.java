@@ -10,10 +10,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
 @ToString
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Course extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +32,6 @@ public class Course extends DateAuditingEntity {
     @Column(length = 1000)
     private String body;
 
-    @Enumerated(EnumType.STRING)
-    private trying.cosmos.domain.course.entity.Access access;
-
     private boolean isDeleted;
 
     @ToString.Exclude
@@ -43,31 +42,21 @@ public class Course extends DateAuditingEntity {
     @OneToMany(mappedBy = "course")
     private List<CourseImage> images = new ArrayList<>();
 
-    public void setImages(List<CourseImage> images) {
-        this.images = images;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
     public void setPlanet(Planet planet) {
         this.planet = planet;
     }
 
     // Constructor
-    public Course(Planet planet, String title, String body, trying.cosmos.domain.course.entity.Access access) {
+    public Course(Planet planet, String title, String body) {
         this.planet = planet;
         this.title = title;
         this.body = body;
-        this.access = access;
         this.isDeleted = false;
     }
 
-    public void update(String title, String body, Access access) {
+    public void update(String title, String body) {
         this.title = title;
         this.body = body;
-        this.access = access;
     }
 
     public void delete() {
