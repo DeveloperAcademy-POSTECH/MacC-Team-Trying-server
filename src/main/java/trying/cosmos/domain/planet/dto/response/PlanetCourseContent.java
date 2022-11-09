@@ -9,7 +9,6 @@ import trying.cosmos.domain.place.entity.Coordinate;
 import trying.cosmos.global.utils.date.DateUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -27,10 +26,10 @@ public class PlanetCourseContent {
     public PlanetCourseContent(Course course) {
         this.courseId = course.getId();
         this.createdDate = DateUtils.getFormattedDate(course.getCreatedDate());
-        this.title = course.getTitle();
-        this.coordinates = course.getTags().stream()
-                .map(tag -> tag.getPlace().getCoordinate())
-                .collect(Collectors.toList());
+//        this.title = course.getTitle();
+//        this.coordinates = course.getTags().stream()
+//                .map(tag -> tag.getPlace().getCoordinate())
+//                .collect(Collectors.toList());
 //        this.stars = StarSignGenerator.generate(course.getTags().stream()
 //                .map(tag -> tag.getPlace().getCoordinate())
 //                .collect(Collectors.toList()));

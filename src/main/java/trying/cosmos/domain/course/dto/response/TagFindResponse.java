@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.course.entity.Tag;
-import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
+import trying.cosmos.domain.place.dto.response.PlaceFindContent;
 
 @ToString
 @Getter
@@ -13,10 +13,10 @@ import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
 public class TagFindResponse {
 
     private String name;
-    private PlaceFindResponse place;
+    private PlaceFindContent place;
 
     public TagFindResponse(Tag tag) {
         this.name = tag.getName();
-        this.place = new PlaceFindResponse(tag.getPlace());
+        this.place = new PlaceFindContent(tag.getPlace());
     }
 }

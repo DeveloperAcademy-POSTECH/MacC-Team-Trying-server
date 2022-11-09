@@ -10,7 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.dto.request.TagCreateRequest;
 import trying.cosmos.domain.course.dto.response.CourseFindContent;
 import trying.cosmos.domain.course.dto.response.CourseFindResponse;
-import trying.cosmos.domain.course.entity.*;
+import trying.cosmos.domain.course.entity.Access;
+import trying.cosmos.domain.course.entity.Course;
+import trying.cosmos.domain.course.entity.CourseImage;
+import trying.cosmos.domain.course.entity.CourseLike;
 import trying.cosmos.domain.course.repository.CourseLikeRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.place.service.PlaceService;
@@ -163,7 +166,7 @@ public class CourseService {
     }
 
     private void createCourseTag(List<TagCreateRequest> tagDto, Course course) {
-        tagDto.forEach(tag -> em.persist(new Tag(course, placeService.create(tag.getPlace()), tag.getName())));
+//        tagDto.forEach(tag -> em.persist(new Tag(course, placeService.create(tag.getPlace()), tag.getName())));
     }
 
     private void createCourseImage(List<MultipartFile> images, Course course) {
