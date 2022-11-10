@@ -11,22 +11,22 @@ import javax.persistence.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CourseImage {
+public class CourseReviewImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_image_id")
+    @Column(name = "course_review_image_id")
     private Long id;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coures_id")
-    private Course course;
+    @JoinColumn(name = "review_id")
+    private CourseReview review;
 
     private String name;
 
-    public CourseImage(Course course, String name) {
-        this.course = course;
+    public CourseReviewImage(CourseReview review, String name) {
+        this.review = review;
         this.name = name;
-        course.getImages().add(this);
+        review.getImages().add(this);
     }
 }

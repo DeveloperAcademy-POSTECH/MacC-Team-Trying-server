@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import trying.cosmos.docs.utils.RestDocsConfiguration;
-import trying.cosmos.domain.course.dto.request.TagCreateRequest;
-import trying.cosmos.domain.course.entity.Access;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.dto.request.PlanetUpdateRequest;

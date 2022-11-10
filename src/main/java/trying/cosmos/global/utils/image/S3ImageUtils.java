@@ -17,7 +17,7 @@ import static trying.cosmos.global.utils.image.ImageUtils.getExtension;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class S3ImageUtils {
+public class S3ImageUtils implements ImageUtils {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;

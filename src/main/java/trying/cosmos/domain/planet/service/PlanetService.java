@@ -13,8 +13,6 @@ import trying.cosmos.domain.planet.dto.response.PlanetFindResponse;
 import trying.cosmos.domain.planet.dto.response.PlanetListFindContent;
 import trying.cosmos.domain.planet.dto.response.PlanetListFindResponse;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.entity.PlanetFollow;
-import trying.cosmos.domain.planet.repository.PlanetFollowRepository;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
@@ -32,7 +30,6 @@ public class PlanetService {
 
     private final UserRepository userRepository;
     private final PlanetRepository planetRepository;
-    private final PlanetFollowRepository planetFollowRepository;
     private final CourseRepository courseRepository;
 
     @Transactional
@@ -64,13 +61,12 @@ public class PlanetService {
     }
 
     public PlanetFindResponse find(Long userId, Long planetId) {
-        if (userId == null) {
-            return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow(), false);
-        } else {
-            User user = userRepository.findById(userId).orElseThrow();
-            Planet planet = planetRepository.searchById(planetId).orElseThrow();
-            return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow(), isFollowed(user, planet));
+        User user = userRepository.findById(userId).orElseThrow();
+        Planet planet = planetRepository.searchById(planetId).orElseThrow();
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
         }
+        return new PlanetFindResponse(planetRepository.searchById(planetId).orElseThrow());
     }
 
     public Planet find(String inviteCode) {
@@ -86,21 +82,16 @@ public class PlanetService {
         return getPlanetList(userId, planetSlice);
     }
 
-    public PlanetListFindResponse findFollowPlanets(Long userId, Pageable pageable) {
-        Slice<Planet> planetSlice = planetRepository.getFollowPlanets(userId, pageable);
-        return getPlanetList(userId, planetSlice);
-    }
-
     private PlanetListFindResponse getPlanetList(Long userId, Slice<Planet> planetSlice) {
         if (userId == null) {
             List<PlanetListFindContent> contents = planetSlice.getContent().stream()
-                    .map(planet -> new PlanetListFindContent(planet, false))
+                    .map(PlanetListFindContent::new)
                     .collect(Collectors.toList());
             return new PlanetListFindResponse(new SliceImpl<>(contents, planetSlice.getPageable(), planetSlice.hasNext()));
         } else {
             User user = userRepository.findById(userId).orElseThrow();
             List<PlanetListFindContent> contents = planetSlice.getContent().stream()
-                    .map(planet -> new PlanetListFindContent(planet, isFollowed(user, planet)))
+                    .map(PlanetListFindContent::new)
                     .collect(Collectors.toList());
             return new PlanetListFindResponse(new SliceImpl<>(contents, planetSlice.getPageable(), planetSlice.hasNext()));
         }
@@ -108,26 +99,11 @@ public class PlanetService {
 
     public Slice<Course> findPlanetCourse(Long userId, Long planetId, Pageable pageable) {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
-        Planet myPlanet = userId == null ? null : userRepository.findById(userId).orElseThrow().getPlanet();
-        return courseRepository.searchByPlanet(myPlanet, planet, pageable);
-    }
-
-    @Transactional
-    public void follow(Long userId, Long planetId) {
         User user = userRepository.findById(userId).orElseThrow();
-        Planet planet = planetRepository.searchById(planetId).orElseThrow();
-        if (planet.isOwnedBy(user) || planetFollowRepository.existsByUserIdAndPlanetId(userId, planetId)) {
-            throw new CustomException(ExceptionType.DUPLICATED);
+        if (!planet.isOwnedBy(user)) {
+            throw new CustomException(ExceptionType.NO_PERMISSION);
         }
-        planetFollowRepository.save(new PlanetFollow(user, planet));
-    }
-
-    @Transactional
-    public void unfollow(Long userId, Long planetId) {
-        if (!planetFollowRepository.existsByUserIdAndPlanetId(userId, planetId)) {
-            throw new CustomException(ExceptionType.NO_DATA);
-        }
-        planetFollowRepository.delete(planetFollowRepository.searchByUserAndPlanet(userId, planetId).orElseThrow());
+        return courseRepository.searchByPlanet(planet, pageable);
     }
 
     @Transactional
@@ -146,15 +122,5 @@ public class PlanetService {
         Planet planet = planetRepository.searchById(planetId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         planet.leave(user);
-    }
-
-    private Boolean isFollowed(User user, Planet planet) {
-        if (user == null) {
-            return false;
-        }
-        if (planet.isOwnedBy(user)) {
-            return null;
-        }
-        return planetFollowRepository.existsByUserIdAndPlanetId(user.getId(), planet.getId());
     }
 }

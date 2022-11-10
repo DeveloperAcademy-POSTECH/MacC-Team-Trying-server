@@ -1,27 +1,31 @@
 package trying.cosmos.domain.course.dto.request;
 
-import lombok.*;
-import trying.cosmos.domain.course.entity.Access;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CourseUpdateRequest {
 
     @NotBlank
     private String title;
 
     @NotBlank
-    private String body;
+    private String date;
 
     @NotNull
-    private Access access;
+    private List<CoursePlaceRequest> places;
 
-    private List<TagCreateRequest> tags = new ArrayList<>();
+    public CourseUpdateRequest(String title, String date, List<CoursePlaceRequest> places) {
+        this.title = title;
+        this.date = date;
+        this.places = places;
+    }
 }

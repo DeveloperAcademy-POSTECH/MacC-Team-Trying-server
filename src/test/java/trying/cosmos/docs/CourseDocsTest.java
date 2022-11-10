@@ -30,8 +30,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.course.dto.request.CourseCreateRequest;
 import trying.cosmos.domain.course.dto.request.CourseUpdateRequest;
-import trying.cosmos.domain.course.dto.request.TagCreateRequest;
-import trying.cosmos.domain.course.entity.Access;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;

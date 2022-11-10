@@ -10,19 +10,15 @@ import trying.cosmos.domain.place.entity.Place;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlaceFindResponse {
+public class PlaceFindContent {
 
     private Long placeId;
     private String name;
-    private String address;
-    private String roadAddress;
     private Coordinate coordinate;
 
-    public PlaceFindResponse(Place place) {
+    public PlaceFindContent(Place place) {
         this.placeId = place.getId();
         this.name = place.getName();
-        this.address = place.getAddress();
-        this.roadAddress = place.getRoadAddress();
         this.coordinate = new Coordinate(place.getLatitude(), place.getLongitude());
     }
 }

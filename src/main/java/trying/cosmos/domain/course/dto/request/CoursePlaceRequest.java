@@ -1,4 +1,4 @@
-package trying.cosmos.domain.user.dto.response;
+package trying.cosmos.domain.course.dto.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserActivityResponse {
+public class CoursePlaceRequest {
 
-    private int courseCount;
-    private int likedCount;
+    private Long placeId;
+    private String memo;
 }

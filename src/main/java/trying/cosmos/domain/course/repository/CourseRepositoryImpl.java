@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import trying.cosmos.domain.course.entity.Access;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.user.entity.User;
 
@@ -64,7 +63,7 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
                         .select(planetFollow.planet)
                         .from(planetFollow)
                         .where(planetFollow.user.eq(user))
-        ).and(course.access.eq(Access.PUBLIC));
+        );
     }
 
     // 행성이 삭제 X

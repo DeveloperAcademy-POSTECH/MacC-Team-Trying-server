@@ -2,19 +2,19 @@ package trying.cosmos.domain.course.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.dto.request.CourseCreateRequest;
 import trying.cosmos.domain.course.dto.request.CourseUpdateRequest;
-import trying.cosmos.domain.course.dto.response.CourseCreateResponse;
-import trying.cosmos.domain.course.dto.response.CourseFindResponse;
-import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
+import trying.cosmos.domain.course.dto.response.*;
 import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.global.auth.AuthorityOf;
 import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
+import trying.cosmos.global.exception.CustomException;
+import trying.cosmos.global.exception.ExceptionType;
+import trying.cosmos.global.utils.date.DateUtils;
 
 import java.util.List;
 
@@ -26,26 +26,39 @@ public class CourseController {
     private final CourseService courseService;
 
     @AuthorityOf(Authority.USER)
-    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public CourseCreateResponse create(@RequestPart(name = "data") @Validated CourseCreateRequest request, List<MultipartFile> images) {
+    @PostMapping
+    public CourseCreateResponse create(@RequestBody @Validated CourseCreateRequest request) {
         return new CourseCreateResponse(courseService.create(
                 AuthKey.getKey(),
                 request.getPlanetId(),
                 request.getTitle(),
-                request.getBody(),
-                request.getAccess(),
-                request.getTags(),
-                images
+                DateUtils.stringToDate(request.getDate()),
+                request.getPlaces()
         ));
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping("/{courseId}")
     public CourseFindResponse find(@PathVariable Long courseId) {
         return courseService.find(AuthKey.getKey(), courseId);
     }
 
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/dates/{date}")
+    public CourseFindResponse findByDate(@PathVariable String date) {
+        return courseService.findByDate(AuthKey.getKey(), DateUtils.stringToDate(date));
+    }
+
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/dates")
+    public CourseDateResponse findCourseDates() {
+        return courseService.getCourseDates(AuthKey.getKey());
+    }
+
+    @AuthorityOf(Authority.USER)
     @GetMapping
-    public CourseListFindResponse findByName(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
+    public CourseListFindResponse findByName(@RequestParam(required = false, defaultValue = "") String query,
+                                             Pageable pageable) {
         return new CourseListFindResponse(courseService.findByTitle(AuthKey.getKey(), query, pageable));
     }
 
@@ -63,19 +76,55 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @DeleteMapping("/{courseId}/like")
-    public void dislike(@PathVariable Long courseId) {
+    public void unlike(@PathVariable Long courseId) {
         courseService.unlike(AuthKey.getKey(), courseId);
     }
 
     @AuthorityOf(Authority.USER)
     @PutMapping("/{courseId}")
-    public CourseCreateResponse update(@PathVariable Long courseId, @RequestPart(name = "data") @Validated CourseUpdateRequest request, List<MultipartFile> images) {
-        return new CourseCreateResponse(courseService.update(AuthKey.getKey(), courseId, request.getTitle(), request.getBody(), request.getAccess(), request.getTags(), images));
+    public CourseCreateResponse update(@PathVariable Long courseId, @RequestBody @Validated CourseUpdateRequest request) {
+        return new CourseCreateResponse(courseService.update(
+                AuthKey.getKey(),
+                courseId,
+                request.getTitle(),
+                DateUtils.stringToDate(request.getDate()),
+                request.getPlaces()
+        ));
     }
 
     @AuthorityOf(Authority.USER)
     @DeleteMapping("/{courseId}")
     public void delete(@PathVariable Long courseId) {
         courseService.delete(AuthKey.getKey(), courseId);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @PostMapping("/{courseId}/review")
+    public void createReview(@PathVariable Long courseId, @RequestParam String body, List<MultipartFile> images) {
+        courseService.createReview(AuthKey.getKey(), courseId, body, images);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @GetMapping("/{courseId}/review")
+    public CourseReviewResponse findReview(@PathVariable Long courseId, @RequestParam String writer) {
+        if (writer.equals("me")) {
+            return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId));
+        } else if (writer.equals("mate")) {
+            return new CourseReviewResponse(courseService.findMateReview(AuthKey.getKey(), courseId));
+        } else {
+            throw new CustomException(ExceptionType.INVALID_PARAMETER);
+        }
+    }
+
+    @AuthorityOf(Authority.USER)
+    @PutMapping("/{courseId}/review")
+    public void updateReview(@PathVariable Long courseId, @RequestParam String body, List<MultipartFile> images) {
+        courseService.updateReview(AuthKey.getKey(), courseId, body, images);
+    }
+
+    @AuthorityOf(Authority.USER)
+    @DeleteMapping("/{courseId}/review")
+    public void deleteReview(@PathVariable Long courseId) {
+        courseService.deleteReview(AuthKey.getKey(), courseId);
     }
 }

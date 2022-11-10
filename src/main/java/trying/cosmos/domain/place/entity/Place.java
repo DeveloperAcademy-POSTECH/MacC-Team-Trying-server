@@ -1,30 +1,31 @@
 package trying.cosmos.domain.place.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Place {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "place_id")
-    private Long placeId;
+    private Long id;
 
     private String name;
 
-    @Embedded
-    private Coordinate coordinate;
+    private String code;
 
-    // Constructor
-    public Place(String name, double latitude, double longitude) {
-        this.name = name;
-        this.coordinate = new Coordinate(latitude, longitude);
-    }
+    private String address;
+
+    private String roadAddress;
+
+    private Double latitude;
+
+    private Double longitude;
 }

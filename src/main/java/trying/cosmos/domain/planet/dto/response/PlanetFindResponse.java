@@ -17,13 +17,11 @@ public class PlanetFindResponse {
     private String name;
     private String image;
     private int dday;
-    private Boolean followed;
 
-    public PlanetFindResponse(Planet planet, Boolean followed) {
+    public PlanetFindResponse(Planet planet) {
         this.planetId = planet.getId();
         this.name = planet.getName();
         this.image = planet.getImage();
         this.dday = planet.getDday();
-        this.followed = followed;
     }
 }

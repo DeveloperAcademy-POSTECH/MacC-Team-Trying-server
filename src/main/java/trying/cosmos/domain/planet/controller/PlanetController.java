@@ -45,43 +45,28 @@ public class PlanetController {
         planetService.join(AuthKey.getKey(), request.getCode());
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping("/{planetId}")
     public PlanetFindResponse findPlanet(@PathVariable Long planetId) {
         return planetService.find(AuthKey.getKey(), planetId);
     }
 
+    @AuthorityOf(Authority.USER)
     @GetMapping
     public PlanetListFindResponse findPlanets(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
         return planetService.findList(AuthKey.getKey(), query, pageable);
     }
 
     @AuthorityOf(Authority.USER)
-    @GetMapping("/follow")
-    public PlanetListFindResponse findFollowPlanets(Pageable pageable) {
-        return planetService.findFollowPlanets(AuthKey.getKey(), pageable);
-    }
-
     @GetMapping("/{planetId}/courses")
     public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
         return new PlanetCourseListResponse(planetService.findPlanetCourse(AuthKey.getKey(), planetId, pageable));
     }
 
     @AuthorityOf(Authority.USER)
-    @PostMapping("/{planetId}/follow")
-    public void follow(@PathVariable Long planetId) {
-        planetService.follow(AuthKey.getKey(), planetId);
-    }
-
-    @AuthorityOf(Authority.USER)
-    @DeleteMapping("/{planetId}/follow")
-    public void unfollow(@PathVariable Long planetId) {
-        planetService.unfollow(AuthKey.getKey(), planetId);
-    }
-
-    @AuthorityOf(Authority.USER)
     @PutMapping("/{planetId}")
     public PlanetFindResponse update(@PathVariable Long planetId, @RequestBody @Validated PlanetUpdateRequest request) {
-        return new PlanetFindResponse(planetService.update(AuthKey.getKey(), planetId, request.getName(), DateUtils.stringToDate(request.getDate()), request.getImage()), null);
+        return new PlanetFindResponse(planetService.update(AuthKey.getKey(), planetId, request.getName(), DateUtils.stringToDate(request.getDate()), request.getImage()));
     }
 
     @AuthorityOf(Authority.USER)

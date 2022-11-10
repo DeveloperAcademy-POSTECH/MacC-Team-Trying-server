@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import trying.cosmos.domain.common.DateAuditingEntity;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.aop.LogSpace;
+import trying.cosmos.global.auditing.DateAuditingEntity;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
