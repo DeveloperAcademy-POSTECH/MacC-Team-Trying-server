@@ -21,6 +21,7 @@ public enum ExceptionType {
     AUTHENTICATION_FAILED(UNAUTHORIZED, "인증에 실패했습니다."),
     NOT_AUTHENTICATED(UNAUTHORIZED, "로그인 상태가 아닙니다."),
     CERTIFICATION_FAILED(UNAUTHORIZED, "이메일 인증에 실패했습니다."),
+    NOT_CERTIFICATED(UNAUTHORIZED, "인증되지 않은 이메일입니다."),
     INVALID_PASSWORD(UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
     NO_PERMISSION(FORBIDDEN, "권한이 없습니다."),
@@ -33,7 +34,9 @@ public enum ExceptionType {
     DUPLICATED(CONFLICT, "중복된 데이터가 존재합니다."),
     EMAIL_DUPLICATED(CONFLICT, "중복된 이메일이 존재합니다."),
     NAME_DUPLICATED(CONFLICT, "중복된 닉네임이 존재합니다."),
-    PLANET_CREATE_FAILED(CONFLICT, "참여한 행성이 존재합니다."),
+    IDENTIFIER_DUPLICATED(CONFLICT, "중복된 식별자가 존재합니다."),
+    PLANET_CREATE_FAILED(CONFLICT, "행성 생성에 실패했습니다."),
+    PLANET_UPDATE_FAILED(CONFLICT, "행성 수정에 실패했습니다."),
     PLANET_JOIN_FAILED(CONFLICT, "행성 참여에 실패했습니다."),
     INVALID_IMAGE_TYPE(CONFLICT, "지원하지 않는 이미지 타입입니다."),
     SOCIAL_ACCOUNT(CONFLICT, "소셜 계정은 비밀번호를 변경할 수 없습니다."),

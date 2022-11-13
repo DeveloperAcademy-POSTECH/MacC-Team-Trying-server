@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 public class CourseReviewResponse {
 
     private String writerName;
-    private String body;
+    private String content;
     private List<String> images;
 
     public CourseReviewResponse(CourseReview review) {
         this.writerName = review.getWriter().getName();
-        this.body = review.getBody();
-        this.images = review.getImages().stream().map(CourseReviewImage::getName).collect(Collectors.toList());
+        this.content = review.getContent();
+        this.images = review.getImages().stream()
+                .map(CourseReviewImage::getName)
+                .collect(Collectors.toList());
     }
 }

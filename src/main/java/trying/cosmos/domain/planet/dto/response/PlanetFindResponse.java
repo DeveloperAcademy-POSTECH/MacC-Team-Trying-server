@@ -13,15 +13,13 @@ import trying.cosmos.domain.planet.entity.Planet;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlanetFindResponse {
 
-    private Long planetId;
     private String name;
-    private String image;
     private int dday;
+    private String image;
 
     public PlanetFindResponse(Planet planet) {
-        this.planetId = planet.getId();
         this.name = planet.getName();
-        this.image = planet.getImage();
         this.dday = planet.getDday();
+        this.image = planet.getImage();
     }
 }

@@ -40,6 +40,12 @@ public class Certification {
         this.isCertified = false;
         this.expiredDate = LocalDateTime.now().plusSeconds(EXPIRED_TIME);
     }
+    public Certification(String email, int expireAfter) {
+        this.email = email;
+        this.code = RandomStringUtils.random(CODE_LENGTH, true, true);
+        this.isCertified = false;
+        this.expiredDate = LocalDateTime.now().plusSeconds(expireAfter);
+    }
 
     public void certificate(String code) {
         if (isExpired() || isWrongCode(code)) {

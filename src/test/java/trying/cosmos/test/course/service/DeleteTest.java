@@ -1,6 +1,5 @@
 package trying.cosmos.test.course.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,27 +11,27 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.auth.entity.Authority;
-import trying.cosmos.global.exception.CustomException;
 
-import java.util.List;
+import javax.persistence.EntityManager;
 import java.util.NoSuchElementException;
 
+import static java.time.LocalDate.now;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Course.Service) 코스 수정")
+@DisplayName("코스 삭제")
 public class DeleteTest {
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     UserRepository userRepository;
@@ -44,53 +43,64 @@ public class DeleteTest {
     CourseRepository courseRepository;
 
     @Autowired
-    CourseService courseService;
-
-    private Long userId;
-    private Long courseId;
+    EntityManager em;
 
     @BeforeEach
     void setup() {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, UserStatus.LOGIN, Authority.USER));
-        this.userId = user.getId();
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagRequest, null);
-        this.courseId = course.getId();
+        em.persist(place1);
     }
-
-    private String generateCode() {
-        String code = RandomStringUtils.random(6, true, true);
-        while (planetRepository.existsByInviteCode(code)) {
-            code = RandomStringUtils.random(6, true, true);
-        }
-        return code;
-    }
-
-    @Nested
-    @DisplayName("성공")
-    class success {
-
-        @Test
-        @DisplayName("코스 삭제")
-        void update() throws Exception {
-            courseService.delete(userId, courseId);
-            assertThatThrownBy(() -> courseService.find(userId, courseId))
-                    .isInstanceOf(NoSuchElementException.class);
-        }
-    }
-
+    
     @Nested
     @DisplayName("실패")
     class fail {
 
         @Test
-        @DisplayName("내 코스가 아닌 경우")
-        void not_my_course() throws Exception {
-            User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGIN, Authority.USER));
-            assertThatThrownBy(() -> courseService.delete(other.getId(), courseId))
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(NO_PERMISSION.getMessage());
+        @DisplayName("코스가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
+        void no_course() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.delete(user.getId(), NOT_EXIST))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+
+        @Test
+        @DisplayName("사용자 행성의 코스가 아니면 NO_DATA 오류를 발생시킨다.")
+        void others_course() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            Course course = courseRepository.save(new Course(planet, TITLE, now()));
+
+            User guest = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.delete(guest.getId(), course.getId()))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+    }
+    
+    @Nested
+    @DisplayName("성공")
+    class success {
+        
+        @Test
+        @DisplayName("코스를 삭제한다")
+        void delete() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+            Course course = courseService.create(user.getId(), TITLE, now(), course_place_request1);
+
+            // WHEN
+            courseService.delete(user.getId(), course.getId());
+
+            // THEN
+            assertThat(courseRepository.searchById(planet, course.getId()))
+                    .isEmpty();
         }
     }
 }

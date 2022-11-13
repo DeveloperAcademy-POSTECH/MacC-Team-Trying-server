@@ -1,6 +1,5 @@
 package trying.cosmos.test.course.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,27 +11,28 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.auth.entity.Authority;
-import trying.cosmos.global.exception.CustomException;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Course.Service) 코스 수정")
+@DisplayName("코스 수정")
 public class UpdateTest {
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     UserRepository userRepository;
@@ -44,63 +44,86 @@ public class UpdateTest {
     CourseRepository courseRepository;
 
     @Autowired
-    CourseService courseService;
-
-    private Long userId;
-    private Long courseId;
+    EntityManager em;
 
     @BeforeEach
     void setup() {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, UserStatus.LOGIN, Authority.USER));
-        this.userId = user.getId();
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
-        List<TagCreateRequest> tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
-        Course course = courseService.create(user.getId(), planet.getId(), TITLE, BODY, Access.PUBLIC, tagRequest, null);
-        this.courseId = course.getId();
+        em.persist(place1);
+        em.persist(place2);
     }
-
-    private String generateCode() {
-        String code = RandomStringUtils.random(6, true, true);
-        while (planetRepository.existsByInviteCode(code)) {
-            code = RandomStringUtils.random(6, true, true);
-        }
-        return code;
-    }
-
-    @Nested
-    @DisplayName("성공")
-    class success {
-
-        @Test
-        @DisplayName("코스 수정")
-        void update() throws Exception {
-            List<TagCreateRequest> updateTag = List.of(
-                    new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
-                    new TagCreateRequest(new PlaceCreateRequest("new place", 1.0, 1.0), "new tag")
-            );
-            courseService.update(userId, courseId, "updated", "updated", Access.PRIVATE, updateTag, null);
-            assertThat(courseRepository.findById(courseId).orElseThrow().getTitle()).isEqualTo("updated");
-            assertThat(courseRepository.findById(courseId).orElseThrow().getBody()).isEqualTo("updated");
-            assertThat(courseRepository.findById(courseId).orElseThrow().getAccess()).isEqualTo(Access.PRIVATE);
-            assertThat(courseRepository.findById(courseId).orElseThrow().getTags().size()).isEqualTo(2);
-        }
-    }
-
+    
     @Nested
     @DisplayName("실패")
     class fail {
+        
+        @Test
+        @DisplayName("코스가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
+        void no_course() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.update(user.getId(), NOT_EXIST, "UPDATED", now(), course_place_request1))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
 
         @Test
-        @DisplayName("내 코스가 아닌 경우")
-        void not_my_course() throws Exception {
-            User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", UserStatus.LOGIN, Authority.USER));
-            List<TagCreateRequest> updateTag = List.of(
-                    new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME),
-                    new TagCreateRequest(new PlaceCreateRequest("new place", 1.0, 1.0), "new tag")
-            );
-            assertThatThrownBy(() -> courseService.update(other.getId(), courseId, "updated", "updated", Access.PRIVATE, updateTag, null))
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(NO_PERMISSION.getMessage());
+        @DisplayName("사용자 행성의 코스가 아니면 NO_DATA 오류를 발생시킨다.")
+        void others_course() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            Course course = courseRepository.save(new Course(planet, TITLE, now()));
+
+            User guest = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.update(guest.getId(), course.getId(), "UPDATED", now(), course_place_request1))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+
+        @Test
+        @DisplayName("장소가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
+        void no_place() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+            Course course = courseService.create(user.getId(), TITLE, now(), course_place_request1);
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.update(user.getId(), course.getId(), TITLE, LocalDate.now(), course_place_not_exist))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+    }
+    
+    @Nested
+    @DisplayName("성공")
+    class success {
+        
+        @Test
+        @DisplayName("코스를 수정한다")
+        void update() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+            Course course = courseService.create(user.getId(), TITLE, now(), course_place_request1);
+
+            // WHEN
+            courseService.update(user.getId(), course.getId(), "UPDATED", LocalDate.now().plusDays(3), course_place_request2);
+
+            // THEN
+            assertThat(course.getTitle())
+                    .isEqualTo("UPDATED");
+            assertThat(course.getDate())
+                    .isNotEqualTo(LocalDate.now());
+            assertThat(course.getPlaces().size())
+                    .isEqualTo(1);
+            assertThat(course.getPlaces().get(0).getPlace().getId())
+                    .isEqualTo(place2.getId());
         }
     }
 }

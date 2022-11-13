@@ -22,7 +22,10 @@ public class SocialAccountService {
 
     @Transactional
     public String join(String identifier, String email, String name, String deviceToken) {
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByIdentifier(identifier)) {
+            throw new CustomException(ExceptionType.IDENTIFIER_DUPLICATED);
+        }
+        if (email != null && userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
         }
         if (userRepository.existsByName(name)) {

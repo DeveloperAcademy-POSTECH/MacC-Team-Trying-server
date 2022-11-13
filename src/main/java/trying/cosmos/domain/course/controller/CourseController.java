@@ -30,7 +30,6 @@ public class CourseController {
     public CourseCreateResponse create(@RequestBody @Validated CourseCreateRequest request) {
         return new CourseCreateResponse(courseService.create(
                 AuthKey.getKey(),
-                request.getPlanetId(),
                 request.getTitle(),
                 DateUtils.stringToDate(request.getDate()),
                 request.getPlaces()
@@ -51,21 +50,27 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @GetMapping("/dates")
-    public CourseDateResponse findCourseDates() {
-        return courseService.getCourseDates(AuthKey.getKey());
+    public CourseDateResponse findCourseDates(@RequestParam String start,
+                                              @RequestParam String end) {
+        return courseService.findCourseDates(
+                AuthKey.getKey(),
+                DateUtils.stringToDate(start),
+                DateUtils.stringToDate(end)
+        );
     }
 
     @AuthorityOf(Authority.USER)
     @GetMapping
-    public CourseListFindResponse findByName(@RequestParam(required = false, defaultValue = "") String query,
-                                             Pageable pageable) {
-        return new CourseListFindResponse(courseService.findByTitle(AuthKey.getKey(), query, pageable));
+    public CourseListFindResponse findList(@RequestParam(required = false, defaultValue = "") String query,
+                                           @RequestParam(required = false, defaultValue = "false") boolean likeonly,
+                                           Pageable pageable) {
+        return new CourseListFindResponse(courseService.findList(AuthKey.getKey(), query, likeonly, pageable));
     }
 
     @AuthorityOf(Authority.USER)
-    @GetMapping("/feed")
-    public CourseListFindResponse getFeed(Pageable pageable) {
-        return new CourseListFindResponse(courseService.getFeeds(AuthKey.getKey(), pageable));
+    @GetMapping("/log")
+    public CourseListFindResponse findLogs(Pageable pageable) {
+        return new CourseListFindResponse(courseService.findLogs(AuthKey.getKey(), pageable));
     }
 
     @AuthorityOf(Authority.USER)
@@ -100,8 +105,8 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @PostMapping("/{courseId}/review")
-    public void createReview(@PathVariable Long courseId, @RequestParam String body, List<MultipartFile> images) {
-        courseService.createReview(AuthKey.getKey(), courseId, body, images);
+    public void createReview(@PathVariable Long courseId, @RequestParam String content, List<MultipartFile> images) {
+        courseService.createReview(AuthKey.getKey(), courseId, content, images);
     }
 
     @AuthorityOf(Authority.USER)
@@ -118,8 +123,8 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @PutMapping("/{courseId}/review")
-    public void updateReview(@PathVariable Long courseId, @RequestParam String body, List<MultipartFile> images) {
-        courseService.updateReview(AuthKey.getKey(), courseId, body, images);
+    public void updateReview(@PathVariable Long courseId, @RequestParam String content, List<MultipartFile> images) {
+        courseService.updateReview(AuthKey.getKey(), courseId, content, images);
     }
 
     @AuthorityOf(Authority.USER)

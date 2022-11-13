@@ -28,19 +28,19 @@ public class CourseReview extends DateAuditingEntity {
     private Course course;
 
     @Column(length = 1000)
-    private String body;
+    private String content;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
     private List<CourseReviewImage> images = new ArrayList<>();
 
-    public CourseReview(User writer, Course course, String body) {
+    public CourseReview(User writer, Course course, String content) {
         this.writer = writer;
         this.course = course;
-        this.body = body;
+        this.content = content;
         course.getReviews().add(this);
     }
 
-    public void update(String body) {
-        this.body = body;
+    public void update(String content) {
+        this.content = content;
     }
 }

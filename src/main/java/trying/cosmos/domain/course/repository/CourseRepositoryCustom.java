@@ -7,5 +7,5 @@ import trying.cosmos.domain.user.entity.User;
 
 public interface CourseRepositoryCustom {
 
-    Slice<Course> getFeed(User user, Pageable pageable);
+    Slice<Course> getLogs(User user, Pageable pageable);
 }

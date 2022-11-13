@@ -11,11 +11,9 @@ import trying.cosmos.domain.planet.entity.Planet;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlanetCreateResponse {
 
-    private Long planetId;
     private String code;
 
     public PlanetCreateResponse(Planet planet) {
-        this.planetId = planet.getId();
         this.code = planet.getInviteCode();
     }
 }

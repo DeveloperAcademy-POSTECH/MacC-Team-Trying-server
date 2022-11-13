@@ -13,13 +13,10 @@ import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import java.security.Key;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class TokenProvider {
 
-    private static final String SUBJECT_KEY = "id";
     private static final String AUTHORITY_KEY = "auth";
     private static final String JWT_PREFIX = "Bearer ";
 
@@ -32,31 +29,20 @@ public class TokenProvider {
 
     public String getAccessToken(Session session) {
         return JWT_PREFIX + Jwts.builder()
-                .claim(SUBJECT_KEY, session.getId())
+                .setSubject(session.getId())
                 .claim(AUTHORITY_KEY, session.getAuthority())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public Map<String, String> parseToken(String accessToken) {
-        Map<String, String> data = new HashMap<>();
-        Claims claims = parseClaims(accessToken);
-        if (claims.get(SUBJECT_KEY) == null || claims.get(AUTHORITY_KEY) == null) {
-            throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
-        }
-        data.put(SUBJECT_KEY, claims.get(SUBJECT_KEY, String.class));
-        data.put(AUTHORITY_KEY, claims.get(AUTHORITY_KEY, String.class));
-        return data;
-    }
-
     public String getSubject(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        if (claims.get(SUBJECT_KEY) == null) {
+        if (claims.getSubject() == null) {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 
-        return claims.get(SUBJECT_KEY, String.class);
+        return claims.getSubject();
     }
 
     private Claims parseClaims(String accessToken) {

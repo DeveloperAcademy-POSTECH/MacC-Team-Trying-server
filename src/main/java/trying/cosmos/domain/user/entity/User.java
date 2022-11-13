@@ -57,7 +57,7 @@ public class User extends DateAuditingEntity {
     @JoinColumn(name = "mate_id")
     private User mate;
 
-    public User(String email, String password, String name) {
+    private User(String email, String password, String name) {
         this.email = email;
         this.password = BCryptUtils.encrypt(password);
         this.name = name;
@@ -67,7 +67,7 @@ public class User extends DateAuditingEntity {
         this.isSocialAccount = false;
     }
 
-    public User(String email, String password, String name, UserStatus status, Authority authority) {
+    private User(String email, String password, String name, UserStatus status, Authority authority) {
         this.email = email;
         this.password = BCryptUtils.encrypt(password);
         this.name = name;
@@ -110,11 +110,6 @@ public class User extends DateAuditingEntity {
         this.deviceToken = deviceToken;
     }
 
-    public void resetPassword(String password) {
-        this.password = password;
-        this.status = UserStatus.LOGOUT;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -144,26 +139,16 @@ public class User extends DateAuditingEntity {
         }
     }
 
-    public String getOriginEmail() {
-        if (this.status.equals(UserStatus.WITHDRAWN)) {
-            return this.email.substring(9);
-        }
-        return this.email;
-    }
-
-    public String getOriginName() {
-        if (this.status.equals(UserStatus.WITHDRAWN)) {
-            return this.name.substring(9);
-        }
-        return this.name;
-    }
-
     public void setPlanet(Planet planet) {
         this.planet = planet;
     }
 
     public void setMate(User mate) {
         this.mate = mate;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
     public void checkPassword(String password) {

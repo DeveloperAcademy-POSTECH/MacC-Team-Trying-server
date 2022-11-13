@@ -1,11 +1,14 @@
 package trying.cosmos.domain.planet.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import trying.cosmos.domain.planet.dto.request.PlanetCreateRequest;
+import trying.cosmos.domain.planet.dto.request.PlanetJoinRequest;
 import trying.cosmos.domain.planet.dto.request.PlanetUpdateRequest;
-import trying.cosmos.domain.planet.dto.response.*;
+import trying.cosmos.domain.planet.dto.response.PlanetCreateResponse;
+import trying.cosmos.domain.planet.dto.response.PlanetFindResponse;
+import trying.cosmos.domain.planet.dto.response.PlanetPreviewResponse;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.global.auth.AuthorityOf;
@@ -28,13 +31,7 @@ public class PlanetController {
     }
 
     @AuthorityOf(Authority.USER)
-    @GetMapping("/{planetId}/code")
-    public PlanetInviteCodeResponse getInviteCode(@PathVariable Long planetId) {
-        return new PlanetInviteCodeResponse(planetService.getInviteCode(AuthKey.getKey(), planetId));
-    }
-
-    @AuthorityOf(Authority.USER)
-    @GetMapping("/join")
+    @GetMapping
     public PlanetPreviewResponse findPlanet(@RequestParam String code) {
         return new PlanetPreviewResponse(planetService.find(code));
     }
@@ -46,32 +43,14 @@ public class PlanetController {
     }
 
     @AuthorityOf(Authority.USER)
-    @GetMapping("/{planetId}")
-    public PlanetFindResponse findPlanet(@PathVariable Long planetId) {
-        return planetService.find(AuthKey.getKey(), planetId);
+    @PutMapping
+    public PlanetFindResponse update(@RequestBody @Validated PlanetUpdateRequest request) {
+        return new PlanetFindResponse(planetService.update(AuthKey.getKey(), request.getName(), DateUtils.stringToDate(request.getDate()), request.getImage()));
     }
 
     @AuthorityOf(Authority.USER)
-    @GetMapping
-    public PlanetListFindResponse findPlanets(@RequestParam(required = false, defaultValue = "") String query, Pageable pageable) {
-        return planetService.findList(AuthKey.getKey(), query, pageable);
-    }
-
-    @AuthorityOf(Authority.USER)
-    @GetMapping("/{planetId}/courses")
-    public PlanetCourseListResponse findPlanetCourses(@PathVariable Long planetId, Pageable pageable) {
-        return new PlanetCourseListResponse(planetService.findPlanetCourse(AuthKey.getKey(), planetId, pageable));
-    }
-
-    @AuthorityOf(Authority.USER)
-    @PutMapping("/{planetId}")
-    public PlanetFindResponse update(@PathVariable Long planetId, @RequestBody @Validated PlanetUpdateRequest request) {
-        return new PlanetFindResponse(planetService.update(AuthKey.getKey(), planetId, request.getName(), DateUtils.stringToDate(request.getDate()), request.getImage()));
-    }
-
-    @AuthorityOf(Authority.USER)
-    @DeleteMapping("/{planetId}")
-    public void leave(@PathVariable Long planetId) {
-        planetService.leave(AuthKey.getKey(), planetId);
+    @DeleteMapping
+    public void leave() {
+        planetService.leave(AuthKey.getKey());
     }
 }

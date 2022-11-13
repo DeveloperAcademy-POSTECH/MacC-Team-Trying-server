@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
-import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
+import static trying.cosmos.global.exception.ExceptionType.PLANET_JOIN_FAILED;
 
 @Slf4j
 @ToString
@@ -46,9 +46,9 @@ public class Planet extends DateAuditingEntity {
     private boolean isDeleted;
 
     // Constructor
-    public Planet(User user, String name, String image, String code) {
+    public Planet(User user, String name, String image, String inviteCode) {
         this.name = name;
-        this.inviteCode = code;
+        this.inviteCode = inviteCode;
         this.image = image;
         this.meetDate = LocalDate.now();
         this.isDeleted = false;
@@ -57,43 +57,31 @@ public class Planet extends DateAuditingEntity {
     }
 
     // Convenience Method
-    public void join(User guest) {
+    public void join(User mate) {
         if (owners.size() != 1) {
-            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
+            throw new CustomException(NO_DATA);
         }
         User owner = owners.get(0);
-        if (owner.equals(guest)) {
-            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
+        if (owner.equals(mate)) {
+            throw new CustomException(PLANET_JOIN_FAILED);
         }
-        this.owners.add(guest);
-        owner.setMate(guest);
-        guest.setMate(owner);
-        guest.setPlanet(this);
+        this.owners.add(mate);
+        owner.setMate(mate);
+        mate.setMate(owner);
+        mate.setPlanet(this);
     }
 
     public void update(String name, LocalDate date, String image) {
-        this.name = name;
+        if (date.isAfter(LocalDate.now())) {
+            throw new CustomException(ExceptionType.PLANET_UPDATE_FAILED);
+        }
         this.meetDate = date;
+        this.name = name;
         this.image = image;
     }
 
     public int getDday() {
         return (int) Duration.between(this.meetDate.atStartOfDay(), LocalDate.now().atStartOfDay()).toDays() + 1;
-    }
-
-    public boolean isOwnedBy(User user) {
-        return owners.contains(user);
-    }
-
-    public String getInviteCode(Long userId) {
-        if (owners.size() != 1) {
-            // 초대코드가 존재하지 않음
-            throw new CustomException(NO_DATA);
-        }
-        if (!owners.get(0).getId().equals(userId)) {
-            throw new CustomException(NO_PERMISSION);
-        }
-        return this.inviteCode;
     }
 
     public boolean isFull() {
@@ -104,10 +92,17 @@ public class Planet extends DateAuditingEntity {
         if (!owners.contains(user)) {
             throw new CustomException(ExceptionType.NO_PERMISSION);
         }
+
+        User mate = user.getMate();
+        if (mate != null) {
+            mate.setMate(null);
+        }
+        user.setMate(null);
         this.owners.remove(user);
         user.setPlanet(null);
+
         if (this.owners.isEmpty()) {
-            log.info("{}Delete Planet {}", LogSpace.getSpace(),id);
+            log.info("{}Delete Planet {}", LogSpace.getSpace(), id);
             this.isDeleted = true;
         }
     }
