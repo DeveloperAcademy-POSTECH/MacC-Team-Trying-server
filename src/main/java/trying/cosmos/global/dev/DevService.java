@@ -6,13 +6,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.planet.entity.Planet;
-import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
-import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.SessionService;
-import trying.cosmos.global.auth.entity.Authority;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -27,7 +24,6 @@ public class DevService {
 
     private final UserRepository userRepository;
     private final SessionService sessionService;
-    private final PlanetRepository planetRepository;
     private final PlanetService planetService;
     private final Environment environment;
 
@@ -41,7 +37,7 @@ public class DevService {
     @Transactional
     public User createUser() {
         String str = randomName();
-        User user = new User(str + "@gmail.com", "password", str, UserStatus.LOGIN, Authority.USER);
+        User user = User.createEmailUser(str + "@gmail.com", "password", str, "device_token");
         return userRepository.save(user);
     }
 

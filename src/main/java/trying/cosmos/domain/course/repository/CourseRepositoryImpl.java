@@ -2,7 +2,6 @@ package trying.cosmos.domain.course.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +13,8 @@ import trying.cosmos.domain.user.entity.User;
 import java.util.List;
 
 import static trying.cosmos.domain.course.entity.QCourse.course;
+import static trying.cosmos.domain.course.entity.QCourseReview.courseReview;
 import static trying.cosmos.domain.planet.entity.QPlanet.planet;
-import static trying.cosmos.domain.planet.entity.QPlanetFollow.planetFollow;
 
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
@@ -23,11 +22,14 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<Course> getFeed(User user, Pageable pageable) {
+    public Slice<Course> getLogs(User user, Pageable pageable) {
         List<Course> contents = queryFactory.select(course)
                 .from(course)
+                .join(course.reviews, courseReview)
+                .fetchJoin()
+                .join(course.planet, planet)
                 .where(
-                        feedCondition(user)
+                        logCondition(user)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -42,10 +44,10 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         return new SliceImpl<>(contents, pageable, hasNext);
     }
 
-    private BooleanBuilder feedCondition(User user) {
+    private BooleanBuilder logCondition(User user) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.or(isMyCourse(user));
-        builder.or(isFollowPublicCourse(user));
+        builder.and(hasReview(user));
         builder.and(isPlanetNotDeleted());
         builder.and(isCourseNotDeleted());
         return builder;
@@ -56,14 +58,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
         return course.planet.eq(user.getPlanet());
     }
 
-    // 내가 팔로우 하고 있는 행성의 공개 코스
-    private BooleanExpression isFollowPublicCourse(User user) {
-        return course.planet.in(
-                JPAExpressions
-                        .select(planetFollow.planet)
-                        .from(planetFollow)
-                        .where(planetFollow.user.eq(user))
-        );
+    // 리뷰가 존재하는지
+    private BooleanExpression hasReview(User user) {
+        return courseReview.writer.eq(user);
     }
 
     // 행성이 삭제 X

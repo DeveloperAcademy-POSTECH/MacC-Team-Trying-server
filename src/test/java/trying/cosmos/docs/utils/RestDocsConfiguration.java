@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.snippet.Attributes;
 
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 
@@ -21,5 +22,9 @@ public class RestDocsConfiguration {
                         prettyPrint()
                 ),
                 preprocessResponse(prettyPrint()));
+    }
+
+    public static Attributes.Attribute constraints(String value) {
+        return new Attributes.Attribute("constraints", value);
     }
 }

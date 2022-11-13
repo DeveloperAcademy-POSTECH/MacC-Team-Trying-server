@@ -1,42 +1,39 @@
 package trying.cosmos.test.course.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
-import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
-import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
+import trying.cosmos.global.exception.ExceptionType;
 
-import java.util.List;
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.domain.course.entity.Access.PUBLIC;
-import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
-import static trying.cosmos.global.auth.entity.Authority.USER;
-import static trying.cosmos.global.exception.ExceptionType.NO_PERMISSION;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Course.Service) 코스 생성")
+@DisplayName("코스 생성")
 public class CreateTest {
+
+    @Autowired
+    CourseService courseService;
 
     @Autowired
     UserRepository userRepository;
@@ -45,65 +42,96 @@ public class CreateTest {
     PlanetRepository planetRepository;
 
     @Autowired
-    PlanetService planetService;
-
-    @Autowired
     CourseRepository courseRepository;
 
     @Autowired
-    CourseService courseService;
-
-    @Autowired
-    PlaceService placeService;
-
-    private Long userId;
-    private Long planetId;
-    private List<TagCreateRequest> tagRequest;
-
-    private Pageable pageable = PageRequest.of(0, 5);
+    EntityManager em;
 
     @BeforeEach
     void setup() {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        this.userId = user.getId();
-
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, PLANET_IMAGE, generateCode()));
-        this.planetId = planet.getId();
-
-        tagRequest = List.of(new TagCreateRequest(new PlaceCreateRequest(PLACE_NAME, LATITUDE, LONGITUDE), TAG_NAME));
+        em.persist(place1);
     }
-
-    private String generateCode() {
-        String code = RandomStringUtils.random(6, true, true);
-        while (planetRepository.existsByInviteCode(code)) {
-            code = RandomStringUtils.random(6, true, true);
-        }
-        return code;
-    }
-
-    @Nested
-    @DisplayName("성공")
-    class success {
-
-        @Test
-        @DisplayName("코스 생성 성공")
-        void create() throws Exception {
-            courseService.create(userId, planetId, TITLE, BODY, PUBLIC, tagRequest, null);
-            assertThat(planetService.findPlanetCourse(userId, planetId, pageable).getNumberOfElements()).isEqualTo(1);
-        }
-    }
-
+    
     @Nested
     @DisplayName("실패")
     class fail {
 
         @Test
-        @DisplayName("내 행성이 아닌 경우")
-        void not_my_planet() throws Exception {
-            User other = userRepository.save(new User("other@gmail.com", PASSWORD, "other", LOGIN, USER));
-            assertThatThrownBy(() -> courseService.create(other.getId(), planetId, TITLE, BODY, PUBLIC, tagRequest, null))
+        @DisplayName("행성이 존재하지 않으면 PLANET_CREATE_FAILED 오류를 발생시킨다.")
+        void no_planet() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
                     .isInstanceOf(CustomException.class)
-                    .hasMessage(NO_PERMISSION.getMessage());
+                    .hasMessage(ExceptionType.PLANET_CREATE_FAILED.getMessage());
+        }
+
+        @Test
+        @DisplayName("메이트가 존재하지 않으면 PLANET_CREATE_FAILED 오류를 발생시킨다.")
+        void no_mate() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ExceptionType.PLANET_CREATE_FAILED.getMessage());
+        }
+
+        @Test
+        @DisplayName("해당 날짜에 코스가 존재한다면 DUPLICATED 오류를 발생시킨다.")
+        void date_duplicated() throws Exception {
+            // GIVEN
+            em.persist(place1);
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+            Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(ExceptionType.DUPLICATED.getMessage());
+        }
+
+        @Test
+        @DisplayName("장소가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
+        void no_place() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+
+            // WHEN THEN
+            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_not_exist))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+    }
+    
+    @Nested
+    @DisplayName("성공")
+    class success {
+        
+        @Test
+        @DisplayName("코스를 저장한다.")
+        void create() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+
+            // WHEN
+            Course course = courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1);
+
+            // THEN
+            assertThat(courseRepository.searchByPlanet(planet, pageable))
+                    .containsExactly(course);
         }
     }
 }

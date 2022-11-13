@@ -2,7 +2,6 @@ package trying.cosmos.domain.user.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import trying.cosmos.domain.planet.dto.response.PlanetFindContent;
 import trying.cosmos.domain.user.entity.User;
 
 @ToString
@@ -14,12 +13,12 @@ public class UserFindResponse {
 
     private UserFindContent me;
     private UserFindContent mate;
-    private PlanetFindContent planet;
+    private UserPlanetResponse planet;
 
     public UserFindResponse(User user) {
         this.me = new UserFindContent(user);
         if (user.getPlanet() != null) {
-            this.planet = new PlanetFindContent(user.getPlanet());
+            this.planet = new UserPlanetResponse(user.getPlanet(), user.getMate() != null);
         }
         if (user.getMate() != null) {
             this.mate = new UserFindContent(user.getMate());

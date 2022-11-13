@@ -11,12 +11,10 @@ import trying.cosmos.domain.planet.entity.Planet;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlanetPreviewResponse {
 
-    private Long planetId;
     private String name;
     private String image;
 
     public PlanetPreviewResponse(Planet planet) {
-        this.planetId = planet.getId();
         this.name = planet.getName();
         this.image = planet.getImage();
     }

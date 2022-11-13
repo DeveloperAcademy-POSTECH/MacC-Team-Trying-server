@@ -13,11 +13,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseListFindResponse {
 
-    private List<CourseFindContent> courses;
+    private List<CourseFindResponse> courses;
     private int size;
     private boolean hasNext;
 
-    public CourseListFindResponse(Slice<CourseFindContent> courseSlice) {
+    public CourseListFindResponse(Slice<CourseFindResponse> courseSlice) {
         this.courses = courseSlice.getContent();
         this.size = courseSlice.getNumberOfElements();
         this.hasNext = courseSlice.hasNext();

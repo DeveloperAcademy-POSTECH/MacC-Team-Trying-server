@@ -28,12 +28,20 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
     Optional<Course> searchByDate(Planet planet, LocalDate date);
 
     @Query("select c from Course c " +
-            "where c.planet = :myPlanet " +
+            "where c.planet = :planet " +
             "and c.title like :query " +
             "and c.planet.isDeleted = false " +
             "and c.isDeleted = false " +
             "order by c.createdDate desc")
-    Slice<Course> searchByName(Planet myPlanet, String query, Pageable pageable);
+    Slice<Course> searchCourses(Planet planet, String query, Pageable pageable);
+
+    @Query("select cl.course from CourseLike cl " +
+            "where cl.course.planet = :planet " +
+            "and cl.course.title like :query " +
+            "and cl.course.planet.isDeleted = false " +
+            "and cl.course.isDeleted = false " +
+            "order by cl.course.createdDate desc")
+    Slice<Course> searchLikeCourses(Planet planet, String query, Pageable pageable);
 
     @Query("select c from Course c " +
             "where c.planet = :planet " +
@@ -46,8 +54,9 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
 
     @Query("select distinct c.date from Course c " +
             "where c.planet = :planet " +
+            "and c.date >= :start and c.date < :end " +
             "and c.planet.isDeleted = false " +
             "and c.isDeleted = false " +
             "order by c.date")
-    List<LocalDate> searchAllDates(Planet planet);
+    List<LocalDate> searchCourseDates(Planet planet, LocalDate start, LocalDate end);
 }

@@ -1,6 +1,5 @@
 package trying.cosmos.test.user.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,14 +13,12 @@ import trying.cosmos.domain.user.service.UserService;
 import trying.cosmos.global.utils.cipher.BCryptUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
-import static trying.cosmos.global.auth.entity.Authority.USER;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(User.Service) 비밀번호 변경")
+@DisplayName("사용자 비밀번호 변경")
 public class UpdatePasswordTest {
 
     @Autowired
@@ -29,24 +26,23 @@ public class UpdatePasswordTest {
 
     @Autowired
     UserRepository userRepository;
-
-    private Long userId;
-
-    @BeforeEach
-    void setup() {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        this.userId = user.getId();
-    }
-
+    
     @Nested
     @DisplayName("성공")
     class success {
-
+        
         @Test
-        @DisplayName("비밀번호 변경")
-        void update_name() throws Exception {
-            userService.updatePassword(userId, "updated");
-            assertThat(BCryptUtils.isMatch("updated", userRepository.findById(userId).orElseThrow().getPassword())).isTrue();
+        @DisplayName("사용자 비밀번호를 변경한다.")
+        void update_password() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN
+            userService.updatePassword(user.getId(), "UPDATED");
+            
+            // THEN
+            assertThat(BCryptUtils.isMatch("UPDATED", user.getPassword()))
+                    .isTrue();
         }
     }
 }

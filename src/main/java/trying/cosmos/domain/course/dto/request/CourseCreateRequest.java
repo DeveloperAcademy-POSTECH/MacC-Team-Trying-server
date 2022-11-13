@@ -13,9 +13,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CourseCreateRequest {
 
-    @NotNull
-    private Long planetId;
-
     @NotBlank
     private String title;
 
@@ -25,8 +22,7 @@ public class CourseCreateRequest {
     @NotNull
     private List<CoursePlaceRequest> places;
 
-    public CourseCreateRequest(Long planetId, String title, String date, List<CoursePlaceRequest> places) {
-        this.planetId = planetId;
+    public CourseCreateRequest(String title, String date, List<CoursePlaceRequest> places) {
         this.title = title;
         this.date = date;
         this.places = places;

@@ -1,6 +1,5 @@
 package trying.cosmos.test.user.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,14 +12,12 @@ import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
-import static trying.cosmos.global.auth.entity.Authority.USER;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(User.Service) 닉네임 변경")
+@DisplayName("사용자 닉네임 변경")
 public class UpdateNameTest {
 
     @Autowired
@@ -28,24 +25,23 @@ public class UpdateNameTest {
 
     @Autowired
     UserRepository userRepository;
-
-    private Long userId;
-
-    @BeforeEach
-    void setup() {
-        User user = userRepository.save(new User(EMAIL, PASSWORD, USER_NAME, LOGIN, USER));
-        this.userId = user.getId();
-    }
-
+    
     @Nested
     @DisplayName("성공")
     class success {
-
+        
         @Test
-        @DisplayName("닉네임 변경")
+        @DisplayName("사용자 닉네임을 변경한다.")
         void update_name() throws Exception {
-            userService.updateName(userId, "updated");
-            assertThat(userRepository.findById(userId).orElseThrow().getName()).isEqualTo("updated");
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN
+            userService.updateName(user.getId(), "UPDATED");
+            
+            // THEN
+            assertThat(user.getName())
+                    .isEqualTo("UPDATED");
         }
     }
 }

@@ -59,4 +59,4 @@ spring:
 
 logging:
   level:
-    trying.cosmos: debug
+    trying.cosmos: trace

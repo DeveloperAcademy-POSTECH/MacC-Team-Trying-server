@@ -23,10 +23,6 @@ public class SessionService {
         return sessionRepository.findById(id);
     }
 
-    public Optional<Session> findByUserId(Long id) {
-        return sessionRepository.findByUserId(id);
-    }
-
     public void delete(Long userId) {
         sessionRepository.findByUserId(userId).ifPresent(sessionRepository::delete);
     }

@@ -1,7 +1,5 @@
 package trying.cosmos.test.planet.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,92 +14,101 @@ import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 
+import java.util.NoSuchElementException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.domain.user.entity.UserStatus.LOGIN;
-import static trying.cosmos.global.auth.entity.Authority.USER;
+import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
 import static trying.cosmos.global.exception.ExceptionType.PLANET_JOIN_FAILED;
-import static trying.cosmos.test.component.TestVariables.*;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-@DisplayName("(Planet.Service) 행성 참가")
+@DisplayName("행성 참가")
 public class JoinTest {
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     PlanetService planetService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     PlanetRepository planetRepository;
-
-    private Long hostId;
-    private Long guestId;
-    private Long planetId;
-    private String inviteCode;
-
-    @BeforeEach
-    void setup() {
-        User host = userRepository.save(new User(EMAIL, PASSWORD, "host", LOGIN, USER));
-        this.hostId = host.getId();
-        User guest = userRepository.save(new User("guest@gmail.com", PASSWORD, "guest", LOGIN, USER));
-        this.guestId = guest.getId();
-
-        Planet planet = planetRepository.save(new Planet(host, PLANET_NAME, PLANET_IMAGE, generateCode()));
-        this.planetId = planet.getId();
-        this.inviteCode = planet.getInviteCode();
-    }
-
-    private String generateCode() {
-        String code = RandomStringUtils.random(6, true, true);
-        while (planetRepository.existsByInviteCode(code)) {
-            code = RandomStringUtils.random(6, true, true);
-        }
-        return code;
-    }
-
-    @Nested
-    @DisplayName("성공")
-    class success {
-
-        @Test
-        @DisplayName("행성 참가시 user.getMate()시 서로가 반환, user.getPlanet()시 행성이 반환, planet.isOwnedBy(user) = true")
-        void join_mate() throws Exception {
-            planetService.join(guestId, inviteCode);
-            User host = userRepository.findById(hostId).orElseThrow();
-            User guest = userRepository.findById(guestId).orElseThrow();
-            Planet planet = planetRepository.findById(planetId).orElseThrow();
-
-            assertThat(host.getMate()).isEqualTo(guest);
-            assertThat(guest.getMate()).isEqualTo(host);
-            assertThat(guest.getPlanet()).isEqualTo(planet);
-            assertThat(planet.isOwnedBy(guest)).isTrue();
-        }
-    }
 
     @Nested
     @DisplayName("실패")
     class fail {
 
         @Test
-        @DisplayName("내 행성인 경우")
-        void my_planet() throws Exception {
-            assertThatThrownBy(() -> planetService.join(hostId, inviteCode))
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(PLANET_JOIN_FAILED.getMessage());
+        @DisplayName("행성이 존재하지 않는다면 NO_DATA 오류를 발생시킨다.")
+        void no_planet() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> planetService.join(user.getId(), WRONG_INVITE_CODE))
+                    .isInstanceOf(NoSuchElementException.class);
         }
 
         @Test
-        @DisplayName("행성에 메이트가 이미 있는 경우")
-        void full_planet() throws Exception {
-            planetService.join(guestId, inviteCode);
-            User newUser = userRepository.save(new User("new@gmail.com", PASSWORD, "new", LOGIN, USER));
-            assertThatThrownBy(() -> planetService.join(newUser.getId(), inviteCode))
+        @DisplayName("행성에 빈 자리가 없으면 NO_DATA 오류를 발생시킨다.")
+        void planet_is_full() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            planet.join(mate);
+            User guest = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN));
+
+            // WHEN THEN
+            assertThatThrownBy(() -> planetService.join(guest.getId(), INVITE_CODE))
+                    .isInstanceOf(CustomException.class)
+                    .hasMessage(NO_DATA.getMessage());
+        }
+        
+        @Test
+        @DisplayName("내 행성이면 PLANET_JOIN_FAILED 오류를 발생시킨다.")
+        void my_planet() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+            
+            // WHEN THEN
+            assertThatThrownBy(() -> planetService.join(user.getId(), INVITE_CODE))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(PLANET_JOIN_FAILED.getMessage());
+        }
+    }
+
+    @Nested
+    @DisplayName("성공")
+    class success {
+
+        /**
+         * <ol>
+         *     <li>행성에 사용자 추가</li>
+         *     <li>사용자에 행성 지정</li>
+         *     <li>메이트 지정</li>
+         * </ol>
+         */
+        @Test
+        @DisplayName("행성 참가")
+        void join() throws Exception {
+            // GIVEN
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+
+            // WHEN
+            planetService.join(mate.getId(), INVITE_CODE);
+            
+            // THEN
+            assertThat(planet.getOwners()).contains(user, mate);
+            assertThat(mate.getPlanet()).isEqualTo(planet);
+            assertThat(user.getMate()).isEqualTo(mate);
+            assertThat(mate.getMate()).isEqualTo(user);
         }
     }
 }
