@@ -218,7 +218,7 @@ public class PlaceTest {
                                 .description("장소 경도"),
                         fieldWithPath("contents[].distance")
                                 .type(NUMBER)
-                                .description("현재 위치로부터 장소까지의 거리"),
+                                .description("현재 위치로부터 장소까지의 거리(km)"),
                         fieldWithPath("size")
                                 .type(NUMBER)
                                 .description("불러온 장소 수"),
@@ -240,9 +240,9 @@ public class PlaceTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
-        ResultActions actions = mvc.perform(get("/places")
+        ResultActions actions = mvc.perform(get("/places/position")
                 .header(ACCESS_TOKEN, accessToken)
-                .param("name", "name")
+                .param("distance", "2")
                 .param("latitude", "0.0")
                 .param("longitude", "0.0")
                 .param("page", "0")
@@ -259,9 +259,9 @@ public class PlaceTest {
                                 .description("인증 토큰")
                 ),
                 requestParameters(
-                        parameterWithName("name")
-                                .attributes(key("type").value("String"))
-                                .description("장소 이름"),
+                        parameterWithName("distance")
+                                .attributes(key("type").value("Number"))
+                                .description("범위(km)"),
                         parameterWithName("latitude")
                                 .attributes(key("type").value("Number"))
                                 .description("장소 위도"),
@@ -292,7 +292,7 @@ public class PlaceTest {
                                 .description("장소 경도"),
                         fieldWithPath("contents[].distance")
                                 .type(NUMBER)
-                                .description("현재 위치로부터 장소까지의 거리"),
+                                .description("현재 위치로부터 장소까지의 거리(km)"),
                         fieldWithPath("size")
                                 .type(NUMBER)
                                 .description("불러온 장소 수"),

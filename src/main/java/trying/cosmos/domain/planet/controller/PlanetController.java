@@ -14,7 +14,7 @@ import trying.cosmos.domain.planet.service.PlanetService;
 import trying.cosmos.global.auth.AuthorityOf;
 import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
-import trying.cosmos.global.utils.date.DateUtils;
+import trying.cosmos.global.utils.DateUtils;
 
 @RestController
 @RequestMapping("/planets")

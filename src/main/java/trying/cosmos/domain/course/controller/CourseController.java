@@ -14,7 +14,7 @@ import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
-import trying.cosmos.global.utils.date.DateUtils;
+import trying.cosmos.global.utils.DateUtils;
 
 import java.util.List;
 

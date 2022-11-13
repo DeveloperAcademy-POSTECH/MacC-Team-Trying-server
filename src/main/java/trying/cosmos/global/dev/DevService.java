@@ -42,8 +42,10 @@ public class DevService {
     }
 
     @Transactional
-    public Planet createPlanet(User user) {
-        return planetService.create(user.getId(), randomName(), "EARTH");
+    public Planet createPlanet(User user, User mate) {
+        Planet planet = planetService.create(user.getId(), randomName(), "EARTH");
+        planetService.join(mate.getId(), planet.getInviteCode());
+        return planet;
     }
 
     private String randomName() {
