@@ -16,7 +16,7 @@ import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.utils.date.DateUtils;
+import trying.cosmos.global.utils.DateUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

@@ -3,6 +3,7 @@ package trying.cosmos.domain.course.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import trying.cosmos.domain.place.entity.Coordinate;
 import trying.cosmos.domain.place.entity.Place;
 
 import javax.persistence.*;
@@ -31,5 +32,9 @@ public class CoursePlace {
         this.place = place;
         this.memo = memo;
         course.getPlaces().add(this);
+    }
+
+    public Coordinate getCoordinate() {
+        return new Coordinate(place.getLatitude(), place.getLongitude());
     }
 }

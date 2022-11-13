@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.domain.place.entity.Place;
+import trying.cosmos.global.utils.DistanceUtils;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +30,6 @@ public class PlaceDistanceContent {
                 latitude,
                 longitude)
         );
-        this.distance = distance;
+        this.distance = DistanceUtils.format(distance);
     }
 }

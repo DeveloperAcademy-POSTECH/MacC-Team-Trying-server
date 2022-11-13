@@ -27,10 +27,10 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "* cos(radians(longitude) - radians(:longitude)) " +
             "+ sin(radians(:latitude)) * sin(radians(latitude)))) as distance " +
             "from Place " +
-//            "where (6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) " +
-//            "* cos(radians(longitude) - radians(:longitude)) " +
-//            "+ sin(radians(:latitude)) * sin(radians(latitude)))) < :distance " +
-            "having distance <= :distance " +
+            "where (6371 * acos(cos(radians(:latitude)) * cos(radians(latitude)) " +
+            "* cos(radians(longitude) - radians(:longitude)) " +
+            "+ sin(radians(:latitude)) * sin(radians(latitude)))) < :distance " +
+//            "having distance <= :distance " +
             "order by distance", nativeQuery = true)
     Slice<PlaceDistanceProjection> findByPosition(Double latitude, Double longitude, Double distance, Pageable pageable);
 }

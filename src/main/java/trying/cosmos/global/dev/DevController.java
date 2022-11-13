@@ -32,7 +32,8 @@ public class DevController {
     @PostMapping("/planets")
     public DevPlanetResponse createPlanet() {
         User user = devService.createUser();
+        User mate = devService.createUser();
         Session auth = sessionService.create(user);
-        return new DevPlanetResponse(devService.createPlanet(user), tokenProvider.getAccessToken(auth));
+        return new DevPlanetResponse(devService.createPlanet(user, mate), tokenProvider.getAccessToken(auth));
     }
 }

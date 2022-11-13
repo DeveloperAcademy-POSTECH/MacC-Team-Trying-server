@@ -16,7 +16,7 @@ import trying.cosmos.global.auth.TokenProvider;
 import trying.cosmos.global.auth.entity.Session;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
-import trying.cosmos.global.utils.cipher.BCryptUtils;
+import trying.cosmos.global.utils.BCryptUtils;
 import trying.cosmos.global.utils.email.EmailType;
 import trying.cosmos.global.utils.email.EmailUtils;
 

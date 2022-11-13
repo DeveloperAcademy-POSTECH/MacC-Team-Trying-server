@@ -1,23 +1,18 @@
-package trying.cosmos.global.utils.date;
+package trying.cosmos.global.utils;
 
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class DateUtils {
+public interface DateUtils {
 
-    public static String getFormattedDate(LocalDateTime dateTime) {
-        return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public static String getFormattedDate(LocalDate date) {
+    static String getFormattedDate(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public static LocalDate stringToDate(String dateString) {
+    static LocalDate stringToDate(String dateString) {
         try {
             return LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE);
         } catch (RuntimeException e) {

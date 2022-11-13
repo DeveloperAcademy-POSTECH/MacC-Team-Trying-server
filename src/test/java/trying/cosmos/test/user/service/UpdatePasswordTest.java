@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
-import trying.cosmos.global.utils.cipher.BCryptUtils;
+import trying.cosmos.global.utils.BCryptUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static trying.cosmos.test.TestVariables.*;

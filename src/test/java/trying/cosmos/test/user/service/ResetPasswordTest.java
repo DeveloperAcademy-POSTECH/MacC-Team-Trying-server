@@ -12,7 +12,7 @@ import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
 import trying.cosmos.global.exception.CustomException;
-import trying.cosmos.global.utils.cipher.BCryptUtils;
+import trying.cosmos.global.utils.BCryptUtils;
 
 import java.util.NoSuchElementException;
 

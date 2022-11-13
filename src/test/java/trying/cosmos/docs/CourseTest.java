@@ -38,7 +38,7 @@ import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
 import trying.cosmos.global.auth.SessionService;
-import trying.cosmos.global.utils.date.DateUtils;
+import trying.cosmos.global.utils.DateUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -304,7 +304,32 @@ public class CourseTest {
                                 .description("코스 날짜"),
                         fieldWithPath("liked")
                                 .type(BOOLEAN)
-                                .description("코스 좋아요 여부")
+                                .description("코스 좋아요 여부"),
+                        fieldWithPath("places[].memo")
+                                .type(STRING)
+                                .description("장소 메모"),
+                        fieldWithPath("places[].place.placeId")
+                                .type(NUMBER)
+                                .description("장소 id"),
+                        fieldWithPath("places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("places[].place.address")
+                                .type(STRING)
+                                .description("장소 주소"),
+                        fieldWithPath("places[].place.roadAddress")
+                                .type(STRING)
+                                .description("장소 도로명 주소"),
+                        fieldWithPath("places[].place.coordinate.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("places[].place.coordinate.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
+                        fieldWithPath("places[].distanceFromNext")
+                                .type(NUMBER)
+                                .description("다음 코스까지의 거리(KM), 마지막 코스에는 없음")
+                                .optional()
                 )
         ));
     }
@@ -354,7 +379,32 @@ public class CourseTest {
                                 .description("코스 날짜"),
                         fieldWithPath("liked")
                                 .type(BOOLEAN)
-                                .description("코스 좋아요 여부")
+                                .description("코스 좋아요 여부"),
+                        fieldWithPath("places[].memo")
+                                .type(STRING)
+                                .description("장소 메모"),
+                        fieldWithPath("places[].place.placeId")
+                                .type(NUMBER)
+                                .description("장소 id"),
+                        fieldWithPath("places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("places[].place.address")
+                                .type(STRING)
+                                .description("장소 주소"),
+                        fieldWithPath("places[].place.roadAddress")
+                                .type(STRING)
+                                .description("장소 도로명 주소"),
+                        fieldWithPath("places[].place.coordinate.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("places[].place.coordinate.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
+                        fieldWithPath("places[].distanceFromNext")
+                                .type(NUMBER)
+                                .description("다음 코스까지의 거리(KM), 마지막 코스에는 없음")
+                                .optional()
                 )
         ));
     }
@@ -427,7 +477,32 @@ public class CourseTest {
                                 .description("불러온 데이터 크기"),
                         fieldWithPath("hasNext")
                                 .type(BOOLEAN)
-                                .description("다음 페이지 존재 여부")
+                                .description("다음 페이지 존재 여부"),
+                        fieldWithPath("courses[].places[].memo")
+                                .type(STRING)
+                                .description("장소 메모"),
+                        fieldWithPath("courses[].places[].place.placeId")
+                                .type(NUMBER)
+                                .description("장소 id"),
+                        fieldWithPath("courses[].places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("courses[].places[].place.address")
+                                .type(STRING)
+                                .description("장소 주소"),
+                        fieldWithPath("courses[].places[].place.roadAddress")
+                                .type(STRING)
+                                .description("장소 도로명 주소"),
+                        fieldWithPath("courses[].places[].place.coordinate.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("courses[].places[].place.coordinate.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
+                        fieldWithPath("courses[].places[].distanceFromNext")
+                                .type(NUMBER)
+                                .description("다음 코스까지의 거리(KM), 마지막 코스에는 없음")
+                                .optional()
                 )
         ));
     }
@@ -491,7 +566,32 @@ public class CourseTest {
                                 .description("불러온 데이터 크기"),
                         fieldWithPath("hasNext")
                                 .type(BOOLEAN)
-                                .description("다음 페이지 존재 여부")
+                                .description("다음 페이지 존재 여부"),
+                        fieldWithPath("courses[].places[].memo")
+                                .type(STRING)
+                                .description("장소 메모"),
+                        fieldWithPath("courses[].places[].place.placeId")
+                                .type(NUMBER)
+                                .description("장소 id"),
+                        fieldWithPath("courses[].places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("courses[].places[].place.address")
+                                .type(STRING)
+                                .description("장소 주소"),
+                        fieldWithPath("courses[].places[].place.roadAddress")
+                                .type(STRING)
+                                .description("장소 도로명 주소"),
+                        fieldWithPath("courses[].places[].place.coordinate.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("courses[].places[].place.coordinate.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
+                        fieldWithPath("courses[].places[].distanceFromNext")
+                                .type(NUMBER)
+                                .description("다음 코스까지의 거리(KM), 마지막 코스에는 없음")
+                                .optional()
                 )
         ));
     }
