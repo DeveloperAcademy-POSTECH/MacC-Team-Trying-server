@@ -21,7 +21,7 @@ public class SocialAccountService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public String join(String identifier, String email, String name, String deviceToken) {
+    public String join(String identifier, String email, String name, String deviceToken, boolean allowNotification) {
         if (userRepository.existsByIdentifier(identifier)) {
             throw new CustomException(ExceptionType.IDENTIFIER_DUPLICATED);
         }
@@ -32,7 +32,7 @@ public class SocialAccountService {
             throw new CustomException(ExceptionType.NAME_DUPLICATED);
         }
 
-        User user = userRepository.save(User.createSocialUser(identifier, email, name, deviceToken));
+        User user = userRepository.save(User.createSocialUser(identifier, email, name, deviceToken, allowNotification));
         Session auth = sessionService.create(user);
         return tokenProvider.getAccessToken(auth);
     }

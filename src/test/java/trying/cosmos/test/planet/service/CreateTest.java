@@ -38,7 +38,7 @@ public class CreateTest {
         @DisplayName("행성이 존재한다면 PLANET_CREATION_FAILED 오류를 발생시킨다.")
         void planet_exist() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             planetService.create(user.getId(), NAME1, IMAGE);
 
             // WHEN THEN
@@ -62,7 +62,7 @@ public class CreateTest {
         @DisplayName("행성을 생성한다.")
         void create() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN
             Planet planet = planetService.create(user.getId(), NAME1, IMAGE);

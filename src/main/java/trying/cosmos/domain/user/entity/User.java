@@ -47,6 +47,8 @@ public class User extends DateAuditingEntity {
 
     private String deviceToken;
 
+    private boolean allowNotification;
+
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "planet_id")
@@ -57,28 +59,8 @@ public class User extends DateAuditingEntity {
     @JoinColumn(name = "mate_id")
     private User mate;
 
-    private User(String email, String password, String name) {
-        this.email = email;
-        this.password = BCryptUtils.encrypt(password);
-        this.name = name;
-        this.status = UserStatus.LOGOUT;
-        this.authority = Authority.USER;
-        this.deviceToken = "";
-        this.isSocialAccount = false;
-    }
-
-    private User(String email, String password, String name, UserStatus status, Authority authority) {
-        this.email = email;
-        this.password = BCryptUtils.encrypt(password);
-        this.name = name;
-        this.status = status;
-        this.authority = authority;
-        this.deviceToken = "";
-        this.isSocialAccount = false;
-    }
-
     // Convenient Method
-    public static User createEmailUser(String email, String password, String name, String deviceToken) {
+    public static User createEmailUser(String email, String password, String name, String deviceToken, boolean allowNotification) {
         User user = new User();
         user.email = email;
         user.isSocialAccount = false;
@@ -88,10 +70,11 @@ public class User extends DateAuditingEntity {
         user.status = UserStatus.LOGIN;
         user.authority = Authority.USER;
         user.deviceToken = deviceToken;
+        user.allowNotification = allowNotification;
         return user;
     }
 
-    public static User createSocialUser(String identifier, String email, String name, String deviceToken) {
+    public static User createSocialUser(String identifier, String email, String name, String deviceToken, boolean allowNotification) {
         User user = new User();
         user.email = email;
         user.isSocialAccount = true;
@@ -101,6 +84,7 @@ public class User extends DateAuditingEntity {
         user.status = UserStatus.LOGIN;
         user.authority = Authority.USER;
         user.deviceToken = deviceToken;
+        user.allowNotification = allowNotification;
         return user;
     }
 

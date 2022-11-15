@@ -57,37 +57,37 @@ public class CreateTest {
     class fail {
 
         @Test
-        @DisplayName("행성이 존재하지 않으면 PLANET_CREATE_FAILED 오류를 발생시킨다.")
+        @DisplayName("행성이 존재하지 않으면 NO_PLANET 오류를 발생시킨다.")
         void no_planet() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN THEN
             assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
                     .isInstanceOf(CustomException.class)
-                    .hasMessage(ExceptionType.PLANET_CREATE_FAILED.getMessage());
+                    .hasMessage(ExceptionType.NO_PLANET.getMessage());
         }
 
-        @Test
-        @DisplayName("메이트가 존재하지 않으면 PLANET_CREATE_FAILED 오류를 발생시킨다.")
-        void no_mate() throws Exception {
-            // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
-
-            // WHEN THEN
-            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(ExceptionType.PLANET_CREATE_FAILED.getMessage());
-        }
+//        @Test
+//        @DisplayName("메이트가 존재하지 않으면 PLANET_CREATE_FAILED 오류를 발생시킨다.")
+//        void no_mate() throws Exception {
+//            // GIVEN
+//            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+//            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+//
+//            // WHEN THEN
+//            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
+//                    .isInstanceOf(CustomException.class)
+//                    .hasMessage(ExceptionType.PLANET_CREATE_FAILED.getMessage());
+//        }
 
         @Test
         @DisplayName("해당 날짜에 코스가 존재한다면 DUPLICATED 오류를 발생시킨다.")
         void date_duplicated() throws Exception {
             // GIVEN
             em.persist(place1);
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
             Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
@@ -102,8 +102,8 @@ public class CreateTest {
         @DisplayName("장소가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_place() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -121,8 +121,8 @@ public class CreateTest {
         @DisplayName("코스를 저장한다.")
         void create() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 

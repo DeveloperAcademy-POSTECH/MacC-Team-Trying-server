@@ -116,8 +116,8 @@ public class CourseTest {
     @DisplayName("코스 생성")
     void create() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -167,8 +167,8 @@ public class CourseTest {
     @DisplayName("코스 수정")
     void update() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -227,8 +227,8 @@ public class CourseTest {
     @DisplayName("코스 삭제")
     void remove() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -263,8 +263,8 @@ public class CourseTest {
     @DisplayName("아이디로 코스 조회")
     void findById() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -338,8 +338,8 @@ public class CourseTest {
     @DisplayName("날짜로 코스 조회")
     void findByDate() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -413,8 +413,8 @@ public class CourseTest {
     @DisplayName("코스 목록 조회")
     void findList() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -511,8 +511,8 @@ public class CourseTest {
     @DisplayName("로그 조회")
     void log() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -600,8 +600,8 @@ public class CourseTest {
     @DisplayName("코스가 존재하는 날짜 조회")
     void courseExistDate() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -647,8 +647,8 @@ public class CourseTest {
     @DisplayName("코스 좋아요")
     void like() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -683,8 +683,8 @@ public class CourseTest {
     @DisplayName("코스 좋아요 취소")
     void unlike() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);

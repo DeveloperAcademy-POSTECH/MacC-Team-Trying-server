@@ -45,7 +45,7 @@ public class JoinTest {
         @DisplayName("행성이 존재하지 않는다면 NO_DATA 오류를 발생시킨다.")
         void no_planet() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN THEN
             assertThatThrownBy(() -> planetService.join(user.getId(), WRONG_INVITE_CODE))
@@ -56,11 +56,11 @@ public class JoinTest {
         @DisplayName("행성에 빈 자리가 없으면 NO_DATA 오류를 발생시킨다.")
         void planet_is_full() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
-            User guest = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN));
+            User guest = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN, true));
 
             // WHEN THEN
             assertThatThrownBy(() -> planetService.join(guest.getId(), INVITE_CODE))
@@ -72,7 +72,7 @@ public class JoinTest {
         @DisplayName("내 행성이면 PLANET_JOIN_FAILED 오류를 발생시킨다.")
         void my_planet() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             
             // WHEN THEN
@@ -97,8 +97,8 @@ public class JoinTest {
         @DisplayName("행성 참가")
         void join() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
 
             // WHEN

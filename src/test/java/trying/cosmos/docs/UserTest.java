@@ -37,8 +37,7 @@ import trying.cosmos.global.auth.SessionService;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static trying.cosmos.docs.utils.DocsVariable.*;
@@ -95,7 +94,7 @@ public class UserTest {
     @DisplayName("로그아웃")
     void logout() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
@@ -119,7 +118,7 @@ public class UserTest {
     @DisplayName("회원탈퇴")
     void withdraw() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
@@ -143,7 +142,7 @@ public class UserTest {
     @DisplayName("닉네임 수정")
     void updateName() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserUpdateNameRequest("UPDATED"));
 
@@ -175,7 +174,7 @@ public class UserTest {
     @DisplayName("비밀번호 수정")
     void updatePassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserUpdatePasswordRequest("!Updated1234"));
 
@@ -207,7 +206,7 @@ public class UserTest {
     @DisplayName("비밀번호 초기화")
     void resetPassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String content = objectMapper.writeValueAsString(new UserResetPasswordRequest(MY_EMAIL));
 
         // WHEN
@@ -233,7 +232,7 @@ public class UserTest {
     @DisplayName("내 정보 조회(행성, 메이트 없음)")
     void findMe() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
 
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
@@ -254,7 +253,10 @@ public class UserTest {
                 responseFields(
                         fieldWithPath("me.name")
                                 .type(STRING)
-                                .description("사용자 닉네임")
+                                .description("사용자 닉네임"),
+                        fieldWithPath("hasNotification")
+                                .type(BOOLEAN)
+                                .description("읽지 않은 알림이 있는지 여부")
                 )
         ));
     }
@@ -263,7 +265,7 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 없음)")
     void findMePlanet() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
 
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -298,7 +300,10 @@ public class UserTest {
                                 .description("행성 이미지 타입"),
                         fieldWithPath("planet.code")
                                 .type(STRING)
-                                .description("행성 초대 코드")
+                                .description("행성 초대 코드"),
+                        fieldWithPath("hasNotification")
+                                .type(BOOLEAN)
+                                .description("읽지 않은 알림이 있는지 여부")
                 )
         ));
     }
@@ -307,8 +312,8 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 존재)")
     void findMeMate() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
 
@@ -344,7 +349,10 @@ public class UserTest {
                                 .attributes(constraints("양수(오늘 이전 날짜 불가)")),
                         fieldWithPath("planet.image")
                                 .type(STRING)
-                                .description("행성 이미지 타입")
+                                .description("행성 이미지 타입"),
+                        fieldWithPath("hasNotification")
+                                .type(BOOLEAN)
+                                .description("읽지 않은 알림이 있는지 여부")
                 )
         ));
     }
@@ -353,8 +361,8 @@ public class UserTest {
     @DisplayName("내 활동 조회")
     void findActivity() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
 

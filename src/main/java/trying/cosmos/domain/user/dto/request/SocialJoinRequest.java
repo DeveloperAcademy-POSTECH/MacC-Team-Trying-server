@@ -25,4 +25,6 @@ public class SocialJoinRequest {
 
     @NotBlank
     private String deviceToken;
+
+    private boolean allowNotification;
 }

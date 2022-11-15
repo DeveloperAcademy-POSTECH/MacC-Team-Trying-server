@@ -35,7 +35,7 @@ public class WithdrawTest {
         @DisplayName("사용자 계정을 삭제한다.")
         void withdraw() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN
             userService.withdraw(user.getId());

@@ -24,8 +24,9 @@ public class AppleAuthController {
                 "APPLE " + request.getIdentifier(),
                 request.getEmail(),
                 request.getName(),
-                request.getDeviceToken())
-        );
+                request.getDeviceToken(),
+                request.isAllowNotification()
+        ));
     }
 
     @PostMapping("/login")

@@ -14,8 +14,9 @@ public class UserFindResponse {
     private UserFindContent me;
     private UserFindContent mate;
     private UserPlanetResponse planet;
+    private boolean hasNotification;
 
-    public UserFindResponse(User user) {
+    public UserFindResponse(User user, boolean hasNotification) {
         this.me = new UserFindContent(user);
         if (user.getPlanet() != null) {
             this.planet = new UserPlanetResponse(user.getPlanet(), user.getMate() != null);
@@ -23,5 +24,6 @@ public class UserFindResponse {
         if (user.getMate() != null) {
             this.mate = new UserFindContent(user.getMate());
         }
+        this.hasNotification = hasNotification;
     }
 }

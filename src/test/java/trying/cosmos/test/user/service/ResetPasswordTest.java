@@ -49,7 +49,7 @@ public class ResetPasswordTest {
         @DisplayName("정지된 사용자라면 SUSPENDED_USER 오류를 발생시킨다.")
         void suspended_user() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             user.setStatus(UserStatus.SUSPENDED);
 
             // WHEN THEN
@@ -62,7 +62,7 @@ public class ResetPasswordTest {
         @DisplayName("삭제된 사용자라면 NO_DATA 오류를 발생시킨다.")
         void withdrawn_user() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             user.setStatus(UserStatus.WITHDRAWN);
 
             // WHEN THEN
@@ -75,7 +75,7 @@ public class ResetPasswordTest {
         @DisplayName("소셜 회원가입한 사용자라면 SOCIAL_ACCOUNT 오류를 발생시킨다.")
         void social_account() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createSocialUser(IDENTIFIER1, EMAIL1, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createSocialUser(IDENTIFIER1, EMAIL1, NAME1, DEVICE_TOKEN, true));
 
             // WHEN THEN
             assertThatThrownBy(() -> userService.resetPassword(EMAIL1))
@@ -98,7 +98,7 @@ public class ResetPasswordTest {
         @DisplayName("비밀번호를 초기화한다.")
         void reset_password() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN
             userService.resetPassword(EMAIL1);

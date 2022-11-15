@@ -7,6 +7,7 @@ import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
+import trying.cosmos.domain.notification.repository.NotificationRepository;
 import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
@@ -21,6 +22,7 @@ import trying.cosmos.global.utils.email.EmailType;
 import trying.cosmos.global.utils.email.EmailUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;
@@ -35,6 +37,7 @@ public class UserService {
     private final CertificationRepository certificationRepository;
     private final CourseRepository courseRepository;
     private final CourseReviewLikeRepository courseReviewLikeRepository;
+    private final NotificationRepository notificationRepository;
 
     private final EmailUtils emailUtils;
     private final TokenProvider tokenProvider;
@@ -44,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public String join(String email, String password, String name, String deviceToken) {
+    public String join(String email, String password, String name, String deviceToken, boolean allowNotification) {
         if (userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
         }
@@ -58,7 +61,7 @@ public class UserService {
         }
 
         certificationRepository.delete(certification);
-        User user = userRepository.save(User.createEmailUser(email, password, name, deviceToken));
+        User user = userRepository.save(User.createEmailUser(email, password, name, deviceToken, allowNotification));
         Session auth = sessionService.create(user);
         return tokenProvider.getAccessToken(auth);
     }
@@ -76,6 +79,15 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow();
         user.checkAccessibleUser();
         return user;
+    }
+
+    public boolean hasNotification(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        return notificationRepository.existsUnreadNotification(user);
+    }
+
+    public List<User> findLoginUsers() {
+        return userRepository.findLoginUsers();
     }
 
     public UserActivityResponse findActivity(Long userId) {

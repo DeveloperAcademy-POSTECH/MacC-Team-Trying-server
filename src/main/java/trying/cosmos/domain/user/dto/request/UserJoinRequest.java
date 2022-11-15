@@ -26,4 +26,6 @@ public class UserJoinRequest {
 
     @NotBlank
     private String deviceToken;
+
+    private boolean allowNotification;
 }

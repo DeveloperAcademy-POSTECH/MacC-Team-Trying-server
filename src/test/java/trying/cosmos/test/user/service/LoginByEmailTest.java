@@ -67,7 +67,7 @@ public class LoginByEmailTest {
         @DisplayName("비밀번호가 일치하지 않으면 INVALID_PASSWORD 오류를 발생시킨다.")
         void wrong_password() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             
             // WHEN THEN
             assertThatThrownBy(() -> userService.login(EMAIL1, WRONG_PASSWORD, DEVICE_TOKEN))
@@ -79,7 +79,7 @@ public class LoginByEmailTest {
         @DisplayName("정지된 사용자라면 SUSPENDED_USER 오류를 발생시킨다.")
         void suspended_user() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             user.setStatus(UserStatus.SUSPENDED);
 
             // WHEN THEN
@@ -92,7 +92,7 @@ public class LoginByEmailTest {
         @DisplayName("삭제된 사용자라면 NO_DATA 오류를 발생시킨다.")
         void withdrawn_user() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             user.setStatus(UserStatus.WITHDRAWN);
 
             // WHEN THEN
@@ -117,7 +117,7 @@ public class LoginByEmailTest {
         @DisplayName("세션이 존재하지 않으면 새로운 세션을 생성한다.")
         void session_not_exist() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN
             String token = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
@@ -140,7 +140,7 @@ public class LoginByEmailTest {
         @DisplayName("세션이 존재하면 기존 세션을 삭제하고 새로운 세션을 생성한다.")
         void session_exist() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
             Session session = sessionRepository.findByUserId(user.getId()).orElseThrow();
 

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import trying.cosmos.domain.notification.entity.NotificationTarget;
+import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
@@ -20,6 +22,7 @@ public class PlanetService {
 
     private final UserRepository userRepository;
     private final PlanetRepository planetRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public Planet create(Long userId, String name, String type) {
@@ -41,7 +44,15 @@ public class PlanetService {
     @Transactional
     public void join(Long userId, String code) {
         Planet planet = planetRepository.searchByInviteCode(code).orElseThrow();
-        planet.join(userRepository.findById(userId).orElseThrow());
+        User user = userRepository.findById(userId).orElseThrow();
+        planet.join(user);
+
+        notificationService.create(
+                user.getMate(),
+                "메이트 행성 도착",
+                "메이트가 행성에 도착했어요",
+                NotificationTarget.PLANET,
+                null);
     }
 
     public Planet find(String inviteCode) {

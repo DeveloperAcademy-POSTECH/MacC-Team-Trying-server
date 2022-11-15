@@ -219,6 +219,62 @@ include::{snippets}/user-test/find-activity/request-headers.adoc[]
 include::{snippets}/user-test/find-activity/http-response.adoc[]
 include::{snippets}/user-test/find-activity/response-fields.adoc[]
 
+[[Notification]]
+== 알림
+
+.타겟(TARGET)
+* 알림이 눌렸을 때, 어떤 데이터를 보여주어야 하는지에 대한 정보
+* ex) target: COURSE, targetId: 1 -> 알림을 누르면 id가 1인 코스를 호출(/courses/1)
+* PLANET, COURSE, REVIEW
+* PLANET은 targetId을 반환하지 않음
+
+=== 1. 알림 조회
+.Overview
+* 최근 7일 안에 내가 받을 알림을 최근 순서대로 반환
+
+==== <Request>
+include::{snippets}/notification-test/find/http-request.adoc[]
+include::{snippets}/notification-test/find/request-headers.adoc[]
+
+==== <Response>
+include::{snippets}/notification-test/find/http-response.adoc[]
+include::{snippets}/notification-test/find/response-fields.adoc[]
+
+=== 2. 알림 읽음 표시
+.Overview
+* 아이디에 해당하는 알림을 읽음 표시
+
+==== <Request>
+include::{snippets}/notification-test/mark/http-request.adoc[]
+include::{snippets}/notification-test/mark/request-headers.adoc[]
+include::{snippets}/notification-test/mark/path-parameters.adoc[]
+
+==== <Response>
+include::{snippets}/notification-test/mark/http-response.adoc[]
+
+=== 3. 알림 삭제
+.Overview
+* 아이디에 해당하는 알림을 삭제
+
+==== <Request>
+include::{snippets}/notification-test/remove/http-request.adoc[]
+include::{snippets}/notification-test/remove/request-headers.adoc[]
+include::{snippets}/notification-test/remove/path-parameters.adoc[]
+
+==== <Response>
+include::{snippets}/notification-test/remove/http-response.adoc[]
+
+=== 4. 알림 전체 삭제
+.Overview
+* 사용자의 모든 알림 삭제
+
+==== <Request>
+include::{snippets}/notification-test/remove-all/http-request.adoc[]
+include::{snippets}/notification-test/remove-all/request-headers.adoc[]
+
+==== <Response>
+include::{snippets}/notification-test/remove-all/http-response.adoc[]
+
 [[Planet]]
 == 행성
 
