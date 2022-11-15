@@ -11,11 +11,11 @@ import trying.cosmos.domain.planet.entity.Planet;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DevPlanetResponse {
 
-    private DevCreateUserResponse owner;
+    private DevUserResponse owner;
     private DevPlanetContent planet;
 
     public DevPlanetResponse(Planet planet, String accessToken) {
-        this.owner = new DevCreateUserResponse(planet.getOwners().get(0), accessToken);
+        this.owner = new DevUserResponse(planet.getOwners().get(0), accessToken);
         this.planet = new DevPlanetContent(planet);
     }
 }

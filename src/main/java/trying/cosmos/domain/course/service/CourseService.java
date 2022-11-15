@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,12 +15,15 @@ import trying.cosmos.domain.course.dto.response.CourseFindResponse;
 import trying.cosmos.domain.course.entity.*;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
+import trying.cosmos.domain.notification.entity.NotificationTarget;
+import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.place.repository.PlaceRepository;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
+import trying.cosmos.global.utils.DateUtils;
 import trying.cosmos.global.utils.image.ImageUtils;
 
 import javax.persistence.EntityManager;
@@ -36,6 +41,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final PlaceRepository placeRepository;
     private final CourseReviewLikeRepository courseReviewLikeRepository;
+    private final NotificationService notificationService;
     private final ImageUtils imageUtils;
     private final EntityManager em;
 
@@ -43,8 +49,8 @@ public class CourseService {
     public Course create(Long userId, String title, LocalDate date, List<CoursePlaceRequest> placeRequests) {
         User user = userRepository.findById(userId).orElseThrow();
 
-        if (user.getPlanet() == null || user.getMate() == null) {
-            throw new CustomException(ExceptionType.PLANET_CREATE_FAILED);
+        if (user.getPlanet() == null) {
+            throw new CustomException(ExceptionType.NO_PLANET);
         }
         if (courseRepository.searchByDate(user.getPlanet(), date).isPresent()) {
             throw new CustomException(ExceptionType.DUPLICATED);
@@ -53,6 +59,16 @@ public class CourseService {
 
         placeRequests.forEach(p ->
                 new CoursePlace(course, placeRepository.findById(p.getPlaceId()).orElseThrow(), p.getMemo())
+        );
+
+        notificationService.create(
+                user.getMate(),
+                "새로운 계획",
+                user.getMate().getName() + "님이 " +
+                        DateUtils.getFormattedDate(course.getDate(), "MM월 dd일") + "에 " +
+                        "[" + course.getTitle() + "] 새로운 데이트 코스를 등록했습니다.",
+                NotificationTarget.COURSE,
+                course.getId()
         );
 
         return course;
@@ -136,6 +152,14 @@ public class CourseService {
         if (images != null) {
             images.forEach(image -> createImage(review, image));
         }
+
+        notificationService.create(
+                user.getMate(),
+                "후기 도착",
+                "[" + course.getTitle() + "] 별자리가 만들어졌어요~ 서둘러서 후기를 등록해보세요!",
+                NotificationTarget.REVIEW,
+                review.getId()
+        );
     }
 
     public CourseReview findMyReview(Long userId, Long courseId) {
@@ -219,5 +243,23 @@ public class CourseService {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
         course.delete();
+    }
+
+    @Async
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void pushTodayCourse() {
+        List<Course> courses = courseRepository.findByDate(LocalDate.now());
+        courses.forEach(course -> {
+            course.getPlanet().getOwners().forEach(user ->
+                    notificationService.create(
+                            user,
+                            "데이트 D-day",
+                            "두근두근!! [" + course.getTitle() + "] 데이트 날이에요! 행복한 시간 보내세요~",
+                            NotificationTarget.COURSE,
+                            course.getId()
+                    )
+            );
+        });
     }
 }

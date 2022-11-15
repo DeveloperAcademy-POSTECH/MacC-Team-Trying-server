@@ -31,6 +31,7 @@ import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.auth.SessionService;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -82,7 +83,7 @@ public class SocialUserTest {
     @DisplayName("애플 계정으로 회원가입")
     void joinWithApple() throws Exception {
         // GIVEN
-        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/oauth/apple")
@@ -109,7 +110,10 @@ public class SocialUserTest {
                                 .attributes(constraints("2~8자리 한글/영어/숫자")),
                         fieldWithPath("deviceToken")
                                 .type(STRING)
-                                .description("디바이스 토큰")
+                                .description("디바이스 토큰"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
                 ),
                 responseFields(
                         fieldWithPath("accessToken")
@@ -123,7 +127,7 @@ public class SocialUserTest {
     @DisplayName("애플 계정으로 로그인")
     void loginWithApple() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createSocialUser("APPLE " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createSocialUser("APPLE " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
         String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
 
         // WHEN
@@ -156,7 +160,7 @@ public class SocialUserTest {
     @DisplayName("카카오 계정으로 회원가입")
     void joinWithKakao() throws Exception {
         // GIVEN
-        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new SocialJoinRequest(IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/oauth/kakao")
@@ -183,7 +187,10 @@ public class SocialUserTest {
                                 .attributes(constraints("2~8자리 한글/영어/숫자")),
                         fieldWithPath("deviceToken")
                                 .type(STRING)
-                                .description("디바이스 토큰")
+                                .description("디바이스 토큰"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
                 ),
                 responseFields(
                         fieldWithPath("accessToken")
@@ -197,7 +204,7 @@ public class SocialUserTest {
     @DisplayName("카카오 계정으로 로그인")
     void loginWithKakao() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createSocialUser("KAKAO " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createSocialUser("KAKAO " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
         String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
 
         // WHEN

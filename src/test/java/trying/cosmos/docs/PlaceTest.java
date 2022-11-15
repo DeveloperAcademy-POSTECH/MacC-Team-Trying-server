@@ -107,8 +107,8 @@ public class PlaceTest {
     @DisplayName("아이디로 장소 조회")
     void findById() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -159,8 +159,8 @@ public class PlaceTest {
     @DisplayName("이름으로 장소 조회")
     void findByName() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -233,8 +233,8 @@ public class PlaceTest {
     @DisplayName("위치로 장소 조회")
     void findByLocation() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);

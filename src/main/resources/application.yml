@@ -19,6 +19,21 @@ spring:
 spring:
   config:
     activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+logging:
+  level:
+    trying.cosmos: debug
+
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: dev
   jpa:
     hibernate:

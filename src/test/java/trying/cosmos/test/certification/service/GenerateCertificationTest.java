@@ -42,7 +42,7 @@ public class GenerateCertificationTest {
         @DisplayName("사용자가 존재한다면 EMAIL_DUPLICATED 오류를 발생시킨다.")
         void email_duplicate() throws Exception {
             // GIVEN
-            userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
             // WHEN THEN
             assertThatThrownBy(() -> certificationService.generate(EMAIL1))

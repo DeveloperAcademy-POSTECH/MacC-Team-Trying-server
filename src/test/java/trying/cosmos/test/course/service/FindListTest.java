@@ -61,8 +61,8 @@ public class FindListTest {
         @DisplayName("likeonly 파라미터가 true면 좋아요한 코스만 반환한다.")
         void find_with_likeonly_true() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -88,8 +88,8 @@ public class FindListTest {
         @DisplayName("likeonly 파라미터가 false면 모든 코스를 반환한다.")
         void find_with_likeonly_false() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -115,8 +115,8 @@ public class FindListTest {
         @DisplayName("query 파라미터가 존재하면 해당 문자열을 제목에 포함하는 코스를 반환한다.")
         void find_with_query() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -142,8 +142,8 @@ public class FindListTest {
         @DisplayName("likeonly가 true고 query가 존재하면 두 조건을 모두 만족하는 코스를 반환한다")
         void find_with_query_and_likeonly() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 

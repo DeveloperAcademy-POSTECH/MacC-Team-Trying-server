@@ -61,8 +61,8 @@ public class CreateTest {
         @DisplayName("코스가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_course() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
             
@@ -75,12 +75,12 @@ public class CreateTest {
         @DisplayName("사용자 행성의 코스가 아니라면 NO_DATA 오류를 발생시킨다.")
         void others_course() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
-            User other = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN));
+            User other = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN, true));
             Planet othersPlanet = planetRepository.save(new Planet(other, NAME2, IMAGE, INVITE_CODE));
             Course othersCourse = courseRepository.save(new Course(othersPlanet, TITLE, LocalDate.now()));
             
@@ -93,8 +93,8 @@ public class CreateTest {
         @DisplayName("리뷰가 존재한다면 DUPLICATED 오류를 발생시킨다.")
         void already_reviewed() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -117,8 +117,8 @@ public class CreateTest {
         @DisplayName("코스 리뷰를 생성한다")
         void create() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 

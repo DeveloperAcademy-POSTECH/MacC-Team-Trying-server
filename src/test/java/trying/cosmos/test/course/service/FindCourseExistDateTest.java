@@ -58,8 +58,8 @@ public class FindCourseExistDateTest {
         @DisplayName("시작 날짜와 끝 날짜 사이에 코스가 존재하는 날짜를 반환한다.")
         void find() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 

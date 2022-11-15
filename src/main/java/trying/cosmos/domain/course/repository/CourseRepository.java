@@ -59,4 +59,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>, CourseRep
             "and c.isDeleted = false " +
             "order by c.date")
     List<LocalDate> searchCourseDates(Planet planet, LocalDate start, LocalDate end);
+
+    List<Course> findByDate(LocalDate today);
 }

@@ -37,12 +37,17 @@ public class DevService {
     @Transactional
     public User createUser() {
         String str = randomName();
-        User user = User.createEmailUser(str + "@gmail.com", "password", str, "device_token");
+        User user = User.createEmailUser(str + "@gmail.com", "password", str, "device_token", true);
         return userRepository.save(user);
     }
 
     @Transactional
-    public Planet createPlanet(User user, User mate) {
+    public Planet createPlanet(User user) {
+        return planetService.create(user.getId(), randomName(), "EARTH");
+    }
+
+    @Transactional
+    public Planet createMate(User user, User mate) {
         Planet planet = planetService.create(user.getId(), randomName(), "EARTH");
         planetService.join(mate.getId(), planet.getInviteCode());
         return planet;

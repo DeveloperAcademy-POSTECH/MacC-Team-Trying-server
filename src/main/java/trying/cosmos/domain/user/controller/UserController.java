@@ -28,18 +28,28 @@ public class UserController {
 
     @PostMapping
     public UserLoginResponse join(@RequestBody @Validated UserJoinRequest request) {
-        return new UserLoginResponse(userService.join(request.getEmail(), request.getPassword(), request.getName(), request.getDeviceToken()));
+        return new UserLoginResponse(userService.join(
+                request.getEmail(),
+                request.getPassword(),
+                request.getName(),
+                request.getDeviceToken(),
+                request.isAllowNotification()
+        ));
     }
 
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody @Validated UserLoginRequest request) {
-        return new UserLoginResponse(userService.login(request.getEmail(), request.getPassword(), request.getDeviceToken()));
+        return new UserLoginResponse(userService.login(
+                request.getEmail(),
+                request.getPassword(),
+                request.getDeviceToken()
+        ));
     }
 
     @AuthorityOf(USER)
     @GetMapping
     public UserFindResponse findMe() {
-        return new UserFindResponse(userService.find(AuthKey.getKey()));
+        return new UserFindResponse(userService.find(AuthKey.getKey()), userService.hasNotification(AuthKey.getKey()));
     }
 
     @AuthorityOf(USER)

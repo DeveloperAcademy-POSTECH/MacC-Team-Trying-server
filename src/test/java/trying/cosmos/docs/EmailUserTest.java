@@ -36,6 +36,7 @@ import trying.cosmos.global.auth.SessionService;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -146,7 +147,7 @@ public class EmailUserTest {
         // GIVEN
         Certification certification = certificationRepository.save(new Certification(MY_EMAIL));
         certification.certificate(certification.getCode());
-        String content = objectMapper.writeValueAsString(new UserJoinRequest(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new UserJoinRequest(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/users")
@@ -173,7 +174,10 @@ public class EmailUserTest {
                                 .attributes(constraints("2~8자리 한글/영어/숫자")),
                         fieldWithPath("deviceToken")
                                 .type(STRING)
-                                .description("디바이스 토큰")
+                                .description("디바이스 토큰"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
                 ),
                 responseFields(
                         fieldWithPath("accessToken")
@@ -187,7 +191,7 @@ public class EmailUserTest {
     @DisplayName("이메일로 로그인")
     void login() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
         String content = objectMapper.writeValueAsString(new UserLoginRequest(MY_EMAIL, PASSWORD, DEVICE_TOKEN));
 
         // WHEN
