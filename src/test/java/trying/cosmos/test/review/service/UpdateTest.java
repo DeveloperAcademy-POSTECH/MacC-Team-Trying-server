@@ -9,15 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.entity.CourseReview;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.course.service.CourseService;
+import trying.cosmos.domain.coursereview.entity.CourseReview;
+import trying.cosmos.domain.coursereview.repository.CourseReviewRepository;
+import trying.cosmos.domain.coursereview.service.CourseReviewService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
-import trying.cosmos.global.exception.CustomException;
-import trying.cosmos.global.exception.ExceptionType;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -34,7 +33,7 @@ import static trying.cosmos.test.TestVariables.*;
 public class UpdateTest {
 
     @Autowired
-    CourseService courseService;
+    CourseReviewService reviewService;
 
     @Autowired
     UserRepository userRepository;
@@ -44,6 +43,9 @@ public class UpdateTest {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    CourseReviewRepository courseReviewRepository;
 
     @Autowired
     EntityManager em;
@@ -73,7 +75,7 @@ public class UpdateTest {
             em.persist(new CourseReview(other, othersCourse, BODY));
 
             // WHEN THEN
-            assertThatThrownBy(() -> courseService.updateReview(user.getId(), othersCourse.getId(), BODY, null))
+            assertThatThrownBy(() -> reviewService.update(user.getId(), othersCourse.getId(), BODY, null))
                     .isInstanceOf(NoSuchElementException.class);
         }
         
@@ -89,9 +91,8 @@ public class UpdateTest {
             Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
 
             // WHEN THEN
-            assertThatThrownBy(() -> courseService.updateReview(user.getId(), course.getId(), BODY, null))
-                    .isInstanceOf(CustomException.class)
-                    .hasMessage(ExceptionType.NO_DATA.getMessage());
+            assertThatThrownBy(() -> reviewService.update(user.getId(), NOT_EXIST, BODY, null))
+                    .isInstanceOf(NoSuchElementException.class);
         }
     }
     
@@ -109,10 +110,10 @@ public class UpdateTest {
             planet.join(mate);
 
             Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
-            em.persist(new CourseReview(user, course, BODY));
+            CourseReview review = courseReviewRepository.save(new CourseReview(user, course, BODY));
 
             // WHEN
-            courseService.updateReview(user.getId(), course.getId(), "UPDATED", null);
+            reviewService.update(user.getId(), review.getId(), "UPDATED", null);
 
             // THEN
             assertThat(course.getReviews().size())

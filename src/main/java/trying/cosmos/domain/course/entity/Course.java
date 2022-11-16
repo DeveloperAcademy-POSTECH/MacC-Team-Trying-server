@@ -3,6 +3,7 @@ package trying.cosmos.domain.course.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import trying.cosmos.domain.coursereview.entity.CourseReview;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.auditing.DateAuditingEntity;
@@ -36,7 +37,7 @@ public class Course extends DateAuditingEntity {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<CoursePlace> places = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
     private List<CourseReview> reviews = new ArrayList<>();
 
     private boolean isDeleted;

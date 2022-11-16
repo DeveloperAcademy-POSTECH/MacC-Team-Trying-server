@@ -106,4 +106,8 @@ public class Planet extends DateAuditingEntity {
             this.isDeleted = true;
         }
     }
+
+    public boolean isOwnedBy(User user) {
+        return this.owners.contains(user);
+    }
 }

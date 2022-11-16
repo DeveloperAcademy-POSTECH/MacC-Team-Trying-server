@@ -1,8 +1,9 @@
-package trying.cosmos.domain.course.entity;
+package trying.cosmos.domain.coursereview.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.auditing.DateAuditingEntity;
 
@@ -42,5 +43,9 @@ public class CourseReview extends DateAuditingEntity {
 
     public void update(String content) {
         this.content = content;
+    }
+
+    public void remove() {
+        course.getReviews().remove(this);
     }
 }

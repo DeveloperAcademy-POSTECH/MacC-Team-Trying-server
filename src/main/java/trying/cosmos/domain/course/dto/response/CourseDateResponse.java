@@ -17,7 +17,7 @@ public class CourseDateResponse {
 
     public CourseDateResponse(List<LocalDate> dates) {
         this.dates = dates.stream()
-                .map(date -> DateUtils.getFormattedDate(date))
+                .map(DateUtils::getFormattedDate)
                 .collect(Collectors.toList());
     }
 }

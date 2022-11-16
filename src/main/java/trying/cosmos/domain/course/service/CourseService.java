@@ -1,6 +1,7 @@
 package trying.cosmos.domain.course.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -8,13 +9,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.dto.request.CoursePlaceRequest;
 import trying.cosmos.domain.course.dto.response.CourseDateResponse;
 import trying.cosmos.domain.course.dto.response.CourseFindResponse;
-import trying.cosmos.domain.course.entity.*;
+import trying.cosmos.domain.course.entity.Course;
+import trying.cosmos.domain.course.entity.CourseLike;
+import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
+import trying.cosmos.domain.coursereview.entity.CourseReview;
+import trying.cosmos.domain.coursereview.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.notification.entity.NotificationTarget;
 import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.place.repository.PlaceRepository;
@@ -24,12 +27,10 @@ import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.DateUtils;
-import trying.cosmos.global.utils.image.ImageUtils;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +43,7 @@ public class CourseService {
     private final PlaceRepository placeRepository;
     private final CourseReviewLikeRepository courseReviewLikeRepository;
     private final NotificationService notificationService;
-    private final ImageUtils imageUtils;
+    private final MessageSourceAccessor messageSource;
     private final EntityManager em;
 
     @Transactional
@@ -61,12 +62,11 @@ public class CourseService {
                 new CoursePlace(course, placeRepository.findById(p.getPlaceId()).orElseThrow(), p.getMemo())
         );
 
+        String[] args = new String[]{user.getName(), DateUtils.getFormattedDate(course.getDate(), "MM월 dd일"), course.getTitle()};
         notificationService.create(
                 user.getMate(),
-                "새로운 계획",
-                user.getMate().getName() + "님이 " +
-                        DateUtils.getFormattedDate(course.getDate(), "MM월 dd일") + "에 " +
-                        "[" + course.getTitle() + "] 새로운 데이트 코스를 등록했습니다.",
+                messageSource.getMessage("notification.course.create.title"),
+                messageSource.getMessage("notification.course.create.body", args),
                 NotificationTarget.COURSE,
                 course.getId()
         );
@@ -140,28 +140,6 @@ public class CourseService {
         courseReviewLikeRepository.delete(courseReviewLikeRepository.findByUserAndCourse(user, course).orElseThrow());
     }
 
-    @Transactional
-    public void createReview(Long userId, Long courseId, String content, List<MultipartFile> images) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-        if (course.isReviewed(user)) {
-            throw new CustomException(ExceptionType.DUPLICATED);
-        }
-
-        CourseReview review = new CourseReview(user, course, content);
-        if (images != null) {
-            images.forEach(image -> createImage(review, image));
-        }
-
-        notificationService.create(
-                user.getMate(),
-                "후기 도착",
-                "[" + course.getTitle() + "] 별자리가 만들어졌어요~ 서둘러서 후기를 등록해보세요!",
-                NotificationTarget.REVIEW,
-                review.getId()
-        );
-    }
-
     public CourseReview findMyReview(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
@@ -174,47 +152,6 @@ public class CourseService {
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
 
         return course.getReview(user.getMate()).orElseThrow();
-    }
-
-    @Transactional
-    public void updateReview(Long userId, Long courseId, String content, List<MultipartFile> images) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-
-        Optional<CourseReview> myReview = course.getReview(user);
-        if (myReview.isEmpty()) {
-            throw new CustomException(ExceptionType.NO_DATA);
-        }
-        myReview.get().update(content);
-        myReview.get().getImages().forEach(this::removeExistImages);
-        myReview.get().getImages().clear();
-
-        if (images != null) {
-            images.forEach(image -> createImage(myReview.get(), image));
-        }
-    }
-
-    @Transactional
-    public void deleteReview(Long userId, Long courseId) {
-        User user = userRepository.findById(userId).orElseThrow();
-        Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-
-        Optional<CourseReview> myReview = course.getReview(user);
-        if (myReview.isEmpty()) {
-            throw new CustomException(ExceptionType.NO_DATA);
-        }
-        course.getReviews().remove(myReview.get());
-        em.remove(myReview.get());
-    }
-
-    private void removeExistImages(CourseReviewImage image) {
-        imageUtils.delete(image.getName());
-        em.remove(image);
-    }
-
-    private void createImage(CourseReview review, MultipartFile image) {
-        String name = imageUtils.create(image);
-        new CourseReviewImage(review, name);
     }
 
     @Transactional
@@ -254,8 +191,8 @@ public class CourseService {
             course.getPlanet().getOwners().forEach(user ->
                     notificationService.create(
                             user,
-                            "데이트 D-day",
-                            "두근두근!! [" + course.getTitle() + "] 데이트 날이에요! 행복한 시간 보내세요~",
+                            messageSource.getMessage("notification.course.dday.title"),
+                            messageSource.getMessage("notification.course.dday.body", new String[]{course.getTitle()}),
                             NotificationTarget.COURSE,
                             course.getId()
                     )

@@ -1,4 +1,4 @@
-package trying.cosmos.domain.course.entity;
+package trying.cosmos.domain.coursereview.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

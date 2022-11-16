@@ -9,9 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
-import trying.cosmos.domain.course.entity.CourseReview;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.course.service.CourseService;
+import trying.cosmos.domain.coursereview.entity.CourseReview;
+import trying.cosmos.domain.coursereview.repository.CourseReviewRepository;
+import trying.cosmos.domain.coursereview.service.CourseReviewService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
@@ -34,7 +35,7 @@ import static trying.cosmos.test.TestVariables.*;
 public class CreateTest {
 
     @Autowired
-    CourseService courseService;
+    CourseReviewService reviewService;
 
     @Autowired
     UserRepository userRepository;
@@ -44,6 +45,9 @@ public class CreateTest {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    CourseReviewRepository courseReviewRepository;
 
     @Autowired
     EntityManager em;
@@ -67,7 +71,7 @@ public class CreateTest {
             planet.join(mate);
             
             // WHEN THEN
-            assertThatThrownBy(() -> courseService.createReview(user.getId(), NOT_EXIST, BODY, null))
+            assertThatThrownBy(() -> reviewService.create(user.getId(), NOT_EXIST, BODY, null))
                     .isInstanceOf(NoSuchElementException.class);
         }
         
@@ -85,7 +89,7 @@ public class CreateTest {
             Course othersCourse = courseRepository.save(new Course(othersPlanet, TITLE, LocalDate.now()));
             
             // WHEN THEN
-            assertThatThrownBy(() -> courseService.createReview(user.getId(), othersCourse.getId(), BODY, null))
+            assertThatThrownBy(() -> reviewService.create(user.getId(), othersCourse.getId(), BODY, null))
                     .isInstanceOf(NoSuchElementException.class);
         }
         
@@ -103,7 +107,7 @@ public class CreateTest {
             em.persist(new CourseReview(user, course, BODY));
             
             // WHEN THEN
-            assertThatThrownBy(() -> courseService.createReview(user.getId(), course.getId(), BODY, null))
+            assertThatThrownBy(() -> reviewService.create(user.getId(), course.getId(), BODY, null))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.DUPLICATED.getMessage());
         }
@@ -125,7 +129,7 @@ public class CreateTest {
             Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
 
             // WHEN
-            courseService.createReview(user.getId(), course.getId(), BODY, null);
+            reviewService.create(user.getId(), course.getId(), BODY, null);
 
             // THEN
             assertThat(course.getReview(user))
