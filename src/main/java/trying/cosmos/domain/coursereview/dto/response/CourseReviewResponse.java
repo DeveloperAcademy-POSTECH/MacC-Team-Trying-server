@@ -1,10 +1,10 @@
-package trying.cosmos.domain.course.dto.response;
+package trying.cosmos.domain.coursereview.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import trying.cosmos.domain.course.entity.CourseReview;
-import trying.cosmos.domain.course.entity.CourseReviewImage;
+import trying.cosmos.domain.coursereview.entity.CourseReview;
+import trying.cosmos.domain.coursereview.entity.CourseReviewImage;
 
 import java.util.List;
 import java.util.stream.Collectors;

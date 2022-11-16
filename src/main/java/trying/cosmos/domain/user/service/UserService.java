@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.course.repository.CourseReviewLikeRepository;
+import trying.cosmos.domain.coursereview.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.notification.repository.NotificationRepository;
 import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.entity.User;

@@ -1,4 +1,4 @@
-package trying.cosmos.domain.course.repository;
+package trying.cosmos.domain.coursereview.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

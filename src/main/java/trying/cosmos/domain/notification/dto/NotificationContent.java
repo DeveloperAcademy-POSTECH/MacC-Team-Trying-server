@@ -26,7 +26,7 @@ public class NotificationContent {
         this.body = notification.getBody();
         this.target = notification.getTarget().toString();
         this.targetId = notification.getTargetId();
-        this.createdDate = DateUtils.getFormattedDate(notification.getCreatedDate(), "yyyy-MM-dd HH:mm:ss");
+        this.createdDate = DateUtils.getFormattedDate(notification.getCreatedDate());
         this.isChecked = notification.isChecked();
     }
 }

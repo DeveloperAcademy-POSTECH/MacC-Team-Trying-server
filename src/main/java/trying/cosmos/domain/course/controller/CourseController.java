@@ -4,19 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.course.dto.request.CourseCreateRequest;
 import trying.cosmos.domain.course.dto.request.CourseUpdateRequest;
-import trying.cosmos.domain.course.dto.response.*;
+import trying.cosmos.domain.course.dto.response.CourseCreateResponse;
+import trying.cosmos.domain.course.dto.response.CourseDateResponse;
+import trying.cosmos.domain.course.dto.response.CourseFindResponse;
+import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
 import trying.cosmos.domain.course.service.CourseService;
+import trying.cosmos.domain.coursereview.dto.response.CourseReviewResponse;
 import trying.cosmos.global.auth.AuthorityOf;
 import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.DateUtils;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
@@ -104,14 +105,8 @@ public class CourseController {
     }
 
     @AuthorityOf(Authority.USER)
-    @PostMapping("/{courseId}/review")
-    public void createReview(@PathVariable Long courseId, @RequestParam String content, List<MultipartFile> images) {
-        courseService.createReview(AuthKey.getKey(), courseId, content, images);
-    }
-
-    @AuthorityOf(Authority.USER)
     @GetMapping("/{courseId}/review")
-    public CourseReviewResponse findReview(@PathVariable Long courseId, @RequestParam String writer) {
+    public CourseReviewResponse findCourseReview(@PathVariable Long courseId, @RequestParam String writer) {
         if (writer.equals("me")) {
             return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId));
         } else if (writer.equals("mate")) {
@@ -119,17 +114,5 @@ public class CourseController {
         } else {
             throw new CustomException(ExceptionType.INVALID_PARAMETER);
         }
-    }
-
-    @AuthorityOf(Authority.USER)
-    @PutMapping("/{courseId}/review")
-    public void updateReview(@PathVariable Long courseId, @RequestParam String content, List<MultipartFile> images) {
-        courseService.updateReview(AuthKey.getKey(), courseId, content, images);
-    }
-
-    @AuthorityOf(Authority.USER)
-    @DeleteMapping("/{courseId}/review")
-    public void deleteReview(@PathVariable Long courseId) {
-        courseService.deleteReview(AuthKey.getKey(), courseId);
     }
 }

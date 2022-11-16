@@ -13,7 +13,7 @@ import trying.cosmos.domain.user.entity.User;
 import java.util.List;
 
 import static trying.cosmos.domain.course.entity.QCourse.course;
-import static trying.cosmos.domain.course.entity.QCourseReview.courseReview;
+import static trying.cosmos.domain.coursereview.entity.QCourseReview.courseReview;
 import static trying.cosmos.domain.planet.entity.QPlanet.planet;
 
 @RequiredArgsConstructor

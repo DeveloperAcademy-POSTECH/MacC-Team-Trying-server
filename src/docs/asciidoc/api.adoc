@@ -485,7 +485,6 @@ include::{snippets}/course-test/unlike/http-response.adoc[]
 ==== <Request>
 include::{snippets}/course-review-test/create/http-request.adoc[]
 include::{snippets}/course-review-test/create/request-headers.adoc[]
-include::{snippets}/course-review-test/create/path-parameters.adoc[]
 include::{snippets}/course-review-test/create/request-parts.adoc[]
 
 ==== <Response>
@@ -516,20 +515,33 @@ include::{snippets}/course-review-test/remove/path-parameters.adoc[]
 ==== <Response>
 include::{snippets}/course-review-test/remove/http-response.adoc[]
 
-=== 4. 코스 리뷰 조회
+=== 4. 아이디로 리뷰 조회
 .Overview
-* 코스 리뷰 조회
+* 아이디로 리뷰 조회
+
+==== <Request>
+include::{snippets}/course-review-test/find-by-id/http-request.adoc[]
+include::{snippets}/course-review-test/find-by-id/request-headers.adoc[]
+include::{snippets}/course-review-test/find-by-id/path-parameters.adoc[]
+
+==== <Response>
+include::{snippets}/course-review-test/find-by-id/http-response.adoc[]
+include::{snippets}/course-review-test/find-by-id/response-fields.adoc[]
+
+=== 4. 코스로 리뷰 조회
+.Overview
+* 코스로 리뷰 조회
 * writer 파라미터에 따라 내 리뷰와 메이트 리뷰 조회
 
 ==== <Request>
-include::{snippets}/course-review-test/find-review/http-request.adoc[]
-include::{snippets}/course-review-test/find-review/request-headers.adoc[]
-include::{snippets}/course-review-test/find-review/path-parameters.adoc[]
-include::{snippets}/course-review-test/find-review/request-parameters.adoc[]
+include::{snippets}/course-review-test/find-by-course/http-request.adoc[]
+include::{snippets}/course-review-test/find-by-course/request-headers.adoc[]
+include::{snippets}/course-review-test/find-by-course/path-parameters.adoc[]
+include::{snippets}/course-review-test/find-by-course/request-parameters.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/find-review/http-response.adoc[]
-include::{snippets}/course-review-test/find-review/response-fields.adoc[]
+include::{snippets}/course-review-test/find-by-course/http-response.adoc[]
+include::{snippets}/course-review-test/find-by-course/response-fields.adoc[]
 
 [[Place]]
 == 장소
