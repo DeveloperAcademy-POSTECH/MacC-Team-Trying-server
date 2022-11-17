@@ -32,6 +32,9 @@ import trying.cosmos.domain.course.entity.CourseLike;
 import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.coursereview.entity.CourseReview;
+import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
+import trying.cosmos.domain.place.entity.Place;
+import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
@@ -53,8 +56,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static trying.cosmos.docs.utils.DocsVariable.*;
-import static trying.cosmos.test.TestVariables.place1;
-import static trying.cosmos.test.TestVariables.place2;
+import static trying.cosmos.test.TestVariables.NAME1;
+import static trying.cosmos.test.TestVariables.NAME2;
 
 @SpringBootTest
 @Transactional
@@ -81,6 +84,9 @@ public class CourseTest {
     @Autowired
     EntityManager em;
 
+    @Autowired
+    PlaceService placeService;
+
     // Docs
     @Autowired
     MockMvc mvc;
@@ -102,9 +108,6 @@ public class CourseTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8",true))
                 .build();
-
-        em.persist(place1);
-        em.persist(place2);
     }
 
     @AfterEach
@@ -122,7 +125,10 @@ public class CourseTest {
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
-        List<CoursePlaceRequest> requests = List.of(new CoursePlaceRequest(place1.getId(), MEMO), new CoursePlaceRequest(place2.getId(), MEMO));
+        List<CoursePlaceRequest> requests = List.of(
+                new CoursePlaceRequest(new PlaceCreateRequest(1L, "효자동국밥", "음식점", 0.1, 0.3), MEMO),
+                new CoursePlaceRequest(new PlaceCreateRequest(2L, "효자동쌀국수", "음식점", 2.1, 1.3), MEMO)
+        );
         String content = objectMapper.writeValueAsString(new CourseCreateRequest(COURSE_NAME, DateUtils.getFormattedDate(LocalDate.now()), requests));
 
         // WHEN
@@ -147,9 +153,21 @@ public class CourseTest {
                         fieldWithPath("date")
                                 .type(STRING)
                                 .description("코스 날짜"),
-                        fieldWithPath("places[].placeId")
+                        fieldWithPath("places[].place.identifier")
                                 .type(NUMBER)
-                                .description("장소 id"),
+                                .description("장소 API에서 제공받은 id"),
+                        fieldWithPath("places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("places[].place.category")
+                                .type(STRING)
+                                .description("장소 카테고리"),
+                        fieldWithPath("places[].place.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("places[].place.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
                         fieldWithPath("places[].memo")
                                 .type(STRING)
                                 .description("장소 계획에 남길 수 있는 메모")
@@ -174,10 +192,16 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        List<CoursePlaceRequest> requests = List.of(new CoursePlaceRequest(place1.getId(), MEMO), new CoursePlaceRequest(place2.getId(), MEMO));
+        List<CoursePlaceRequest> requests = List.of(
+                new CoursePlaceRequest(new PlaceCreateRequest(1L, "효자동국밥", "음식점", 0.1, 0.3), MEMO),
+                new CoursePlaceRequest(new PlaceCreateRequest(2L, "효자동쌀국수", "음식점", 2.1, 1.3), MEMO)
+        );
         String content = objectMapper.writeValueAsString(new CourseUpdateRequest("UPDATED", DateUtils.getFormattedDate(LocalDate.now().plusDays(3)), requests));
 
         // WHEN
@@ -207,9 +231,21 @@ public class CourseTest {
                         fieldWithPath("date")
                                 .type(STRING)
                                 .description("코스 날짜"),
-                        fieldWithPath("places[].placeId")
+                        fieldWithPath("places[].place.identifier")
                                 .type(NUMBER)
-                                .description("장소 id"),
+                                .description("장소 API에서 제공받은 id"),
+                        fieldWithPath("places[].place.name")
+                                .type(STRING)
+                                .description("장소 이름"),
+                        fieldWithPath("places[].place.category")
+                                .type(STRING)
+                                .description("장소 카테고리"),
+                        fieldWithPath("places[].place.latitude")
+                                .type(NUMBER)
+                                .description("장소 위도"),
+                        fieldWithPath("places[].place.longitude")
+                                .type(NUMBER)
+                                .description("장소 경도"),
                         fieldWithPath("places[].memo")
                                 .type(STRING)
                                 .description("장소 계획에 남길 수 있는 메모")
@@ -234,6 +270,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -270,6 +309,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -314,12 +356,6 @@ public class CourseTest {
                         fieldWithPath("places[].place.name")
                                 .type(STRING)
                                 .description("장소 이름"),
-                        fieldWithPath("places[].place.address")
-                                .type(STRING)
-                                .description("장소 주소"),
-                        fieldWithPath("places[].place.roadAddress")
-                                .type(STRING)
-                                .description("장소 도로명 주소"),
                         fieldWithPath("places[].place.coordinate.latitude")
                                 .type(NUMBER)
                                 .description("장소 위도"),
@@ -345,6 +381,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -389,12 +428,6 @@ public class CourseTest {
                         fieldWithPath("places[].place.name")
                                 .type(STRING)
                                 .description("장소 이름"),
-                        fieldWithPath("places[].place.address")
-                                .type(STRING)
-                                .description("장소 주소"),
-                        fieldWithPath("places[].place.roadAddress")
-                                .type(STRING)
-                                .description("장소 도로명 주소"),
                         fieldWithPath("places[].place.coordinate.latitude")
                                 .type(NUMBER)
                                 .description("장소 위도"),
@@ -420,6 +453,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -487,12 +523,6 @@ public class CourseTest {
                         fieldWithPath("courses[].places[].place.name")
                                 .type(STRING)
                                 .description("장소 이름"),
-                        fieldWithPath("courses[].places[].place.address")
-                                .type(STRING)
-                                .description("장소 주소"),
-                        fieldWithPath("courses[].places[].place.roadAddress")
-                                .type(STRING)
-                                .description("장소 도로명 주소"),
                         fieldWithPath("courses[].places[].place.coordinate.latitude")
                                 .type(NUMBER)
                                 .description("장소 위도"),
@@ -518,6 +548,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
         em.persist(new CourseReview(user, course, CONTENT));
@@ -576,12 +609,6 @@ public class CourseTest {
                         fieldWithPath("courses[].places[].place.name")
                                 .type(STRING)
                                 .description("장소 이름"),
-                        fieldWithPath("courses[].places[].place.address")
-                                .type(STRING)
-                                .description("장소 주소"),
-                        fieldWithPath("courses[].places[].place.roadAddress")
-                                .type(STRING)
-                                .description("장소 도로명 주소"),
                         fieldWithPath("courses[].places[].place.coordinate.latitude")
                                 .type(NUMBER)
                                 .description("장소 위도"),
@@ -607,6 +634,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
         em.persist(new CourseReview(user, course, CONTENT));
@@ -654,6 +684,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -690,6 +723,9 @@ public class CourseTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
         em.persist(new CourseLike(user, course));

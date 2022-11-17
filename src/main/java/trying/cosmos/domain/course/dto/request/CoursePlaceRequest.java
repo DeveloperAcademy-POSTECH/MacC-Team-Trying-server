@@ -4,16 +4,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotNull;
+import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class CoursePlaceRequest {
 
-    @NotNull
-    private Long placeId;
+    private PlaceCreateRequest place;
 
     private String memo;
 }

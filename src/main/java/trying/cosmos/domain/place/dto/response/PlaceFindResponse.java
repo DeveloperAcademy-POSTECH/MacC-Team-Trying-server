@@ -13,16 +13,16 @@ import trying.cosmos.domain.place.entity.Place;
 public class PlaceFindResponse {
 
     private Long placeId;
+    private Long identifier;
     private String name;
-    private String address;
-    private String roadAddress;
+    private String category;
     private Coordinate coordinate;
 
     public PlaceFindResponse(Place place) {
         this.placeId = place.getId();
+        this.identifier = place.getIdentifier();
         this.name = place.getName();
-        this.address = place.getAddress();
-        this.roadAddress = place.getRoadAddress();
-        this.coordinate = new Coordinate(place.getLatitude(), place.getLongitude());
+        this.category = place.getCategory();
+        this.coordinate = new Coordinate(place.getLongitude(), place.getLatitude());
     }
 }

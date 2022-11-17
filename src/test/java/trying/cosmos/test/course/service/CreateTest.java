@@ -1,6 +1,5 @@
 package trying.cosmos.test.course.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import trying.cosmos.global.exception.ExceptionType;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,11 +44,6 @@ public class CreateTest {
 
     @Autowired
     EntityManager em;
-
-    @BeforeEach
-    void setup() {
-        em.persist(place1);
-    }
     
     @Nested
     @DisplayName("실패")
@@ -85,7 +78,6 @@ public class CreateTest {
         @DisplayName("해당 날짜에 코스가 존재한다면 DUPLICATED 오류를 발생시킨다.")
         void date_duplicated() throws Exception {
             // GIVEN
-            em.persist(place1);
             User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
             User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
@@ -96,20 +88,6 @@ public class CreateTest {
             assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_request1))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.DUPLICATED.getMessage());
-        }
-
-        @Test
-        @DisplayName("장소가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
-        void no_place() throws Exception {
-            // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
-            Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
-            planet.join(mate);
-
-            // WHEN THEN
-            assertThatThrownBy(() -> courseService.create(user.getId(), TITLE, LocalDate.now(), course_place_not_exist))
-                    .isInstanceOf(NoSuchElementException.class);
         }
     }
     

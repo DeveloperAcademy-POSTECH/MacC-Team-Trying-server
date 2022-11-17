@@ -1,7 +1,5 @@
 package trying.cosmos.docs.utils;
 
-import trying.cosmos.domain.place.entity.Place;
-
 public abstract class DocsVariable {
 
     public static final String JSON_CONTENT_TYPE = "application/json";
@@ -24,8 +22,10 @@ public abstract class DocsVariable {
     public static final String COURSE_NAME = "COURSE";
     public static final String MEMO = "MEMO";
     public static final String CONTENT = "CONTENT";
-    public static final Place PLACE1 = new Place(1L, "Place1", "CODE", "ADDRESS", "ADDRESS", 0.0, 0.0);
-    public static final Place PLACE2 = new Place(2L, "Place2", "CODE", "ADDRESS", "ADDRESS", 0.1, 0.2);
+    public static final Long PLACE_IDENTIFIER1 = 1L;
+    public static final Long PLACE_IDENTIFIER2 = 2L;
+    public static final String CATEGORY1 = "CATEGORY1";
+    public static final String CATEGORY2 = "CATEGORY1";
 
     public static final String NOTIFICATION__TITLE = "title";
     public static final String NOTIFICATION__BODY = "body";

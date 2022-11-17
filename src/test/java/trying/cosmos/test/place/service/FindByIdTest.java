@@ -1,6 +1,5 @@
 package trying.cosmos.test.place.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static trying.cosmos.test.TestVariables.NOT_EXIST;
-import static trying.cosmos.test.TestVariables.place1;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -34,11 +32,6 @@ public class FindByIdTest {
 
     @Autowired
     EntityManager em;
-
-    @BeforeEach
-    void setup() {
-        em.persist(place1);
-    }
     
     @Nested
     @DisplayName("실패")
@@ -61,6 +54,7 @@ public class FindByIdTest {
         @DisplayName("장소를 반환한다.")
         void find() throws Exception {
             // WHEN
+            Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
             Place place = placeService.find(place1.getId());
 
             // THEN

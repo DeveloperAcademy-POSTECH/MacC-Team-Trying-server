@@ -21,6 +21,7 @@ import trying.cosmos.domain.coursereview.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.notification.entity.NotificationTarget;
 import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.place.repository.PlaceRepository;
+import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
@@ -44,6 +45,7 @@ public class CourseService {
     private final CourseReviewLikeRepository courseReviewLikeRepository;
     private final NotificationService notificationService;
     private final MessageSourceAccessor messageSource;
+    private final PlaceService placeService;
     private final EntityManager em;
 
     @Transactional
@@ -58,9 +60,13 @@ public class CourseService {
         }
         Course course = courseRepository.save(new Course(user.getPlanet(), title, date));
 
-        placeRequests.forEach(p ->
-                new CoursePlace(course, placeRepository.findById(p.getPlaceId()).orElseThrow(), p.getMemo())
-        );
+        placeRequests.forEach(request -> new CoursePlace(course, placeService.create(
+                request.getPlace().getIdentifier(),
+                request.getPlace().getName(),
+                request.getPlace().getCategory(),
+                request.getPlace().getLongitude(),
+                request.getPlace().getLatitude()
+        ), request.getMemo()));
 
         String[] args = new String[]{user.getName(), DateUtils.getFormattedDate(course.getDate(), "MM월 dd일"), course.getTitle()};
         notificationService.create(
@@ -161,8 +167,14 @@ public class CourseService {
 
         course.update(title, date);
         removeExistPlaces(course);
-        placeRequests.forEach(p ->
-                new CoursePlace(course, placeRepository.findById(p.getPlaceId()).orElseThrow(), p.getMemo())
+        placeRequests.forEach(requeyst ->
+                new CoursePlace(course, placeService.create(
+                        requeyst.getPlace().getIdentifier(),
+                        requeyst.getPlace().getName(),
+                        requeyst.getPlace().getCategory(),
+                        requeyst.getPlace().getLongitude(),
+                        requeyst.getPlace().getLatitude()),
+                        requeyst.getMemo())
         );
         em.flush();
         em.clear();

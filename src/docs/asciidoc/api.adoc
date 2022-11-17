@@ -559,32 +559,6 @@ include::{snippets}/place-test/find-by-id/path-parameters.adoc[]
 include::{snippets}/place-test/find-by-id/http-response.adoc[]
 include::{snippets}/place-test/find-by-id/response-fields.adoc[]
 
-=== 2. 이름으로 장소 조회
-.Overview
-* 이름을 포함한 가게를 현 위치로부터 가까운 순서대로 반환
-
-==== <Request>
-include::{snippets}/place-test/find-by-name/http-request.adoc[]
-include::{snippets}/place-test/find-by-name/request-headers.adoc[]
-include::{snippets}/place-test/find-by-name/request-parameters.adoc[]
-
-==== <Response>
-include::{snippets}/place-test/find-by-name/http-response.adoc[]
-include::{snippets}/place-test/find-by-name/response-fields.adoc[]
-
-=== 3. 위치로 장소 조회
-.Overview
-* 현 위치로부터 가까운 가게를 순서대로 반환
-
-==== <Request>
-include::{snippets}/place-test/find-by-location/http-request.adoc[]
-include::{snippets}/place-test/find-by-location/request-headers.adoc[]
-include::{snippets}/place-test/find-by-location/request-parameters.adoc[]
-
-==== <Response>
-include::{snippets}/place-test/find-by-location/http-response.adoc[]
-include::{snippets}/place-test/find-by-location/response-fields.adoc[]
-
 [[Exceptions]]
 == Exceptions
 - 500번 오류 발생시 에러 ID와 함께 알려주세요
