@@ -3,7 +3,7 @@ package trying.cosmos.test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import trying.cosmos.domain.course.dto.request.CoursePlaceRequest;
-import trying.cosmos.domain.place.entity.Place;
+import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 
 import java.util.List;
 
@@ -46,11 +46,12 @@ public abstract class TestVariables {
     public static final String TITLE = "title";
     public static final String BODY = "body";
     public static final String MEMO = "memo";
-    public static final Place place1 = new Place(1L, "name", "code", "address", "roadAddress", 0.0, 0.0);
-    public static final Place place2 = new Place(2L, "name", "code", "address", "roadAddress", 0.0, 0.0);
-    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(place1.getId(), MEMO));
-    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(place2.getId(), MEMO));
-    public static final List<CoursePlaceRequest> course_place_not_exist = List.of(new CoursePlaceRequest(0L, "NOT_EXIST"));
+    public static final Long PLACE_IDENTIFIER1 = 1L;
+    public static final Long PLACE_IDENTIFIER2 = 2L;
+    public static final String CATEGORY1 = "CATEGORY1";
+    public static final String CATEGORY2 = "CATEGORY1";
+    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(1L, "name", "code",  0.0, 0.0), MEMO));
+    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(2L, "name", "code",  0.3, 0.5), MEMO));
 
     // pageable
     public static final Pageable pageable = PageRequest.of(0, 20);

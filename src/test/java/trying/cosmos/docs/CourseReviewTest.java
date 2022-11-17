@@ -30,8 +30,11 @@ import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
+import trying.cosmos.domain.course.service.CourseService;
 import trying.cosmos.domain.coursereview.entity.CourseReview;
 import trying.cosmos.domain.coursereview.repository.CourseReviewRepository;
+import trying.cosmos.domain.place.entity.Place;
+import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.entity.User;
@@ -54,8 +57,8 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static trying.cosmos.docs.utils.DocsVariable.*;
 import static trying.cosmos.docs.utils.RestDocsConfiguration.constraints;
-import static trying.cosmos.test.TestVariables.place1;
-import static trying.cosmos.test.TestVariables.place2;
+import static trying.cosmos.test.TestVariables.NAME1;
+import static trying.cosmos.test.TestVariables.NAME2;
 
 @SpringBootTest
 @Transactional
@@ -85,6 +88,12 @@ public class CourseReviewTest {
     @Autowired
     CourseReviewRepository courseReviewRepository;
 
+    @Autowired
+    PlaceService placeService;
+
+    @Autowired
+    CourseService courseService;
+
     // Docs
     @Autowired
     MockMvc mvc;
@@ -106,9 +115,6 @@ public class CourseReviewTest {
                 .alwaysDo(restDocs)
                 .addFilters(new CharacterEncodingFilter("UTF-8",true))
                 .build();
-
-        em.persist(place1);
-        em.persist(place2);
     }
 
     @AfterEach
@@ -127,6 +133,11 @@ public class CourseReviewTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
+        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getLongitude(), place1.getLatitude());
+        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place2.getLongitude(), place2.getLatitude());
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -177,6 +188,9 @@ public class CourseReviewTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -231,6 +245,9 @@ public class CourseReviewTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -268,6 +285,12 @@ public class CourseReviewTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
+        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getLongitude(), place1.getLatitude());
+        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place2.getLongitude(), place2.getLatitude());
+
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
@@ -324,6 +347,9 @@ public class CourseReviewTest {
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+
         em.persist(new CoursePlace(course, place1, MEMO));
 
         CourseReview review = courseReviewRepository.save(new CourseReview(user, course, CONTENT));

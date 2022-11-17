@@ -19,6 +19,6 @@ public class PlaceFindContent {
     public PlaceFindContent(Place place) {
         this.placeId = place.getId();
         this.name = place.getName();
-        this.coordinate = new Coordinate(place.getLatitude(), place.getLongitude());
+        this.coordinate = new Coordinate(place.getLongitude(), place.getLatitude());
     }
 }

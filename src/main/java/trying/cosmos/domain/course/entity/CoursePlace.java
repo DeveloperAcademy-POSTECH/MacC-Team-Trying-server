@@ -35,6 +35,6 @@ public class CoursePlace {
     }
 
     public Coordinate getCoordinate() {
-        return new Coordinate(place.getLatitude(), place.getLongitude());
+        return new Coordinate(place.getLongitude(), place.getLatitude());
     }
 }

@@ -51,8 +51,8 @@ spring:
       on-profile: local
   jpa:
     hibernate:
-#      ddl-auto: create-drop
-      ddl-auto: update
+      ddl-auto: create-drop
+#      ddl-auto: update
     properties:
       hibernate:
 #        show_sql: true
@@ -71,6 +71,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
 
 logging:
   level:
