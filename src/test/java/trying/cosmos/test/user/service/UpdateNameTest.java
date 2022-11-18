@@ -34,7 +34,7 @@ public class UpdateNameTest {
         @DisplayName("사용자 닉네임을 변경한다.")
         void update_name() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
 
             // WHEN
             userService.updateName(user.getId(), "UPDATED");

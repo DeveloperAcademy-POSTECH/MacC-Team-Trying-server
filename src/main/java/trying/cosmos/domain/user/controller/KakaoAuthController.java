@@ -24,8 +24,7 @@ public class KakaoAuthController {
                 "KAKAO " + request.getIdentifier(),
                 request.getEmail(),
                 request.getName(),
-                request.getDeviceToken(),
-                request.isAllowNotification()
+                request.getDeviceToken()
         ));
     }
 

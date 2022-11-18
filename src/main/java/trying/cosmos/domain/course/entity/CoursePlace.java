@@ -3,6 +3,7 @@ package trying.cosmos.domain.course.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.place.entity.Coordinate;
 import trying.cosmos.domain.place.entity.Place;
 
@@ -17,10 +18,12 @@ public class CoursePlace {
     @Column(name = "course_place_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;

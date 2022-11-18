@@ -17,9 +17,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static trying.cosmos.global.exception.ExceptionType.NO_DATA;
-import static trying.cosmos.global.exception.ExceptionType.PLANET_JOIN_FAILED;
-
 @Slf4j
 @ToString
 @Entity
@@ -59,11 +56,11 @@ public class Planet extends DateAuditingEntity {
     // Convenience Method
     public void join(User mate) {
         if (owners.size() != 1) {
-            throw new CustomException(NO_DATA);
+            throw new CustomException(ExceptionType.NO_DATA);
         }
         User owner = owners.get(0);
         if (owner.equals(mate)) {
-            throw new CustomException(PLANET_JOIN_FAILED);
+            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
         }
         this.owners.add(mate);
         owner.setMate(mate);

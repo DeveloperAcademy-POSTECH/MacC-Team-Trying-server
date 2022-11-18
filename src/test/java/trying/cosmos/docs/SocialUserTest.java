@@ -127,7 +127,7 @@ public class SocialUserTest {
     @DisplayName("애플 계정으로 로그인")
     void loginWithApple() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createSocialUser("APPLE " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createSocialUser("APPLE " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
         String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
 
         // WHEN
@@ -204,7 +204,7 @@ public class SocialUserTest {
     @DisplayName("카카오 계정으로 로그인")
     void loginWithKakao() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createSocialUser("KAKAO " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createSocialUser("KAKAO " + IDENTIFIER, MY_EMAIL, MY_NAME, DEVICE_TOKEN));
         String content = objectMapper.writeValueAsString(new SocialLoginRequest(IDENTIFIER, DEVICE_TOKEN));
 
         // WHEN

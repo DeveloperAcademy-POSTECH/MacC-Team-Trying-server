@@ -47,13 +47,13 @@ public class FindTest {
         @DisplayName("알림을 최근 순서대로 반환")
         void find() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
             Notification notification1 = notificationRepository.save(new Notification(user, TITLE, BODY, NotificationTarget.COURSE, 1L));
-            Notification notification2 = notificationRepository.save(new Notification(user, TITLE, BODY, NotificationTarget.PLANET, null));
+            Notification notification2 = notificationRepository.save(new Notification(user, TITLE, BODY, NotificationTarget.COURSE, 1L));
             Notification notification3 = notificationRepository.save(new Notification(user, TITLE, BODY, NotificationTarget.REVIEW, 1L));
 
             // WHEN

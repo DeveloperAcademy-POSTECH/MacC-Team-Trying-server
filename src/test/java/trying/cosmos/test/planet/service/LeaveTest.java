@@ -42,7 +42,7 @@ public class LeaveTest {
         @DisplayName("행성이 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_planet() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
 
             // WHEN THEN
             assertThatThrownBy(() -> planetService.leave(user.getId()))
@@ -66,8 +66,8 @@ public class LeaveTest {
         @DisplayName("행성을 나간 후 빈 행성이 아니라면 유지한다.")
         void leave() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
@@ -93,7 +93,7 @@ public class LeaveTest {
         @DisplayName("행성을 나간 후 빈 행성이라면 행성을 삭제한다.")
         void leave_empty() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
 
             // WHEN

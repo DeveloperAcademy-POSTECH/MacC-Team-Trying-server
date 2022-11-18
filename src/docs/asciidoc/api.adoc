@@ -12,7 +12,7 @@ ifndef::snippets[]
 endif::[]
 
 [[EmailUser]]
-== 이메일 유저 회원가입/로그인
+== 1) 이메일 유저 회원가입/로그인
 
 === 1. 이메일 인증코드 보내기
 .Overview
@@ -63,7 +63,7 @@ include::{snippets}/email-user-test/login/http-response.adoc[]
 include::{snippets}/email-user-test/login/response-fields.adoc[]
 
 [[SocialUser]]
-== 소셜 계정 유저 회원가입/로그인
+== 2) 소셜 계정 유저 회원가입/로그인
 
 === 1. 애플 계정으로 회원가입
 .Overview
@@ -114,7 +114,7 @@ include::{snippets}/social-user-test/login-with-kakao/http-response.adoc[]
 include::{snippets}/social-user-test/login-with-kakao/response-fields.adoc[]
 
 [[User]]
-== 유저
+== 3) 유저
 
 === 1. 로그아웃
 .Overview
@@ -138,7 +138,19 @@ include::{snippets}/user-test/withdraw/request-headers.adoc[]
 ==== <Response>
 include::{snippets}/user-test/withdraw/http-response.adoc[]
 
-=== 3. 닉네임 수정
+=== 3. 알림 허용 여부 수정
+.Overview
+* 알림 허용 여부 수정
+
+==== <Request>
+include::{snippets}/user-test/set-allow-notification/http-request.adoc[]
+include::{snippets}/user-test/set-allow-notification/request-headers.adoc[]
+include::{snippets}/user-test/set-allow-notification/request-fields.adoc[]
+
+==== <Response>
+include::{snippets}/user-test/set-allow-notification/http-response.adoc[]
+
+=== 4. 닉네임 수정
 .Overview
 * 사용자 닉네임 수정
 
@@ -150,7 +162,7 @@ include::{snippets}/user-test/update-name/request-fields.adoc[]
 ==== <Response>
 include::{snippets}/user-test/update-name/http-response.adoc[]
 
-=== 4. 비밀번호 수정
+=== 5. 비밀번호 수정
 .Overview
 * 사용자 비밀번호 수정
 
@@ -162,7 +174,7 @@ include::{snippets}/user-test/update-password/request-fields.adoc[]
 ==== <Response>
 include::{snippets}/user-test/update-password/http-response.adoc[]
 
-=== 4. 비밀번호 재설정
+=== 6. 비밀번호 재설정
 .Overview
 * 비밀번호를 모를 때 비밀번호를 초기화하고, 바뀐 비밀번호를 이메일로 전송
 
@@ -173,7 +185,7 @@ include::{snippets}/user-test/reset-password/request-fields.adoc[]
 ==== <Response>
 include::{snippets}/user-test/reset-password/http-response.adoc[]
 
-=== 5. 내 정보 조회
+=== 7. 내 정보 조회
 .Overview
 * 내 정보 조회
 * 행성, 메이트 정보는 존재할 때만 출력
@@ -207,20 +219,8 @@ include::{snippets}/user-test/find-me-mate/request-headers.adoc[]
 include::{snippets}/user-test/find-me-mate/http-response.adoc[]
 include::{snippets}/user-test/find-me-mate/response-fields.adoc[]
 
-=== 6. 내 활동 조회
-.Overview
-* 내 모든 별자리 수, 내가 좋아요 누른 별자리 수 조회
-
-==== <Request>
-include::{snippets}/user-test/find-activity/http-request.adoc[]
-include::{snippets}/user-test/find-activity/request-headers.adoc[]
-
-==== <Response>
-include::{snippets}/user-test/find-activity/http-response.adoc[]
-include::{snippets}/user-test/find-activity/response-fields.adoc[]
-
 [[Notification]]
-== 알림
+== 4) 알림
 
 .타겟(TARGET)
 * 알림이 눌렸을 때, 어떤 데이터를 보여주어야 하는지에 대한 정보
@@ -276,7 +276,7 @@ include::{snippets}/notification-test/remove-all/request-headers.adoc[]
 include::{snippets}/notification-test/remove-all/http-response.adoc[]
 
 [[Planet]]
-== 행성
+== 5) 행성
 
 === 1. 행성 생성
 .Overview
@@ -342,7 +342,7 @@ include::{snippets}/planet-test/leave/request-headers.adoc[]
 include::{snippets}/planet-test/leave/http-response.adoc[]
 
 [[Course]]
-== 코스
+== 6) 코스
 
 === 1. 코스 생성
 .Overview
@@ -476,57 +476,57 @@ include::{snippets}/course-test/unlike/path-parameters.adoc[]
 include::{snippets}/course-test/unlike/http-response.adoc[]
 
 [[Review]]
-== 코스 리뷰
+== 7) 코스 리뷰
 
 === 1. 코스 리뷰 생성
 .Overview
 * 코스 리뷰 생성
 
 ==== <Request>
-include::{snippets}/course-review-test/create/http-request.adoc[]
-include::{snippets}/course-review-test/create/request-headers.adoc[]
-include::{snippets}/course-review-test/create/request-parts.adoc[]
+include::{snippets}/review-test/create/http-request.adoc[]
+include::{snippets}/review-test/create/request-headers.adoc[]
+include::{snippets}/review-test/create/request-parts.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/create/http-response.adoc[]
+include::{snippets}/review-test/create/http-response.adoc[]
 
 === 2. 코스 리뷰 수정
 .Overview
 * 코스 리뷰 수정
 
 ==== <Request>
-include::{snippets}/course-review-test/update/http-request.adoc[]
-include::{snippets}/course-review-test/update/request-headers.adoc[]
-include::{snippets}/course-review-test/update/path-parameters.adoc[]
-include::{snippets}/course-review-test/update/request-parts.adoc[]
+include::{snippets}/review-test/update/http-request.adoc[]
+include::{snippets}/review-test/update/request-headers.adoc[]
+include::{snippets}/review-test/update/path-parameters.adoc[]
+include::{snippets}/review-test/update/request-parts.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/update/http-response.adoc[]
+include::{snippets}/review-test/update/http-response.adoc[]
 
 === 3. 코스 리뷰 삭제
 .Overview
 * 코스 리뷰 삭제
 
 ==== <Request>
-include::{snippets}/course-review-test/remove/http-request.adoc[]
-include::{snippets}/course-review-test/remove/request-headers.adoc[]
-include::{snippets}/course-review-test/remove/path-parameters.adoc[]
+include::{snippets}/review-test/remove/http-request.adoc[]
+include::{snippets}/review-test/remove/request-headers.adoc[]
+include::{snippets}/review-test/remove/path-parameters.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/remove/http-response.adoc[]
+include::{snippets}/review-test/remove/http-response.adoc[]
 
 === 4. 아이디로 리뷰 조회
 .Overview
 * 아이디로 리뷰 조회
 
 ==== <Request>
-include::{snippets}/course-review-test/find-by-id/http-request.adoc[]
-include::{snippets}/course-review-test/find-by-id/request-headers.adoc[]
-include::{snippets}/course-review-test/find-by-id/path-parameters.adoc[]
+include::{snippets}/review-test/find-by-id/http-request.adoc[]
+include::{snippets}/review-test/find-by-id/request-headers.adoc[]
+include::{snippets}/review-test/find-by-id/path-parameters.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/find-by-id/http-response.adoc[]
-include::{snippets}/course-review-test/find-by-id/response-fields.adoc[]
+include::{snippets}/review-test/find-by-id/http-response.adoc[]
+include::{snippets}/review-test/find-by-id/response-fields.adoc[]
 
 === 4. 코스로 리뷰 조회
 .Overview
@@ -534,17 +534,16 @@ include::{snippets}/course-review-test/find-by-id/response-fields.adoc[]
 * writer 파라미터에 따라 내 리뷰와 메이트 리뷰 조회
 
 ==== <Request>
-include::{snippets}/course-review-test/find-by-course/http-request.adoc[]
-include::{snippets}/course-review-test/find-by-course/request-headers.adoc[]
-include::{snippets}/course-review-test/find-by-course/path-parameters.adoc[]
-include::{snippets}/course-review-test/find-by-course/request-parameters.adoc[]
+include::{snippets}/review-test/find-by-course/http-request.adoc[]
+include::{snippets}/review-test/find-by-course/request-headers.adoc[]
+include::{snippets}/review-test/find-by-course/path-parameters.adoc[]
 
 ==== <Response>
-include::{snippets}/course-review-test/find-by-course/http-response.adoc[]
-include::{snippets}/course-review-test/find-by-course/response-fields.adoc[]
+include::{snippets}/review-test/find-by-course/http-response.adoc[]
+include::{snippets}/review-test/find-by-course/response-fields.adoc[]
 
 [[Place]]
-== 장소
+== 8) 장소
 
 === 1. 아이디로 장소 조회
 .Overview

@@ -1,4 +1,4 @@
-package trying.cosmos.domain.coursereview.entity;
+package trying.cosmos.domain.review.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CourseReviewImage {
+public class ReviewImage {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_review_image_id")
@@ -20,11 +20,11 @@ public class CourseReviewImage {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
-    private CourseReview review;
+    private Review review;
 
     private String name;
 
-    public CourseReviewImage(CourseReview review, String name) {
+    public ReviewImage(Review review, String name) {
         this.review = review;
         this.name = name;
         review.getImages().add(this);

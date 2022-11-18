@@ -3,12 +3,14 @@ package trying.cosmos.domain.notification.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.auditing.DateAuditingEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@ToString
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,6 +20,7 @@ public class Notification extends DateAuditingEntity {
     @Column(name = "notification_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

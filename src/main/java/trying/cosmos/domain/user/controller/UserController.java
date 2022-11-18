@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.domain.user.dto.request.*;
-import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.dto.response.UserEmailExistResponse;
 import trying.cosmos.domain.user.dto.response.UserFindResponse;
 import trying.cosmos.domain.user.dto.response.UserLoginResponse;
@@ -32,8 +31,7 @@ public class UserController {
                 request.getEmail(),
                 request.getPassword(),
                 request.getName(),
-                request.getDeviceToken(),
-                request.isAllowNotification()
+                request.getDeviceToken()
         ));
     }
 
@@ -47,15 +45,15 @@ public class UserController {
     }
 
     @AuthorityOf(USER)
-    @GetMapping
-    public UserFindResponse findMe() {
-        return new UserFindResponse(userService.find(AuthKey.getKey()), userService.hasNotification(AuthKey.getKey()));
+    @PatchMapping("/notification")
+    public void setNotification(@RequestBody @Validated UserSetNotificationRequest request) {
+        userService.setNotification(AuthKey.getKey(), request.isAllow());
     }
 
     @AuthorityOf(USER)
-    @GetMapping("/activity")
-    public UserActivityResponse findActivity() {
-        return userService.findActivity(AuthKey.getKey());
+    @GetMapping
+    public UserFindResponse findMe() {
+        return new UserFindResponse(userService.find(AuthKey.getKey()), userService.hasNotification(AuthKey.getKey()), userService.findActivity(AuthKey.getKey()));
     }
 
     @PatchMapping("/password")
@@ -72,7 +70,7 @@ public class UserController {
     @AuthorityOf(USER)
     @PutMapping("/password")
     public void updatePassword(@RequestBody @Validated UserUpdatePasswordRequest request) {
-        userService.updatePassword(AuthKey.getKey(), request.getPassword());
+        userService.updatePassword(AuthKey.getKey(), request.getPreviousPassword(), request.getUpdatePassword());
     }
 
     @AuthorityOf(USER)

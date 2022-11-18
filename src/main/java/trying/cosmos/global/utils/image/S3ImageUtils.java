@@ -12,8 +12,6 @@ import trying.cosmos.global.aop.LogSpace;
 import java.io.IOException;
 import java.util.UUID;
 
-import static trying.cosmos.global.utils.image.ImageUtils.getExtension;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class S3ImageUtils implements ImageUtils {
     private final AmazonS3 amazonS3;
 
     public String create(MultipartFile file) {
-        String imageName = UUID.randomUUID() + getExtension(file);
+        String imageName = UUID.randomUUID() + ImageUtils.getExtension(file);
         upload(imageName, file);
         return imageName;
     }

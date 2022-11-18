@@ -1,17 +1,22 @@
 package trying.cosmos.domain.user.dto.response;
 
-import lombok.*;
-import trying.cosmos.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserFindContent {
 
     private String name;
+    private String email;
 
-    public UserFindContent(User user) {
-        this.name = user.getName();
+    public UserFindContent(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }

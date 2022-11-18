@@ -103,9 +103,9 @@ public class NotificationTest {
     @DisplayName("알림 조회")
     void find() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         Notification notification = notificationRepository.save(new Notification(user, NOTIFICATION__TITLE, NOTIFICATION__BODY, NotificationTarget.COURSE, 1L));
@@ -154,9 +154,9 @@ public class NotificationTest {
     @DisplayName("알림 읽음 표시")
     void mark() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         Notification notification = notificationRepository.save(new Notification(user, NOTIFICATION__TITLE, NOTIFICATION__BODY, NotificationTarget.COURSE, 1L));
@@ -185,9 +185,9 @@ public class NotificationTest {
     @DisplayName("알림 삭제")
     void remove() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         Notification notification = notificationRepository.save(new Notification(user, NOTIFICATION__TITLE, NOTIFICATION__BODY, NotificationTarget.COURSE, 1L));
@@ -214,9 +214,9 @@ public class NotificationTest {
     @DisplayName("알림 전체 삭제")
     void removeAll() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         Notification notification = notificationRepository.save(new Notification(user, NOTIFICATION__TITLE, NOTIFICATION__BODY, NotificationTarget.COURSE, 1L));
