@@ -9,11 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.coursereview.entity.CourseReview;
-import trying.cosmos.domain.coursereview.repository.CourseReviewRepository;
-import trying.cosmos.domain.coursereview.service.CourseReviewService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
+import trying.cosmos.domain.review.entity.Review;
+import trying.cosmos.domain.review.repository.ReviewRepository;
+import trying.cosmos.domain.review.service.ReviewService;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
@@ -34,7 +34,7 @@ import static trying.cosmos.test.TestVariables.*;
 public class CreateTest {
 
     @Autowired
-    CourseReviewService reviewService;
+    ReviewService reviewService;
 
     @Autowired
     UserRepository userRepository;
@@ -46,7 +46,7 @@ public class CreateTest {
     CourseRepository courseRepository;
 
     @Autowired
-    CourseReviewRepository courseReviewRepository;
+    ReviewRepository reviewRepository;
 
     @Autowired
     EntityManager em;
@@ -59,8 +59,8 @@ public class CreateTest {
         @DisplayName("코스가 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_course() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
             
@@ -73,12 +73,12 @@ public class CreateTest {
         @DisplayName("사용자 행성의 코스가 아니라면 NO_DATA 오류를 발생시킨다.")
         void others_course() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
-            User other = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN, true));
+            User other = userRepository.save(User.createEmailUser(EMAIL3, PASSWORD, NAME3, DEVICE_TOKEN));
             Planet othersPlanet = planetRepository.save(new Planet(other, NAME2, IMAGE, INVITE_CODE));
             Course othersCourse = courseRepository.save(new Course(othersPlanet, TITLE, LocalDate.now()));
             
@@ -91,14 +91,14 @@ public class CreateTest {
         @DisplayName("리뷰가 존재한다면 DUPLICATED 오류를 발생시킨다.")
         void already_reviewed() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 
             Course course = courseRepository.save(new Course(planet, TITLE, LocalDate.now()));
 
-            em.persist(new CourseReview(user, course, BODY));
+            em.persist(new Review(user, course, BODY));
             
             // WHEN THEN
             assertThatThrownBy(() -> reviewService.create(user.getId(), course.getId(), BODY, null))
@@ -115,8 +115,8 @@ public class CreateTest {
         @DisplayName("코스 리뷰를 생성한다")
         void create() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
-            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+            User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
 

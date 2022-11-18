@@ -1,6 +1,7 @@
 package trying.cosmos.global.dev;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,6 @@ import trying.cosmos.global.auth.SessionService;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
-
-import static org.apache.commons.lang3.RandomStringUtils.random;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,7 +36,7 @@ public class DevService {
     @Transactional
     public User createUser() {
         String str = randomName();
-        User user = User.createEmailUser(str + "@gmail.com", "password", str, "device_token", true);
+        User user = User.createEmailUser(str + "@gmail.com", "password", str, "device_token");
         return userRepository.save(user);
     }
 
@@ -54,6 +53,6 @@ public class DevService {
     }
 
     private String randomName() {
-        return random(6, true, true);
+        return RandomStringUtils.random(6, true, true);
     }
 }

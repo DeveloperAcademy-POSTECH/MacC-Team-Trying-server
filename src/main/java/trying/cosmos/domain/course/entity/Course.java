@@ -1,10 +1,11 @@
 package trying.cosmos.domain.course.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import trying.cosmos.domain.coursereview.entity.CourseReview;
 import trying.cosmos.domain.planet.entity.Planet;
+import trying.cosmos.domain.review.entity.Review;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.auditing.DateAuditingEntity;
 
@@ -14,11 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static lombok.AccessLevel.PROTECTED;
-
+@ToString
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Course extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,12 +35,22 @@ public class Course extends DateAuditingEntity {
     private LocalDate date;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<CoursePlace> places = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.REMOVE)
-    private List<CourseReview> reviews = new ArrayList<>();
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
 
     private boolean isDeleted;
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void setPlaces(List<CoursePlace> places) {
+        this.places = places;
+    }
 
     public void setPlanet(Planet planet) {
         this.planet = planet;
@@ -67,7 +77,7 @@ public class Course extends DateAuditingEntity {
         return reviews.stream().anyMatch(r -> r.getWriter().equals(user));
     }
 
-    public Optional<CourseReview> getReview(User user) {
+    public Optional<Review> getReview(User user) {
         return reviews.stream().filter(r -> r.getWriter().equals(user)).findFirst();
     }
 }

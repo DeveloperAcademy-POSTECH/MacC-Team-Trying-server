@@ -27,6 +27,7 @@ import trying.cosmos.docs.utils.RestDocsConfiguration;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
 import trying.cosmos.domain.user.dto.request.UserResetPasswordRequest;
+import trying.cosmos.domain.user.dto.request.UserSetNotificationRequest;
 import trying.cosmos.domain.user.dto.request.UserUpdateNameRequest;
 import trying.cosmos.domain.user.dto.request.UserUpdatePasswordRequest;
 import trying.cosmos.domain.user.entity.User;
@@ -94,7 +95,7 @@ public class UserTest {
     @DisplayName("로그아웃")
     void logout() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
@@ -118,7 +119,7 @@ public class UserTest {
     @DisplayName("회원탈퇴")
     void withdraw() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
@@ -139,10 +140,41 @@ public class UserTest {
     }
 
     @Test
+    @DisplayName("알림 허용 여부 수정")
+    void setAllowNotification() throws Exception {
+        // GIVEN
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String content = objectMapper.writeValueAsString(new UserSetNotificationRequest(true));
+
+        // WHEN
+        ResultActions actions = mvc.perform(patch("/users/notification")
+                .header(ACCESS_TOKEN, accessToken)
+                .content(content)
+                .contentType(JSON_CONTENT_TYPE));
+
+        // THEN
+        actions.andExpect(status().isOk());
+
+        // DOCS
+        actions.andDo(restDocs.document(
+                requestHeaders(
+                        headerWithName(ACCESS_TOKEN)
+                                .description("인증 토큰")
+                ),
+                requestFields(
+                        fieldWithPath("allow")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
+                )
+        ));
+    }
+
+    @Test
     @DisplayName("닉네임 수정")
     void updateName() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserUpdateNameRequest("UPDATED"));
 
@@ -174,9 +206,9 @@ public class UserTest {
     @DisplayName("비밀번호 수정")
     void updatePassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        String content = objectMapper.writeValueAsString(new UserUpdatePasswordRequest("!Updated1234"));
+        String content = objectMapper.writeValueAsString(new UserUpdatePasswordRequest(PASSWORD, "!Updated1234"));
 
         // WHEN
         ResultActions actions = mvc.perform(put("/users/password")
@@ -194,9 +226,12 @@ public class UserTest {
                                 .description("인증 토큰")
                 ),
                 requestFields(
-                        fieldWithPath("password")
+                        fieldWithPath("previousPassword")
                                 .type(STRING)
-                                .description("비밀번호")
+                                .description("변경 전 비밀번호"),
+                        fieldWithPath("updatePassword")
+                                .type(STRING)
+                                .description("변경 후 비밀번호")
                                 .attributes(constraints("8~16자리 영어/숫자/문자(!@#$%^&*)"))
                 )
         ));
@@ -206,7 +241,7 @@ public class UserTest {
     @DisplayName("비밀번호 초기화")
     void resetPassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String content = objectMapper.writeValueAsString(new UserResetPasswordRequest(MY_EMAIL));
 
         // WHEN
@@ -232,7 +267,7 @@ public class UserTest {
     @DisplayName("내 정보 조회(행성, 메이트 없음)")
     void findMe() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
 
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
 
@@ -254,9 +289,18 @@ public class UserTest {
                         fieldWithPath("me.name")
                                 .type(STRING)
                                 .description("사용자 닉네임"),
+                        fieldWithPath("me.email")
+                                .type(STRING)
+                                .description("사용자 이메일"),
                         fieldWithPath("hasNotification")
                                 .type(BOOLEAN)
-                                .description("읽지 않은 알림이 있는지 여부")
+                                .description("읽지 않은 알림이 있는지 여부"),
+                        fieldWithPath("socialAccount")
+                                .type(BOOLEAN)
+                                .description("소셜 계정 여부"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
                 )
         ));
     }
@@ -265,7 +309,7 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 없음)")
     void findMePlanet() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
 
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -288,9 +332,15 @@ public class UserTest {
                         fieldWithPath("me.name")
                                 .type(STRING)
                                 .description("사용자 닉네임"),
+                        fieldWithPath("me.email")
+                                .type(STRING)
+                                .description("사용자 이메일"),
                         fieldWithPath("planet.name")
                                 .type(STRING)
                                 .description("행성 이름"),
+                        fieldWithPath("planet.meetDate")
+                                .type(STRING)
+                                .description("만난 날짜"),
                         fieldWithPath("planet.dday")
                                 .type(NUMBER)
                                 .description("D+Day(초기값은 행성 생성일 기준)")
@@ -301,9 +351,15 @@ public class UserTest {
                         fieldWithPath("planet.code")
                                 .type(STRING)
                                 .description("행성 초대 코드"),
+                        fieldWithPath("socialAccount")
+                                .type(BOOLEAN)
+                                .description("소셜 계정 여부"),
                         fieldWithPath("hasNotification")
                                 .type(BOOLEAN)
-                                .description("읽지 않은 알림이 있는지 여부")
+                                .description("읽지 않은 알림이 있는지 여부"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부")
                 )
         ));
     }
@@ -312,8 +368,8 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 존재)")
     void findMeMate() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
 
@@ -337,12 +393,18 @@ public class UserTest {
                         fieldWithPath("me.name")
                                 .type(STRING)
                                 .description("사용자 닉네임"),
+                        fieldWithPath("me.email")
+                                .type(STRING)
+                                .description("사용자 이메일"),
                         fieldWithPath("mate.name")
                                 .type(STRING)
                                 .description("메이트 닉네임"),
                         fieldWithPath("planet.name")
                                 .type(STRING)
                                 .description("행성 이름"),
+                        fieldWithPath("planet.meetDate")
+                                .type(STRING)
+                                .description("만난 날짜"),
                         fieldWithPath("planet.dday")
                                 .type(NUMBER)
                                 .description("D+Day(초기값은 행성 생성일 기준)")
@@ -350,45 +412,21 @@ public class UserTest {
                         fieldWithPath("planet.image")
                                 .type(STRING)
                                 .description("행성 이미지 타입"),
+                        fieldWithPath("socialAccount")
+                                .type(BOOLEAN)
+                                .description("소셜 계정 여부"),
                         fieldWithPath("hasNotification")
                                 .type(BOOLEAN)
-                                .description("읽지 않은 알림이 있는지 여부")
-                )
-        ));
-    }
-
-    @Test
-    @DisplayName("내 활동 조회")
-    void findActivity() throws Exception {
-        // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
-        planet.join(mate);
-
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-
-        // WHEN
-        ResultActions actions = mvc.perform(get("/users/activity")
-                .header(ACCESS_TOKEN, accessToken)
-                .contentType(JSON_CONTENT_TYPE));
-
-        // THEN
-        actions.andExpect(status().isOk());
-
-        // DOCS
-        actions.andDo(restDocs.document(
-                requestHeaders(
-                        headerWithName(ACCESS_TOKEN)
-                                .description("인증 토큰")
-                ),
-                responseFields(
-                        fieldWithPath("courseCount")
+                                .description("읽지 않은 알림이 있는지 여부"),
+                        fieldWithPath("allowNotification")
+                                .type(BOOLEAN)
+                                .description("알림 허용 여부"),
+                        fieldWithPath("activities.courseCount")
                                 .type(NUMBER)
-                                .description("내 별자리 수"),
-                        fieldWithPath("likedCount")
+                                .description("사용자가 작성한 코스 수"),
+                        fieldWithPath("activities.likedCount")
                                 .type(NUMBER)
-                                .description("내가 좋아요한 별자리 수")
+                                .description("사용자가 좋아요를 누른 코스 수")
                 )
         ));
     }

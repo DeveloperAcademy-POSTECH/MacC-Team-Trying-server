@@ -35,10 +35,10 @@ public class UpdatePasswordTest {
         @DisplayName("사용자 비밀번호를 변경한다.")
         void update_password() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
 
             // WHEN
-            userService.updatePassword(user.getId(), "UPDATED");
+            userService.updatePassword(user.getId(), PASSWORD, "UPDATED");
             
             // THEN
             assertThat(BCryptUtils.isMatch("UPDATED", user.getPassword()))

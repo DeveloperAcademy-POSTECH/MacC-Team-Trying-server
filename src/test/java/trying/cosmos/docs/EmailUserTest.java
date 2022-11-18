@@ -191,7 +191,7 @@ public class EmailUserTest {
     @DisplayName("이메일로 로그인")
     void login() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
         String content = objectMapper.writeValueAsString(new UserLoginRequest(MY_EMAIL, PASSWORD, DEVICE_TOKEN));
 
         // WHEN

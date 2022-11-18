@@ -12,17 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.dto.request.CoursePlaceRequest;
 import trying.cosmos.domain.course.dto.response.CourseDateResponse;
 import trying.cosmos.domain.course.dto.response.CourseFindResponse;
+import trying.cosmos.domain.course.dto.response.LogCourseFindResponse;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.entity.CourseLike;
 import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.coursereview.entity.CourseReview;
-import trying.cosmos.domain.coursereview.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.notification.entity.NotificationTarget;
 import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.place.repository.PlaceRepository;
 import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
+import trying.cosmos.domain.review.entity.Review;
+import trying.cosmos.domain.review.repository.ReviewLikeRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
@@ -42,7 +43,7 @@ public class CourseService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final PlaceRepository placeRepository;
-    private final CourseReviewLikeRepository courseReviewLikeRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
     private final NotificationService notificationService;
     private final MessageSourceAccessor messageSource;
     private final PlaceService placeService;
@@ -113,51 +114,51 @@ public class CourseService {
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
 
-    public Slice<CourseFindResponse> findLogs(Long userId, Pageable pageable) {
+    public Slice<LogCourseFindResponse> findLogs(Long userId, Pageable pageable) {
         Slice<Course> courseSlice = courseRepository.getLogs(userRepository.findById(userId).orElseThrow(), pageable);
         User user = userRepository.findById(userId).orElseThrow();
-        List<CourseFindResponse> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindResponse(course, isLiked(user, course)))
+        List<LogCourseFindResponse> contents = courseSlice.getContent().stream()
+                .map(course -> new LogCourseFindResponse(course, isLiked(user, course)))
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }
 
     private boolean isLiked(User user, Course course) {
-        return courseReviewLikeRepository.existsByUserAndCourse(user, course);
+        return reviewLikeRepository.existsByUserAndCourse(user, course);
     }
 
     @Transactional
     public void like(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-        if (courseReviewLikeRepository.existsByUserAndCourse(user, course)) {
+        if (reviewLikeRepository.existsByUserAndCourse(user, course)) {
             throw new CustomException(ExceptionType.DUPLICATED);
         }
-        courseReviewLikeRepository.save(new CourseLike(userRepository.findById(userId).orElseThrow(), courseRepository.findById(courseId).orElseThrow()));
+        reviewLikeRepository.save(new CourseLike(userRepository.findById(userId).orElseThrow(), courseRepository.findById(courseId).orElseThrow()));
     }
 
     @Transactional
     public void unlike(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-        if (!courseReviewLikeRepository.existsByUserAndCourse(user, course)) {
+        if (!reviewLikeRepository.existsByUserAndCourse(user, course)) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
-        courseReviewLikeRepository.delete(courseReviewLikeRepository.findByUserAndCourse(user, course).orElseThrow());
+        reviewLikeRepository.delete(reviewLikeRepository.findByUserAndCourse(user, course).orElseThrow());
     }
 
-    public CourseReview findMyReview(Long userId, Long courseId) {
+    public Review findMyReview(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
 
-        return course.getReview(user).orElseThrow();
+        return course.getReview(user).orElse(null);
     }
 
-    public CourseReview findMateReview(Long userId, Long courseId) {
+    public Review findMateReview(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
 
-        return course.getReview(user.getMate()).orElseThrow();
+        return course.getReview(user.getMate()).orElse(null);
     }
 
     @Transactional

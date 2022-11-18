@@ -60,7 +60,7 @@ public class User extends DateAuditingEntity {
     private User mate;
 
     // Convenient Method
-    public static User createEmailUser(String email, String password, String name, String deviceToken, boolean allowNotification) {
+    public static User createEmailUser(String email, String password, String name, String deviceToken) {
         User user = new User();
         user.email = email;
         user.isSocialAccount = false;
@@ -70,11 +70,11 @@ public class User extends DateAuditingEntity {
         user.status = UserStatus.LOGIN;
         user.authority = Authority.USER;
         user.deviceToken = deviceToken;
-        user.allowNotification = allowNotification;
+        user.allowNotification = false;
         return user;
     }
 
-    public static User createSocialUser(String identifier, String email, String name, String deviceToken, boolean allowNotification) {
+    public static User createSocialUser(String identifier, String email, String name, String deviceToken) {
         User user = new User();
         user.email = email;
         user.isSocialAccount = true;
@@ -84,7 +84,7 @@ public class User extends DateAuditingEntity {
         user.status = UserStatus.LOGIN;
         user.authority = Authority.USER;
         user.deviceToken = deviceToken;
-        user.allowNotification = allowNotification;
+        user.allowNotification = false;
         return user;
     }
 
@@ -100,6 +100,10 @@ public class User extends DateAuditingEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setAllowNotification(boolean value) {
+        this.allowNotification = value;
     }
 
     public void logout() {
@@ -120,6 +124,9 @@ public class User extends DateAuditingEntity {
         if (this.mate != null) {
             this.mate.setMate(null);
             this.mate = null;
+        }
+        if (this.isSocialAccount) {
+            this.identifier = prefix + this.identifier;
         }
     }
 

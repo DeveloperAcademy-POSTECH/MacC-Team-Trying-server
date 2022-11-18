@@ -5,7 +5,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import trying.cosmos.domain.notification.entity.NotificationTarget;
 import trying.cosmos.domain.notification.service.NotificationService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
@@ -48,13 +47,6 @@ public class PlanetService {
         Planet planet = planetRepository.searchByInviteCode(code).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         planet.join(user);
-
-        notificationService.create(
-                user.getMate(),
-                messageSource.getMessage("notification.planet.join.title"),
-                messageSource.getMessage("notification.planet.join.body"),
-                NotificationTarget.PLANET,
-                null);
     }
 
     public Planet find(String inviteCode) {

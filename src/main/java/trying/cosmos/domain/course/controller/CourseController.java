@@ -6,17 +6,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import trying.cosmos.domain.course.dto.request.CourseCreateRequest;
 import trying.cosmos.domain.course.dto.request.CourseUpdateRequest;
-import trying.cosmos.domain.course.dto.response.CourseCreateResponse;
-import trying.cosmos.domain.course.dto.response.CourseDateResponse;
-import trying.cosmos.domain.course.dto.response.CourseFindResponse;
-import trying.cosmos.domain.course.dto.response.CourseListFindResponse;
+import trying.cosmos.domain.course.dto.response.*;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.domain.coursereview.dto.response.CourseReviewResponse;
 import trying.cosmos.global.auth.AuthorityOf;
 import trying.cosmos.global.auth.entity.AuthKey;
 import trying.cosmos.global.auth.entity.Authority;
-import trying.cosmos.global.exception.CustomException;
-import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.DateUtils;
 
 @RestController
@@ -70,8 +64,8 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @GetMapping("/log")
-    public CourseListFindResponse findLogs(Pageable pageable) {
-        return new CourseListFindResponse(courseService.findLogs(AuthKey.getKey(), pageable));
+    public LogFindResponse findLogs(Pageable pageable) {
+        return new LogFindResponse(courseService.findLogs(AuthKey.getKey(), pageable));
     }
 
     @AuthorityOf(Authority.USER)
@@ -106,13 +100,7 @@ public class CourseController {
 
     @AuthorityOf(Authority.USER)
     @GetMapping("/{courseId}/review")
-    public CourseReviewResponse findCourseReview(@PathVariable Long courseId, @RequestParam String writer) {
-        if (writer.equals("me")) {
-            return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId));
-        } else if (writer.equals("mate")) {
-            return new CourseReviewResponse(courseService.findMateReview(AuthKey.getKey(), courseId));
-        } else {
-            throw new CustomException(ExceptionType.INVALID_PARAMETER);
-        }
+    public CourseReviewResponse findCourseReview(@PathVariable Long courseId) {
+        return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId), courseService.findMateReview(AuthKey.getKey(), courseId));
     }
 }

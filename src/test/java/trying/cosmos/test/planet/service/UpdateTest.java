@@ -44,7 +44,7 @@ public class UpdateTest {
         @DisplayName("행성이 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_planet() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
 
             // THEN WHEN
             assertThatThrownBy(() -> planetService.update(user.getId(), "UPDATED", LocalDate.now(), IMAGE))
@@ -61,7 +61,7 @@ public class UpdateTest {
         @DisplayName("행성 정보를 수정한다.")
         void update() throws Exception {
             // GIVEN
-            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
 
             // WHEN

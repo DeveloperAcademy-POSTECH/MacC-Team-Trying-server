@@ -1,4 +1,4 @@
-package trying.cosmos.domain.coursereview.repository;
+package trying.cosmos.domain.review.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -10,7 +10,7 @@ import trying.cosmos.domain.user.entity.User;
 
 import java.util.Optional;
 
-public interface CourseReviewLikeRepository extends JpaRepository<CourseLike, Long> {
+public interface ReviewLikeRepository extends JpaRepository<CourseLike, Long> {
 
     boolean existsByUserAndCourse(User user, Course course);
 

@@ -1,13 +1,14 @@
 package trying.cosmos.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.certification.entity.Certification;
 import trying.cosmos.domain.certification.repository.CertificationRepository;
 import trying.cosmos.domain.course.repository.CourseRepository;
-import trying.cosmos.domain.coursereview.repository.CourseReviewLikeRepository;
 import trying.cosmos.domain.notification.repository.NotificationRepository;
+import trying.cosmos.domain.review.repository.ReviewLikeRepository;
 import trying.cosmos.domain.user.dto.response.UserActivityResponse;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
@@ -25,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.RandomStringUtils.random;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -36,7 +35,7 @@ public class UserService {
     private final SessionService sessionService;
     private final CertificationRepository certificationRepository;
     private final CourseRepository courseRepository;
-    private final CourseReviewLikeRepository courseReviewLikeRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
     private final NotificationRepository notificationRepository;
 
     private final EmailUtils emailUtils;
@@ -47,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public String join(String email, String password, String name, String deviceToken, boolean allowNotification) {
+    public String join(String email, String password, String name, String deviceToken) {
         if (userRepository.existsByEmail(email)) {
             throw new CustomException(ExceptionType.EMAIL_DUPLICATED);
         }
@@ -61,7 +60,7 @@ public class UserService {
         }
 
         certificationRepository.delete(certification);
-        User user = userRepository.save(User.createEmailUser(email, password, name, deviceToken, allowNotification));
+        User user = userRepository.save(User.createEmailUser(email, password, name, deviceToken));
         Session auth = sessionService.create(user);
         return tokenProvider.getAccessToken(auth);
     }
@@ -93,15 +92,21 @@ public class UserService {
     public UserActivityResponse findActivity(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
         if (user.getPlanet() == null) {
-            throw new CustomException(ExceptionType.NO_PLANET);
+            return null;
         }
         if (user.getMate() == null) {
-            throw new CustomException(ExceptionType.NO_MATE);
+            return null;
         }
         return new UserActivityResponse(
                 courseRepository.countByPlanet(user.getPlanet()),
-                courseReviewLikeRepository.countByUser(user)
+                reviewLikeRepository.countByUser(user)
         );
+    }
+
+    @Transactional
+    public void setNotification(Long userId, boolean allow) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setAllowNotification(allow);
     }
 
     @Transactional
@@ -112,7 +117,7 @@ public class UserService {
             throw new CustomException(ExceptionType.SOCIAL_ACCOUNT);
         }
 
-        String password = random(6, true, true);
+        String password = RandomStringUtils.random(6, true, true);
         user.setPassword(BCryptUtils.encrypt(password));
         user.setStatus(UserStatus.LOGOUT);
         sendResetPasswordEmail(email, password);
@@ -133,12 +138,13 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long userId, String password) {
+    public void updatePassword(Long userId, String previousPassword, String updatedPassword) {
         User user = userRepository.findById(userId).orElseThrow();
         if (user.isSocialAccount()) {
             throw new CustomException(ExceptionType.SOCIAL_ACCOUNT);
         }
-        user.setPassword(BCryptUtils.encrypt(password));
+        user.checkPassword(previousPassword);
+        user.setPassword(BCryptUtils.encrypt(updatedPassword));
     }
 
     @Transactional

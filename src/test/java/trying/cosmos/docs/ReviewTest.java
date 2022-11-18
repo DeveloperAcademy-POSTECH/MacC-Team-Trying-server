@@ -31,12 +31,12 @@ import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
-import trying.cosmos.domain.coursereview.entity.CourseReview;
-import trying.cosmos.domain.coursereview.repository.CourseReviewRepository;
 import trying.cosmos.domain.place.entity.Place;
 import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.planet.repository.PlanetRepository;
+import trying.cosmos.domain.review.entity.Review;
+import trying.cosmos.domain.review.repository.ReviewRepository;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.domain.user.service.UserService;
@@ -56,7 +56,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static trying.cosmos.docs.utils.DocsVariable.*;
-import static trying.cosmos.docs.utils.RestDocsConfiguration.constraints;
 import static trying.cosmos.test.TestVariables.NAME1;
 import static trying.cosmos.test.TestVariables.NAME2;
 
@@ -68,7 +67,7 @@ import static trying.cosmos.test.TestVariables.NAME2;
 @AutoConfigureRestDocs
 @Import(RestDocsConfiguration.class)
 @ExtendWith({RestDocumentationExtension.class})
-public class CourseReviewTest {
+public class ReviewTest {
 
     @Autowired
     UserRepository userRepository;
@@ -86,7 +85,7 @@ public class CourseReviewTest {
     EntityManager em;
 
     @Autowired
-    CourseReviewRepository courseReviewRepository;
+    ReviewRepository reviewRepository;
 
     @Autowired
     PlaceService placeService;
@@ -126,8 +125,8 @@ public class CourseReviewTest {
     @DisplayName("코스 리뷰 생성")
     void create() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -181,8 +180,8 @@ public class CourseReviewTest {
     @DisplayName("코스 리뷰 수정")
     void update() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -194,7 +193,7 @@ public class CourseReviewTest {
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        CourseReview review = courseReviewRepository.save(new CourseReview(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, CONTENT));
 
         MockPart contentPart = new MockPart("content", "UPDATED".getBytes(StandardCharsets.UTF_8));
         MockPart imagePart = new MockPart("images", null);
@@ -238,8 +237,8 @@ public class CourseReviewTest {
     @DisplayName("코스 리뷰 삭제")
     void remove() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -251,7 +250,7 @@ public class CourseReviewTest {
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        CourseReview review = courseReviewRepository.save(new CourseReview(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, CONTENT));
 
         // WHEN
         ResultActions actions = mvc.perform(delete("/reviews/{reviewId}", review.getId())
@@ -278,8 +277,8 @@ public class CourseReviewTest {
     @DisplayName("코스로 리뷰 조회")
     void findByCourse() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -294,12 +293,11 @@ public class CourseReviewTest {
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        em.persist(new CourseReview(user, course, CONTENT));
-        em.persist(new CourseReview(mate, course, CONTENT));
+        em.persist(new Review(user, course, CONTENT));
+        em.persist(new Review(mate, course, CONTENT));
 
         // WHEN
         ResultActions actions = mvc.perform(get("/courses/{courseId}/review", course.getId())
-                .param("writer", "me")
                 .header(ACCESS_TOKEN, accessToken));
 
         // THEN
@@ -312,24 +310,27 @@ public class CourseReviewTest {
                                 .attributes(key("type").value("Number"))
                                 .description("코스 id")
                 ),
-                requestParameters(
-                        parameterWithName("writer")
-                                .attributes(key("type").value("String"))
-                                .description("리뷰 작성자")
-                                .attributes(constraints("me/mate"))
-                ),
                 requestHeaders(
                         headerWithName(ACCESS_TOKEN)
                                 .description("인증 토큰")
                 ),
                 responseFields(
-                        fieldWithPath("writerName")
+                        fieldWithPath("myReview.writerName")
                                 .type(STRING)
                                 .description("리뷰 작성자 닉네임"),
-                        fieldWithPath("content")
+                        fieldWithPath("myReview.content")
                                 .type(STRING)
                                 .description("리뷰 내용"),
-                        fieldWithPath("images[]")
+                        fieldWithPath("myReview.images[]")
+                                .type(ARRAY)
+                                .description("리뷰 이미지 경로"),
+                        fieldWithPath("mateReview.writerName")
+                                .type(STRING)
+                                .description("리뷰 작성자 닉네임"),
+                        fieldWithPath("mateReview.content")
+                                .type(STRING)
+                                .description("리뷰 내용"),
+                        fieldWithPath("mateReview.images[]")
                                 .type(ARRAY)
                                 .description("리뷰 이미지 경로")
                 )
@@ -340,8 +341,8 @@ public class CourseReviewTest {
     @DisplayName("아이디로 코스 리뷰 조회")
     void findById() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN, true));
+        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
         Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
         planet.join(mate);
         String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
@@ -352,7 +353,7 @@ public class CourseReviewTest {
 
         em.persist(new CoursePlace(course, place1, MEMO));
 
-        CourseReview review = courseReviewRepository.save(new CourseReview(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, CONTENT));
 
         // WHEN
         ResultActions actions = mvc.perform(get("/reviews/{reviewId}", review.getId())

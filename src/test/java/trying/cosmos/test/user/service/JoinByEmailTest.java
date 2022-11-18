@@ -60,7 +60,7 @@ public class JoinByEmailTest {
         @DisplayName("인증 객체가 존재하지 않으면 NOT_CERTIFICATED 오류를 발생시킨다.")
         void no_certification() throws Exception {
             // WHEN THEN
-            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true))
+            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.NOT_CERTIFICATED.getMessage());
         }
@@ -72,7 +72,7 @@ public class JoinByEmailTest {
             certificationService.generate(EMAIL1);
 
             // WHEN THEN
-            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true))
+            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.NOT_CERTIFICATED.getMessage());
         }
@@ -81,12 +81,12 @@ public class JoinByEmailTest {
         @DisplayName("이메일에 해당하는 사용자가 존재한다면 EMAIL_DUPLICATED 오류를 발생시킨다.")
         void email_duplicated() throws Exception {
             // GIVEN
-            userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME2, DEVICE_TOKEN, true));
+            userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME2, DEVICE_TOKEN));
             Certification certification = certificationRepository.save(new Certification(EMAIL1));
             certificationService.certificate(EMAIL1, certification.getCode());
 
             // WHEN THEN
-            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true))
+            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.EMAIL_DUPLICATED.getMessage());
         }
@@ -94,12 +94,12 @@ public class JoinByEmailTest {
         @Test
         @DisplayName("닉네임에 해당하는 사용자가 존재한다면 NAME_DUPLICATED 오류를 발생시킨다.")
         void name_duplicated() throws Exception {
-            userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME1, DEVICE_TOKEN, true));
+            userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME1, DEVICE_TOKEN));
             String code = certificationRepository.save(new Certification(EMAIL1)).getCode();
             certificationService.certificate(EMAIL1, code);
 
             // WHEN THEN
-            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true))
+            assertThatThrownBy(() -> userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN))
                     .isInstanceOf(CustomException.class)
                     .hasMessage(ExceptionType.NAME_DUPLICATED.getMessage());
         }
@@ -124,7 +124,7 @@ public class JoinByEmailTest {
             certificationService.certificate(EMAIL1, certification.getCode());
 
             // WHEN
-            userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true);
+            userService.join(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN);
 
             // THEN
             assertThat(certificationRepository.findByEmail(EMAIL1)).isEmpty();
