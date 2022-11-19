@@ -44,7 +44,7 @@ public class FindTest {
         @DisplayName("행성이 존재하지 않으면 NO_DATA 오류를 발생시킨다.")
         void no_planet() throws Exception {
             // WHEN THEN
-            assertThatThrownBy(() -> planetService.find(WRONG_INVITE_CODE))
+            assertThatThrownBy(() -> planetService.find("WRONG_INVITE_CODE"))
                     .isInstanceOf(NoSuchElementException.class);
         }
         

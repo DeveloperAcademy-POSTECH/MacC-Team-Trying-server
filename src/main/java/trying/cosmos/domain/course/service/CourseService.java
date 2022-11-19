@@ -19,7 +19,6 @@ import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.notification.entity.NotificationTarget;
 import trying.cosmos.domain.notification.service.NotificationService;
-import trying.cosmos.domain.place.repository.PlaceRepository;
 import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
 import trying.cosmos.domain.review.entity.Review;
@@ -42,7 +41,6 @@ public class CourseService {
 
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
-    private final PlaceRepository placeRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final NotificationService notificationService;
     private final MessageSourceAccessor messageSource;
@@ -65,6 +63,7 @@ public class CourseService {
                 request.getPlace().getIdentifier(),
                 request.getPlace().getName(),
                 request.getPlace().getCategory(),
+                request.getPlace().getAddress(),
                 request.getPlace().getLongitude(),
                 request.getPlace().getLatitude()
         ), request.getMemo()));
@@ -168,14 +167,15 @@ public class CourseService {
 
         course.update(title, date);
         removeExistPlaces(course);
-        placeRequests.forEach(requeyst ->
+        placeRequests.forEach(request ->
                 new CoursePlace(course, placeService.create(
-                        requeyst.getPlace().getIdentifier(),
-                        requeyst.getPlace().getName(),
-                        requeyst.getPlace().getCategory(),
-                        requeyst.getPlace().getLongitude(),
-                        requeyst.getPlace().getLatitude()),
-                        requeyst.getMemo())
+                        request.getPlace().getIdentifier(),
+                        request.getPlace().getName(),
+                        request.getPlace().getCategory(),
+                        request.getPlace().getAddress(),
+                        request.getPlace().getLongitude(),
+                        request.getPlace().getLatitude()),
+                        request.getMemo())
         );
         em.flush();
         em.clear();

@@ -8,6 +8,10 @@ import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import java.util.List;
 
 public abstract class TestVariables {
+    // accessToken header
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String JSON_CONTENT_TYPE = "application/json";
+
     // not exist id
     public static final Long NOT_EXIST = 0L;
 
@@ -50,8 +54,9 @@ public abstract class TestVariables {
     public static final Long PLACE_IDENTIFIER2 = 2L;
     public static final String CATEGORY1 = "CATEGORY1";
     public static final String CATEGORY2 = "CATEGORY1";
-    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(1L, "name", "code",  0.0, 0.0), MEMO));
-    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(2L, "name", "code",  0.3, 0.5), MEMO));
+    public static final String ADDRESS = "ADDRESS";
+    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(1L, "name", "code",  "address", 0.0, 0.0), MEMO));
+    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(2L, "name", "code",  "address", 0.3, 0.5), MEMO));
 
     // pageable
     public static final Pageable pageable = PageRequest.of(0, 20);

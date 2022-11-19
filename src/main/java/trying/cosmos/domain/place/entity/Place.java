@@ -23,21 +23,25 @@ public class Place {
 
     private String category;
 
+    private String address;
+
     private Double longitude;
 
     private Double latitude;
 
-    public Place(Long identifier, String name, String category, Double longitude, Double latitude) {
+    public Place(Long identifier, String name, String category, String address, Double longitude, Double latitude) {
         this.identifier = identifier;
         this.name = name;
         this.category = category;
+        this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
     }
 
-    public boolean isSame(String name, String category, Double longitude, Double latitude) {
+    public boolean isSame(String name, String category, String address, Double longitude, Double latitude) {
         return this.name.equals(name)
                 && this.category.equals(category)
+                && this.address.equals(address)
                 && this.longitude.equals(longitude)
                 && this.latitude.equals(latitude);
     }

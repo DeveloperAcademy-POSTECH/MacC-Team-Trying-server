@@ -41,8 +41,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.DocsVariable.*;
 import static trying.cosmos.docs.utils.RestDocsConfiguration.constraints;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -95,8 +95,8 @@ public class UserTest {
     @DisplayName("로그아웃")
     void logout() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(delete("/users/logout")
@@ -119,8 +119,8 @@ public class UserTest {
     @DisplayName("회원탈퇴")
     void withdraw() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(delete("/users")
@@ -143,8 +143,8 @@ public class UserTest {
     @DisplayName("알림 허용 여부 수정")
     void setAllowNotification() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserSetNotificationRequest(true));
 
         // WHEN
@@ -174,8 +174,8 @@ public class UserTest {
     @DisplayName("닉네임 수정")
     void updateName() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserUpdateNameRequest("UPDATED"));
 
         // WHEN
@@ -206,8 +206,8 @@ public class UserTest {
     @DisplayName("비밀번호 수정")
     void updatePassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
         String content = objectMapper.writeValueAsString(new UserUpdatePasswordRequest(PASSWORD, "!Updated1234"));
 
         // WHEN
@@ -241,8 +241,8 @@ public class UserTest {
     @DisplayName("비밀번호 초기화")
     void resetPassword() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String content = objectMapper.writeValueAsString(new UserResetPasswordRequest(MY_EMAIL));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new UserResetPasswordRequest(EMAIL1));
 
         // WHEN
         ResultActions actions = mvc.perform(patch("/users/password")
@@ -267,9 +267,9 @@ public class UserTest {
     @DisplayName("내 정보 조회(행성, 메이트 없음)")
     void findMe() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
 
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(get("/users")
@@ -309,10 +309,10 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 없음)")
     void findMePlanet() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
 
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(get("/users")
@@ -368,12 +368,12 @@ public class UserTest {
     @DisplayName("내 정보 조회(메이트 존재)")
     void findMeMate() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
 
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(get("/users")

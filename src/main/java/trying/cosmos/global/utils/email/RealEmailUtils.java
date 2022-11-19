@@ -11,7 +11,6 @@ import org.thymeleaf.context.Context;
 import trying.cosmos.global.aop.LogSpace;
 
 import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;

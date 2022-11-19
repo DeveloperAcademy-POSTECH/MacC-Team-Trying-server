@@ -47,8 +47,8 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.DocsVariable.*;
 import static trying.cosmos.docs.utils.RestDocsConfiguration.constraints;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -101,10 +101,10 @@ public class PlanetTest {
     @DisplayName("행성 생성")
     void create() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        String content = objectMapper.writeValueAsString(new PlanetCreateRequest(PLANET_NAME, IMAGE_NAME));
+        String content = objectMapper.writeValueAsString(new PlanetCreateRequest(NAME1, IMAGE));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/planets")
@@ -142,9 +142,9 @@ public class PlanetTest {
     @DisplayName("행성 조회")
     void find() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(get("/planets")
@@ -181,10 +181,10 @@ public class PlanetTest {
     @DisplayName("행성 참가")
     void join() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(mate, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(mate, NAME1, IMAGE, INVITE_CODE));
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         String content = objectMapper.writeValueAsString(new PlanetJoinRequest(INVITE_CODE));
 
@@ -215,13 +215,13 @@ public class PlanetTest {
     @DisplayName("행성 수정")
     void update() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("UPDATED", "2020-01-10", IMAGE_NAME));
+        String content = objectMapper.writeValueAsString(new PlanetUpdateRequest("UPDATED", "2020-01-10", IMAGE));
 
         // WHEN
         ResultActions actions = mvc.perform(put("/planets")
@@ -268,11 +268,11 @@ public class PlanetTest {
     @DisplayName("행성 나가기")
     void leave() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
         // WHEN
         ResultActions actions = mvc.perform(delete("/planets")

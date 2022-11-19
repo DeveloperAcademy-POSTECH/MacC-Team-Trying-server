@@ -55,9 +55,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.DocsVariable.*;
-import static trying.cosmos.test.TestVariables.NAME1;
-import static trying.cosmos.test.TestVariables.NAME2;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -125,22 +123,22 @@ public class ReviewTest {
     @DisplayName("코스 리뷰 생성")
     void create() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+        Course course = courseRepository.save(new Course(planet, NAME1, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
 
-        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getLongitude(), place1.getLatitude());
-        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place2.getLongitude(), place2.getLatitude());
+        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getAddress(), place1.getLongitude(), place1.getLatitude());
+        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place1.getAddress(), place2.getLongitude(), place2.getLatitude());
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        MockPart contentPart = new MockPart("content", CONTENT.getBytes(StandardCharsets.UTF_8));
+        MockPart contentPart = new MockPart("content", BODY.getBytes(StandardCharsets.UTF_8));
         MockPart courseIdPart = new MockPart("courseId", String.valueOf(course.getId()).getBytes(StandardCharsets.UTF_8));
         MockPart imagePart = new MockPart("images", null);
 
@@ -180,20 +178,20 @@ public class ReviewTest {
     @DisplayName("코스 리뷰 수정")
     void update() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+        Course course = courseRepository.save(new Course(planet, NAME1, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
 
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        Review review = reviewRepository.save(new Review(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, BODY));
 
         MockPart contentPart = new MockPart("content", "UPDATED".getBytes(StandardCharsets.UTF_8));
         MockPart imagePart = new MockPart("images", null);
@@ -237,20 +235,20 @@ public class ReviewTest {
     @DisplayName("코스 리뷰 삭제")
     void remove() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+        Course course = courseRepository.save(new Course(planet, NAME1, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
 
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        Review review = reviewRepository.save(new Review(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, BODY));
 
         // WHEN
         ResultActions actions = mvc.perform(delete("/reviews/{reviewId}", review.getId())
@@ -277,24 +275,24 @@ public class ReviewTest {
     @DisplayName("코스로 리뷰 조회")
     void findByCourse() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+        Course course = courseRepository.save(new Course(planet, NAME1, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
 
-        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getLongitude(), place1.getLatitude());
-        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place2.getLongitude(), place2.getLatitude());
+        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getAddress(), place1.getLongitude(), place1.getLatitude());
+        placeService.create(place2.getIdentifier(), place2.getName(), place2.getCategory(), place1.getAddress(), place2.getLongitude(), place2.getLatitude());
 
         em.persist(new CoursePlace(course, place1, MEMO));
         em.persist(new CoursePlace(course, place2, MEMO));
 
-        em.persist(new Review(user, course, CONTENT));
-        em.persist(new Review(mate, course, CONTENT));
+        em.persist(new Review(user, course, BODY));
+        em.persist(new Review(mate, course, BODY));
 
         // WHEN
         ResultActions actions = mvc.perform(get("/courses/{courseId}/review", course.getId())
@@ -341,19 +339,19 @@ public class ReviewTest {
     @DisplayName("아이디로 코스 리뷰 조회")
     void findById() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
 
-        Course course = courseRepository.save(new Course(planet, COURSE_NAME, LocalDate.now()));
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, 0.2, 0.3);
+        Course course = courseRepository.save(new Course(planet, NAME1, LocalDate.now()));
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
 
         em.persist(new CoursePlace(course, place1, MEMO));
 
-        Review review = reviewRepository.save(new Review(user, course, CONTENT));
+        Review review = reviewRepository.save(new Review(user, course, BODY));
 
         // WHEN
         ResultActions actions = mvc.perform(get("/reviews/{reviewId}", review.getId())

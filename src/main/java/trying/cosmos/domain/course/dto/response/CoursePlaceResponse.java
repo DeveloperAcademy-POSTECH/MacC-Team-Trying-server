@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.domain.course.entity.CoursePlace;
-import trying.cosmos.domain.place.dto.response.PlaceFindContent;
+import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
 import trying.cosmos.global.utils.DistanceUtils;
 
 @Getter
@@ -13,12 +13,12 @@ import trying.cosmos.global.utils.DistanceUtils;
 @JsonInclude(JsonInclude.Include.NON_NULL )
 public class CoursePlaceResponse {
 
-    private PlaceFindContent place;
+    private PlaceFindResponse place;
     private String memo;
     private Double distanceFromNext;
 
     public CoursePlaceResponse(CoursePlace coursePlace, CoursePlace nextPlace) {
-        this.place = new PlaceFindContent(coursePlace.getPlace());
+        this.place = new PlaceFindResponse(coursePlace.getPlace());
         this.memo = coursePlace.getMemo();
         this.distanceFromNext = nextPlace == null ? null : DistanceUtils.getDistance(coursePlace.getCoordinate(), nextPlace.getCoordinate());
     }
