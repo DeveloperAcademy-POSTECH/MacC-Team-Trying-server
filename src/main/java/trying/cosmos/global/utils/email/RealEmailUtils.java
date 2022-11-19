@@ -3,6 +3,7 @@ package trying.cosmos.global.utils.email;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.thymeleaf.TemplateEngine;
@@ -18,6 +19,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
@@ -50,8 +52,11 @@ public class RealEmailUtils implements EmailUtils {
             multipart.addBodyPart(messageBodyPart);
 
             BodyPart imageBodyPart = new MimeBodyPart();
-            FileDataSource dataSource = new FileDataSource(logo);
-            imageBodyPart.setDataHandler(new DataHandler(dataSource));
+//            FileDataSource dataSource = new FileDataSource(logo);
+
+            ClassPathResource resource = new ClassPathResource("static/logo.png");
+//            imageBodyPart.setDataHandler(new DataHandler(dataSource));
+            imageBodyPart.setDataHandler(new DataHandler(resource.getURL()));
             imageBodyPart.setHeader("Content-ID", "<image>");
 
             multipart.addBodyPart(imageBodyPart);
@@ -62,6 +67,8 @@ public class RealEmailUtils implements EmailUtils {
             emailSender.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException("메일 전송 실패", e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
