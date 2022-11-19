@@ -5,18 +5,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import trying.cosmos.domain.course.entity.CoursePlace;
-import trying.cosmos.domain.place.dto.response.PlaceFindContent;
+import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL )
 public class LogPlaceResponse {
 
-    private PlaceFindContent place;
+    private PlaceFindResponse place;
     private String memo;
 
     public LogPlaceResponse(CoursePlace coursePlace) {
-        this.place = new PlaceFindContent(coursePlace.getPlace());
+        this.place = new PlaceFindResponse(coursePlace.getPlace());
         this.memo = coursePlace.getMemo();
     }
 }

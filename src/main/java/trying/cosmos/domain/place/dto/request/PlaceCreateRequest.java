@@ -11,6 +11,7 @@ public class PlaceCreateRequest {
     private Long identifier;
     private String name;
     private String category;
+    private String address;
     private double latitude;
     private double longitude;
 }

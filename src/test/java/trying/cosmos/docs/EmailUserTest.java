@@ -40,8 +40,8 @@ import static org.springframework.restdocs.payload.JsonFieldType.BOOLEAN;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.DocsVariable.*;
 import static trying.cosmos.docs.utils.RestDocsConfiguration.constraints;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -91,7 +91,7 @@ public class EmailUserTest {
     @DisplayName("인증코드 생성")
     void generate() throws Exception {
         // GIVEN
-        String content = objectMapper.writeValueAsString(new GenerateCertificationRequest(MY_EMAIL));
+        String content = objectMapper.writeValueAsString(new GenerateCertificationRequest(EMAIL1));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/certification")
@@ -116,8 +116,8 @@ public class EmailUserTest {
     @DisplayName("인증코드 확인")
     void certificate() throws Exception {
         // GIVEN
-        Certification certification = certificationRepository.save(new Certification(MY_EMAIL));
-        String content = objectMapper.writeValueAsString(new CertificateRequest(MY_EMAIL, certification.getCode()));
+        Certification certification = certificationRepository.save(new Certification(EMAIL1));
+        String content = objectMapper.writeValueAsString(new CertificateRequest(EMAIL1, certification.getCode()));
 
         // WHEN
         ResultActions actions = mvc.perform(patch("/certification")
@@ -145,9 +145,9 @@ public class EmailUserTest {
     @DisplayName("이메일로 회원가입")
     void join() throws Exception {
         // GIVEN
-        Certification certification = certificationRepository.save(new Certification(MY_EMAIL));
+        Certification certification = certificationRepository.save(new Certification(EMAIL1));
         certification.certificate(certification.getCode());
-        String content = objectMapper.writeValueAsString(new UserJoinRequest(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN, true));
+        String content = objectMapper.writeValueAsString(new UserJoinRequest(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN, true));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/users")
@@ -191,8 +191,8 @@ public class EmailUserTest {
     @DisplayName("이메일로 로그인")
     void login() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        String content = objectMapper.writeValueAsString(new UserLoginRequest(MY_EMAIL, PASSWORD, DEVICE_TOKEN));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        String content = objectMapper.writeValueAsString(new UserLoginRequest(EMAIL1, PASSWORD, DEVICE_TOKEN));
 
         // WHEN
         ResultActions actions = mvc.perform(post("/users/login")

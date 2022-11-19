@@ -16,6 +16,7 @@ public class PlaceFindResponse {
     private Long identifier;
     private String name;
     private String category;
+    private String address;
     private Coordinate coordinate;
 
     public PlaceFindResponse(Place place) {
@@ -23,6 +24,7 @@ public class PlaceFindResponse {
         this.identifier = place.getIdentifier();
         this.name = place.getName();
         this.category = place.getCategory();
+        this.address = place.getAddress();
         this.coordinate = new Coordinate(place.getLongitude(), place.getLatitude());
     }
 }

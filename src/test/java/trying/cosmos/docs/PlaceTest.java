@@ -47,8 +47,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static trying.cosmos.docs.utils.DocsVariable.*;
-import static trying.cosmos.test.TestVariables.NAME1;
+import static trying.cosmos.test.TestVariables.*;
 
 @SpringBootTest
 @Transactional
@@ -110,13 +109,13 @@ public class PlaceTest {
     @DisplayName("아이디로 장소 조회")
     void findById() throws Exception {
         // GIVEN
-        User user = userRepository.save(User.createEmailUser(MY_EMAIL, PASSWORD, MY_NAME, DEVICE_TOKEN));
-        User mate = userRepository.save(User.createEmailUser(MATE_EMAIL, PASSWORD, MATE_NAME, DEVICE_TOKEN));
-        Planet planet = planetRepository.save(new Planet(user, PLANET_NAME, IMAGE_NAME, INVITE_CODE));
+        User user = userRepository.save(User.createEmailUser(EMAIL1, PASSWORD, NAME1, DEVICE_TOKEN));
+        User mate = userRepository.save(User.createEmailUser(EMAIL2, PASSWORD, NAME2, DEVICE_TOKEN));
+        Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
         planet.join(mate);
-        String accessToken = userService.login(MY_EMAIL, PASSWORD, DEVICE_TOKEN);
-        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
-        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getLongitude(), place1.getLatitude());
+        String accessToken = userService.login(EMAIL1, PASSWORD, DEVICE_TOKEN);
+        Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
+        placeService.create(place1.getIdentifier(), place1.getName(), place1.getCategory(), place1.getAddress(), place1.getLongitude(), place1.getLatitude());
 
         // WHEN
         ResultActions actions = mvc.perform(get("/places/{placeId}", place1.getId())
@@ -150,6 +149,9 @@ public class PlaceTest {
                         fieldWithPath("category")
                                 .type(STRING)
                                 .description("장소 카테고리"),
+                        fieldWithPath("address")
+                                .type(STRING)
+                                .description("장소 주ㅗ"),
                         fieldWithPath("coordinate.latitude")
                                 .type(NUMBER)
                                 .description("장소 위도"),

@@ -54,7 +54,7 @@ public class FindByIdTest {
         @DisplayName("장소를 반환한다.")
         void find() throws Exception {
             // WHEN
-            Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, 0.0, 0.1);
+            Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
             Place place = placeService.find(place1.getId());
 
             // THEN
