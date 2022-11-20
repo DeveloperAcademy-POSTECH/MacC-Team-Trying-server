@@ -18,7 +18,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
+@Table(name =
+        "users")
 public class User extends DateAuditingEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

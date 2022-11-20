@@ -55,8 +55,8 @@ public abstract class TestVariables {
     public static final String CATEGORY1 = "CATEGORY1";
     public static final String CATEGORY2 = "CATEGORY1";
     public static final String ADDRESS = "ADDRESS";
-    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(1L, "name", "code",  "address", 0.0, 0.0), MEMO));
-    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(2L, "name", "code",  "address", 0.3, 0.5), MEMO));
+    public static final List<CoursePlaceRequest> course_place_request1 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(1L, "name", "category",  "address", 0.0, 0.0), MEMO));
+    public static final List<CoursePlaceRequest> course_place_request2 = List.of(new CoursePlaceRequest(new PlaceCreateRequest(2L, "name", "category",  "address", 0.2, 0.3), MEMO));
 
     // pageable
     public static final Pageable pageable = PageRequest.of(0, 20);

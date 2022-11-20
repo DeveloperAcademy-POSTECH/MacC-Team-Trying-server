@@ -17,6 +17,9 @@ public class CustomExceptionEntity {
         this.id = RequestKeyInterceptor.getRequestKey();
         this.code = eType.toString();
         this.message = message;
-        log.info("{}[{}] Exception {}, {}", LogSpace.getSpace(), RequestKeyInterceptor.getRequestKey(), code, message, e);
+
+
+
+        log.info("{}[{}] Exception {}, {}", LogSpace.getSpace(), id, code, message, e);
     }
 }
