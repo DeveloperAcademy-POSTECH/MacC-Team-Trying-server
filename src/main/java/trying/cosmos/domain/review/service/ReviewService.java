@@ -52,7 +52,7 @@ public class ReviewService {
                 messageSource.getMessage("notification.review.create.title"),
                 messageSource.getMessage("notification.review.create.body", new String[]{course.getTitle()}),
                 NotificationTarget.REVIEW,
-                course.getId()
+                review.getId()
         );
 
         return review;

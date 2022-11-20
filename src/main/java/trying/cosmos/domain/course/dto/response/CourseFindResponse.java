@@ -33,7 +33,7 @@ public class CourseFindResponse {
     private List<CoursePlaceResponse> getPlaceWithDistance(List<CoursePlace> places) {
         int length = places.size();
         if (length == 0) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<CoursePlaceResponse> response = new ArrayList<>();
