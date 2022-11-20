@@ -18,8 +18,6 @@ public class CustomExceptionEntity {
         this.code = eType.toString();
         this.message = message;
 
-
-
         log.info("{}[{}] Exception {}, {}", LogSpace.getSpace(), id, code, message, e);
     }
 }

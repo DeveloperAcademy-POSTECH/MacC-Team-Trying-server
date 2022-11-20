@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import trying.cosmos.domain.course.entity.CoursePlace;
 import trying.cosmos.domain.place.dto.response.PlaceFindResponse;
 import trying.cosmos.global.utils.DistanceUtils;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL )

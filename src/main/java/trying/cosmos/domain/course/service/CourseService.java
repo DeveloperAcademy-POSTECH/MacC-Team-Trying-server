@@ -57,6 +57,9 @@ public class CourseService {
         if (courseRepository.searchByDate(user.getPlanet(), date).isPresent()) {
             throw new CustomException(ExceptionType.DUPLICATED);
         }
+        if (placeRequests.isEmpty()) {
+            throw new CustomException(ExceptionType.INVALID_INPUT);
+        }
         Course course = courseRepository.save(new Course(user.getPlanet(), title, date));
 
         placeRequests.forEach(request -> new CoursePlace(course, placeService.create(

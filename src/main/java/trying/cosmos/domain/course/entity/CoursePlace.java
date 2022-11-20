@@ -9,6 +9,7 @@ import trying.cosmos.domain.place.entity.Place;
 
 import javax.persistence.*;
 
+@ToString
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
