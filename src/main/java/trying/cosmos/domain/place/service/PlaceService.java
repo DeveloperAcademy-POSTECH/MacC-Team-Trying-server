@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.place.entity.Place;
 import trying.cosmos.domain.place.repository.PlaceRepository;
-import trying.cosmos.global.aop.LogSpace;
 
 import java.util.Optional;
 
@@ -20,18 +19,11 @@ public class PlaceService {
 
     @Transactional
     public Place create(Long identifier, String name, String category, String address, Double longitude, Double latitude) {
-        Optional<Place> placeOptional = placeRepository.findByIdentifier(identifier);
-        if (placeOptional.isEmpty()) {
-            log.info("{}Create new place identifier={}", LogSpace.getSpace(), identifier);
+        Optional<Place> place = placeRepository.find(identifier, name, category, address, longitude, latitude);
+        if (place.isEmpty()) {
             return placeRepository.save(new Place(identifier, name, category, address, longitude, latitude));
-        } else {
-            Place place = placeOptional.get();
-            if (!place.isSame(name, category, address, longitude, latitude)) {
-                log.info("{}Create new place identifier={}", LogSpace.getSpace(), identifier);
-                placeRepository.save(new Place(identifier, name, category, address, longitude, latitude));
-            }
-            return place;
         }
+        return place.get();
     }
 
     public Place find(Long placeId) {

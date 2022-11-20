@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.repository.CourseRepository;
 import trying.cosmos.domain.course.service.CourseService;
+import trying.cosmos.domain.place.dto.request.PlaceCreateRequest;
 import trying.cosmos.domain.place.entity.Place;
 import trying.cosmos.domain.place.service.PlaceService;
 import trying.cosmos.domain.planet.entity.Planet;
@@ -94,8 +95,10 @@ public class UpdateTest {
             Planet planet = planetRepository.save(new Planet(user, NAME1, IMAGE, INVITE_CODE));
             planet.join(mate);
             Course course = courseService.create(user.getId(), TITLE, now(), course_place_request1);
-            Place place1 = placeService.create(PLACE_IDENTIFIER1, NAME1, CATEGORY1, ADDRESS, 0.0, 0.1);
-            Place place2 = placeService.create(PLACE_IDENTIFIER2, NAME2, CATEGORY2, ADDRESS, 0.2, 0.3);
+            PlaceCreateRequest request1 = course_place_request1.get(0).getPlace();
+            Place place1 = placeService.create(request1.getIdentifier(), request1.getName(), request1.getCategory(), request1.getAddress(), request1.getLongitude(), request1.getLatitude());
+            PlaceCreateRequest request2 = course_place_request2.get(0).getPlace();
+            Place place2 = placeService.create(request2.getIdentifier(), request2.getName(), request2.getCategory(), request2.getAddress(), request2.getLongitude(), request2.getLatitude());
 
             // WHEN
             courseService.update(user.getId(), course.getId(), "UPDATED", LocalDate.now().plusDays(3), course_place_request2);
