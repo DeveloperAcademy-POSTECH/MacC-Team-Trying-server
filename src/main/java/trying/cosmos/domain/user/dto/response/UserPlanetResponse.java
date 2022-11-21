@@ -19,6 +19,7 @@ public class UserPlanetResponse {
     private int dday;
     private String image;
     private String code;
+    private boolean hasBeenMateEntered;
 
     public UserPlanetResponse(Planet planet, boolean hasMate) {
         this.name = planet.getName();
@@ -26,5 +27,6 @@ public class UserPlanetResponse {
         this.dday = planet.getDday();
         this.image = planet.getImage();
         this.code = hasMate ? null : planet.getInviteCode();
+        this.hasBeenMateEntered = planet.isHasBeenMateEntered();
     }
 }
