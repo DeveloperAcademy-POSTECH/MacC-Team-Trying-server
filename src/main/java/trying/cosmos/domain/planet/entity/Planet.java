@@ -40,6 +40,8 @@ public class Planet extends DateAuditingEntity {
 
     private String inviteCode;
 
+    private boolean hasBeenMateEntered;
+
     private boolean isDeleted;
 
     // Constructor
@@ -48,6 +50,7 @@ public class Planet extends DateAuditingEntity {
         this.inviteCode = inviteCode;
         this.image = image;
         this.meetDate = LocalDate.now();
+        this.hasBeenMateEntered = false;
         this.isDeleted = false;
         user.setPlanet(this);
         this.owners.add(user);
@@ -58,6 +61,9 @@ public class Planet extends DateAuditingEntity {
         if (owners.size() != 1) {
             throw new CustomException(ExceptionType.NO_DATA);
         }
+        if (this.hasBeenMateEntered) {
+            throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
+        }
         User owner = owners.get(0);
         if (owner.equals(mate)) {
             throw new CustomException(ExceptionType.PLANET_JOIN_FAILED);
@@ -66,6 +72,7 @@ public class Planet extends DateAuditingEntity {
         owner.setMate(mate);
         mate.setMate(owner);
         mate.setPlanet(this);
+        this.hasBeenMateEntered = true;
     }
 
     public void update(String name, LocalDate date, String image) {

@@ -24,7 +24,7 @@ public class LogSpace {
         if (!isInit()) {
             init();
         }
-        return "[" + RequestKeyInterceptor.getRequestKey() + "]" + " ".repeat(depth.get() * 4);
+        return "[" + RequestKeyInterceptor.getRequestKey() + "] " + " ".repeat(depth.get() * 4);
     }
 
     private static boolean isInit() {

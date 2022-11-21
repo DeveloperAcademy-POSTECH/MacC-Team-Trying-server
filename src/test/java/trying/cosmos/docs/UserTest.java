@@ -351,6 +351,9 @@ public class UserTest {
                         fieldWithPath("planet.code")
                                 .type(STRING)
                                 .description("행성 초대 코드"),
+                        fieldWithPath("planet.hasBeenMateEntered")
+                                .type(BOOLEAN)
+                                .description("true면 메이트가 들어온 적이 있음, false면 없음"),
                         fieldWithPath("socialAccount")
                                 .type(BOOLEAN)
                                 .description("소셜 계정 여부"),
@@ -412,6 +415,9 @@ public class UserTest {
                         fieldWithPath("planet.image")
                                 .type(STRING)
                                 .description("행성 이미지 타입"),
+                        fieldWithPath("planet.hasBeenMateEntered")
+                                .type(BOOLEAN)
+                                .description("true면 메이트가 들어온 적이 있음, false면 없음"),
                         fieldWithPath("socialAccount")
                                 .type(BOOLEAN)
                                 .description("소셜 계정 여부"),
