@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.review.entity.Review;
-import trying.cosmos.domain.review.entity.ReviewImage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,11 +18,11 @@ public class ReviewResponse {
     private String content;
     private List<String> images;
 
-    public ReviewResponse(Review review) {
+    public ReviewResponse(Review review, String baseurl) {
         this.writerName = review.getWriter().getName();
         this.content = review.getContent();
         this.images = review.getImages().stream()
-                .map(ReviewImage::getName)
+                .map(reviewImage -> baseurl + "/images/" + reviewImage.getName())
                 .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package trying.cosmos.domain.course.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ import trying.cosmos.global.utils.DateUtils;
 public class CourseController {
 
     private final CourseService courseService;
+
+    @Value("${baseurl}")
+    private String baseurl;
 
     @AuthorityOf(Authority.USER)
     @PostMapping
@@ -101,6 +105,6 @@ public class CourseController {
     @AuthorityOf(Authority.USER)
     @GetMapping("/{courseId}/review")
     public CourseReviewResponse findCourseReview(@PathVariable Long courseId) {
-        return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId), courseService.findMateReview(AuthKey.getKey(), courseId));
+        return new CourseReviewResponse(courseService.findMyReview(AuthKey.getKey(), courseId), courseService.findMateReview(AuthKey.getKey(), courseId), baseurl);
     }
 }

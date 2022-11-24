@@ -23,11 +23,11 @@ public class AuthUtils {
 
     public Session checkAuthenticate(HttpServletRequest request) {
         String token = request.getHeader(ACCESS_TOKEN_HEADER);
+        log.debug("{}token: {}", LogSpace.getSpace(), token);
         if (token == null) {
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
         if (!tokenProvider.validateToken(token)) {
-            log.debug("{}token: {}", LogSpace.getSpace(), token);
             throw new CustomException(ExceptionType.AUTHENTICATION_FAILED);
         }
 

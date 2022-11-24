@@ -2,7 +2,6 @@ package trying.cosmos.domain.planet.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import trying.cosmos.domain.notification.service.NotificationService;
@@ -23,7 +22,6 @@ public class PlanetService {
     private final UserRepository userRepository;
     private final PlanetRepository planetRepository;
     private final NotificationService notificationService;
-    private final MessageSourceAccessor messageSource;
 
     @Transactional
     public Planet create(Long userId, String name, String type) {
@@ -76,5 +74,6 @@ public class PlanetService {
             throw new CustomException(ExceptionType.NO_DATA);
         }
         planet.leave(user);
+        notificationService.deleteAll(user.getId());
     }
 }

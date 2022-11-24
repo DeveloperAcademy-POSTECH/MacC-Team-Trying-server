@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import trying.cosmos.domain.course.entity.Course;
 import trying.cosmos.domain.course.entity.CoursePlace;
+import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.global.utils.DateUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +22,15 @@ public class CourseFindResponse {
     private String title;
     private String date;
     private boolean liked;
+    private boolean canReview;
     private List<CoursePlaceResponse> places;
 
-    public CourseFindResponse(Course course, boolean liked) {
+    public CourseFindResponse(Course course, User user, boolean liked) {
         this.courseId = course.getId();
         this.title = course.getTitle();
         this.date = DateUtils.getFormattedDate(course.getDate());
         this.liked = liked;
+        this.canReview = !course.getDate().isAfter(LocalDate.now()) && !course.isReviewed(user);
         this.places = getPlaceWithDistance(course.getPlaces());
     }
 

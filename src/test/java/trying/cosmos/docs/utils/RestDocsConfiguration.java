@@ -17,7 +17,7 @@ public class RestDocsConfiguration {
                 Preprocessors.preprocessRequest(
                         modifyUris()
                                 .scheme("http")
-                                .host("15.165.72.196")
+                                .host("localhost")
                                 .port(3059),
                         prettyPrint()
                 ),

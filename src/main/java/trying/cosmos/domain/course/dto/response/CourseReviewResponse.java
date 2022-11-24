@@ -17,8 +17,8 @@ public class CourseReviewResponse {
     private ReviewResponse myReview;
     private ReviewResponse mateReview;
 
-    public CourseReviewResponse(Review myReview, Review mateReview) {
-        this.myReview = myReview == null ? null : new ReviewResponse(myReview);
-        this.mateReview = mateReview == null ? null : new ReviewResponse(mateReview);
+    public CourseReviewResponse(Review myReview, Review mateReview, String baseurl) {
+        this.myReview = myReview == null ? null : new ReviewResponse(myReview, baseurl);
+        this.mateReview = mateReview == null ? null : new ReviewResponse(mateReview, baseurl);
     }
 }

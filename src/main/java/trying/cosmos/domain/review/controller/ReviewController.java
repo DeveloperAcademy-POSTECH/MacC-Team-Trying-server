@@ -1,6 +1,7 @@
 package trying.cosmos.domain.review.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import trying.cosmos.domain.review.dto.response.ReviewCreateResponse;
@@ -19,6 +20,9 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @Value("${baseurl}")
+    private String baseurl;
+
     @AuthorityOf(Authority.USER)
     @PostMapping
     public ReviewCreateResponse createReview(@RequestParam Long courseId, @RequestParam String content, List<MultipartFile> images) {
@@ -28,7 +32,7 @@ public class ReviewController {
     @AuthorityOf(Authority.USER)
     @GetMapping("/{reviewId}")
     public ReviewResponse find(@PathVariable Long reviewId) {
-        return new ReviewResponse(reviewService.find(AuthKey.getKey(), reviewId));
+        return new ReviewResponse(reviewService.find(AuthKey.getKey(), reviewId), baseurl);
     }
 
     @AuthorityOf(Authority.USER)
