@@ -86,13 +86,13 @@ public class CourseService {
     public CourseFindResponse find(Long userId, Long courseId) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchById(user.getPlanet(), courseId).orElseThrow();
-        return new CourseFindResponse(course, isLiked(user, course));
+        return new CourseFindResponse(course, user, isLiked(user, course));
     }
 
     public CourseFindResponse findByDate(Long userId, LocalDate date) {
         User user = userRepository.findById(userId).orElseThrow();
         Course course = courseRepository.searchByDate(user.getPlanet(), date).orElseThrow();
-        return new CourseFindResponse(course, isLiked(user, course));
+        return new CourseFindResponse(course, user, isLiked(user, course));
     }
 
     public CourseDateResponse findCourseDates(Long userId, LocalDate start, LocalDate end) {
@@ -111,7 +111,7 @@ public class CourseService {
         }
 
         List<CourseFindResponse> contents = courseSlice.getContent().stream()
-                .map(course -> new CourseFindResponse(course, isLiked(user, course)))
+                .map(course -> new CourseFindResponse(course, user, isLiked(user, course)))
                 .collect(Collectors.toList());
         return new SliceImpl<>(contents, courseSlice.getPageable(), courseSlice.hasNext());
     }

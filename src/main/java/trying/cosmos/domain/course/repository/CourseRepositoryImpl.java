@@ -60,7 +60,7 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
 
     // 리뷰가 존재하는지
     private BooleanExpression hasReview(User user) {
-        return review.writer.eq(user);
+        return review.writer.eq(user).or(review.writer.eq(user.getMate()));
     }
 
     // 행성이 삭제 X

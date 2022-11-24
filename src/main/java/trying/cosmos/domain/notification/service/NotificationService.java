@@ -28,8 +28,8 @@ public class NotificationService {
 
     @Transactional
     public void create(User user, String title, String body, NotificationTarget target, Long targetId) {
-        notificationRepository.save(new Notification(user, title, body, target, targetId));
-        pushUtils.pushTo(user, title, body, target, targetId);
+        Notification notification = notificationRepository.save(new Notification(user, title, body, target, targetId));
+        pushUtils.pushTo(user, title, body, notification);
     }
 
     public List<Notification> findByUser(Long userId) {

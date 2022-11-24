@@ -351,6 +351,9 @@ public class CourseTest {
                         fieldWithPath("liked")
                                 .type(BOOLEAN)
                                 .description("코스 좋아요 여부"),
+                        fieldWithPath("canReview")
+                                .type(BOOLEAN)
+                                .description("리뷰를 남길 수 있는지 여부"),
                         fieldWithPath("places[].memo")
                                 .type(STRING)
                                 .description("장소 메모"),
@@ -432,6 +435,9 @@ public class CourseTest {
                         fieldWithPath("liked")
                                 .type(BOOLEAN)
                                 .description("코스 좋아요 여부"),
+                        fieldWithPath("canReview")
+                                .type(BOOLEAN)
+                                .description("리뷰를 남길 수 있는지 여부"),
                         fieldWithPath("places[].memo")
                                 .type(STRING)
                                 .description("장소 메모"),
@@ -530,6 +536,9 @@ public class CourseTest {
                         fieldWithPath("courses[].liked")
                                 .type(BOOLEAN)
                                 .description("코스 좋아요 여부"),
+                        fieldWithPath("courses[].canReview")
+                                .type(BOOLEAN)
+                                .description("리뷰를 남길 수 있는지 여부"),
                         fieldWithPath("size")
                                 .type(NUMBER)
                                 .description("불러온 데이터 크기"),

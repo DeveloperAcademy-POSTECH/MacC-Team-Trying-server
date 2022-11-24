@@ -29,6 +29,7 @@ public class PushRequest {
     @Getter
     @AllArgsConstructor
     public static class Data {
+        private String notificationId;
         private String target;
         private String targetId;
     }

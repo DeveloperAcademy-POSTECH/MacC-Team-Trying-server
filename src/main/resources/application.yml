@@ -20,13 +20,13 @@ spring:
   config:
     activate:
       on-profile: prod
-  jpa:
-    hibernate:
-      ddl-auto: none
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
 
 logging:
   level:
-    trying.cosmos: debug
+    trying.cosmos: trace
 
 
 ---
@@ -51,8 +51,8 @@ spring:
       on-profile: local
   jpa:
     hibernate:
-#      ddl-auto: create-drop
-      ddl-auto: update
+      ddl-auto: create
+#      ddl-auto: update
     properties:
       hibernate:
 #        show_sql: true

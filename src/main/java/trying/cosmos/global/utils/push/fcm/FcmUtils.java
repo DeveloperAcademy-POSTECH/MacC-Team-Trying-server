@@ -11,7 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import trying.cosmos.domain.notification.entity.NotificationTarget;
+import trying.cosmos.domain.notification.entity.Notification;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.service.UserService;
@@ -28,12 +28,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FcmUtils implements PushUtils {
 
-    private static final String FIREBASE_CONFIG_PATH = "firebase/firebase_service_key.json";
     private static final String GOOGLE_API_URL = "https://www.googleapis.com/auth/cloud-platform";
 
     @Value("${firebase.appid}")
     private String clientAppId;
     private String clientPushAPI;
+
+    @Value("${firebase.configpath}")
+    private String FIREBASE_CONFIG_PATH;
 
     @PostConstruct
     public void init() {
@@ -46,16 +48,16 @@ public class FcmUtils implements PushUtils {
     @Async
     public void pushAll(String title, String body) {
         for (User user : userService.findLoginUsers()) {
-            sendMessageTo(user, title, body, null, null);
+            sendMessageTo(user, title, body, null);
         }
     }
 
     @Async
-    public void pushTo(User member, String title, String body, NotificationTarget type, Long targetId) {
-        sendMessageTo(member, title, body, type, targetId);
+    public void pushTo(User member, String title, String body, Notification notification) {
+        log.info("{}[FCM] Send message {}", LogSpace.getSpace(), sendMessageTo(member, title, body, notification) ? "success" : "fail");
     }
 
-    private boolean sendMessageTo(User user, String title, String body, NotificationTarget type, Long targetId) {
+    private boolean sendMessageTo(User user, String title, String body, Notification notification) {
         if (!user.getStatus().equals(UserStatus.LOGIN)) {
             return false;
         }
@@ -64,7 +66,7 @@ public class FcmUtils implements PushUtils {
         }
 
         try {
-            String message = makeMessage(user.getDeviceToken(), title, body, type, targetId);
+            String message = makeMessage(user.getDeviceToken(), title, body, notification);
             log.info("{}[FCM] Send message to {}", LogSpace.getSpace(), user.getId());
 
             OkHttpClient client = new OkHttpClient();
@@ -84,9 +86,9 @@ public class FcmUtils implements PushUtils {
         }
     }
 
-    private String makeMessage(String targetToken, String title, String body, NotificationTarget type, Long targetId) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body, Notification noti) throws JsonProcessingException {
         PushRequest.Notification notification = new PushRequest.Notification(title, body, null);
-        PushRequest.Data data = new PushRequest.Data(type.toString(), String.valueOf(targetId));
+        PushRequest.Data data = new PushRequest.Data(String.valueOf(noti.getId()), noti.getTarget().toString(), String.valueOf(noti.getTargetId()));
         PushRequest.Message message = new PushRequest.Message(targetToken, notification, data);
         PushRequest pushRequest = new PushRequest(false, message);
 

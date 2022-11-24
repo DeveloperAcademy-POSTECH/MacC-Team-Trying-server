@@ -25,7 +25,7 @@ public class User extends DateAuditingEntity {
     @Column(name = "user_id", nullable = false)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String email;
 
     @Column(nullable = false)
