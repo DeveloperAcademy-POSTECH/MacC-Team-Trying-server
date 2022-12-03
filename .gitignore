@@ -12,3 +12,5 @@ src/main/resources/static/docs/*
 src/main/resources/firebase
 docker
 sendfile
+versions
+buildproject
