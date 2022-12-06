@@ -117,7 +117,7 @@ public class UserService {
             throw new CustomException(ExceptionType.SOCIAL_ACCOUNT);
         }
 
-        String password = RandomStringUtils.random(6, true, true);
+        String password = RandomStringUtils.random(8, true, true);
         user.setPassword(BCryptUtils.encrypt(password));
         user.setStatus(UserStatus.LOGOUT);
         sendResetPasswordEmail(email, password);

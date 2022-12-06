@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class CourseLike {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_review_like_id")
+    @Column(name = "course_like_id")
     private Long id;
 
     @ToString.Exclude

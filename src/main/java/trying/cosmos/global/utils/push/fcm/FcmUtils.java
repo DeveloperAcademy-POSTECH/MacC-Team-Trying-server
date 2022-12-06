@@ -11,7 +11,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import trying.cosmos.domain.notification.entity.Notification;
 import trying.cosmos.domain.user.entity.User;
 import trying.cosmos.domain.user.entity.UserStatus;
 import trying.cosmos.domain.user.service.UserService;
@@ -53,11 +52,12 @@ public class FcmUtils implements PushUtils {
     }
 
     @Async
-    public void pushTo(User member, String title, String body, Notification notification) {
-        log.info("{}[FCM] Send message {}", LogSpace.getSpace(), sendMessageTo(member, title, body, notification) ? "success" : "fail");
+    public void pushTo(User member, String title, String body, PushRequest.Data data) {
+        boolean result = sendMessageTo(member, title, body, data);
+        log.info("{}[FCM] Send message {}", LogSpace.getSpace(), result ? "success" : "fail");
     }
 
-    private boolean sendMessageTo(User user, String title, String body, Notification notification) {
+    private boolean sendMessageTo(User user, String title, String body, PushRequest.Data data) {
         if (!user.getStatus().equals(UserStatus.LOGIN)) {
             return false;
         }
@@ -66,7 +66,7 @@ public class FcmUtils implements PushUtils {
         }
 
         try {
-            String message = makeMessage(user.getDeviceToken(), title, body, notification);
+            String message = makeMessage(user.getDeviceToken(), title, body, data);
             log.info("{}[FCM] Send message to {}", LogSpace.getSpace(), user.getId());
 
             OkHttpClient client = new OkHttpClient();
@@ -86,12 +86,10 @@ public class FcmUtils implements PushUtils {
         }
     }
 
-    private String makeMessage(String targetToken, String title, String body, Notification noti) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body, PushRequest.Data data) throws JsonProcessingException {
         PushRequest.Notification notification = new PushRequest.Notification(title, body, null);
-        PushRequest.Data data = new PushRequest.Data(String.valueOf(noti.getId()), noti.getTarget().toString(), String.valueOf(noti.getTargetId()));
         PushRequest.Message message = new PushRequest.Message(targetToken, notification, data);
         PushRequest pushRequest = new PushRequest(false, message);
-
         return objectMapper.writeValueAsString(pushRequest);
     }
 
