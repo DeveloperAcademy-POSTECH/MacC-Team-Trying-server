@@ -13,6 +13,7 @@ import trying.cosmos.domain.user.repository.UserRepository;
 import trying.cosmos.global.exception.CustomException;
 import trying.cosmos.global.exception.ExceptionType;
 import trying.cosmos.global.utils.push.PushUtils;
+import trying.cosmos.global.utils.push.dto.PushRequest;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,7 +30,10 @@ public class NotificationService {
     @Transactional
     public void create(User user, String title, String body, NotificationTarget target, Long targetId) {
         Notification notification = notificationRepository.save(new Notification(user, title, body, target, targetId));
-        pushUtils.pushTo(user, title, body, notification);
+        pushUtils.pushTo(user, title, body,
+                new PushRequest.Data(String.valueOf(notification.getId()),
+                notification.getTarget().toString(),
+                String.valueOf(notification.getTargetId())));
     }
 
     public List<Notification> findByUser(Long userId) {

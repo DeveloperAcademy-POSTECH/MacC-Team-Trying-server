@@ -47,13 +47,23 @@ public class ReviewService {
             images.forEach(image -> createImage(review, image));
         }
 
-        notificationService.create(
-                user.getMate(),
-                messageSource.getMessage("notification.review.create.title"),
-                messageSource.getMessage("notification.review.create.body", new String[]{course.getTitle()}),
-                NotificationTarget.REVIEW,
-                course.getId()
-        );
+        if (course.isReviewed(user.getMate())) {
+            notificationService.create(
+                    user.getMate(),
+                    messageSource.getMessage("notification.review.create.title"),
+                    messageSource.getMessage("notification.review.create.body.review", new String[]{course.getTitle()}),
+                    NotificationTarget.REVIEW,
+                    course.getId()
+            );
+        } else {
+            notificationService.create(
+                    user.getMate(),
+                    messageSource.getMessage("notification.review.create.title"),
+                    messageSource.getMessage("notification.review.create.body.noreview", new String[]{course.getTitle()}),
+                    NotificationTarget.REVIEW,
+                    course.getId()
+            );
+        }
 
         return review;
     }
