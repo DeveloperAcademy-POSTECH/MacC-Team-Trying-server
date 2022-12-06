@@ -14,7 +14,6 @@ import java.util.List;
 
 import static trying.cosmos.domain.course.entity.QCourse.course;
 import static trying.cosmos.domain.planet.entity.QPlanet.planet;
-import static trying.cosmos.domain.review.entity.QReview.review;
 
 @RequiredArgsConstructor
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
@@ -25,11 +24,9 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     public Slice<Course> getLogs(User user, Pageable pageable) {
         List<Course> contents = queryFactory.select(course)
                 .from(course)
-                .join(course.reviews, review)
-                .fetchJoin()
-                .join(course.planet, planet)
                 .where(
-                        logCondition(user)
+                        logCondition(user),
+                        course.reviews.isNotEmpty()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -47,7 +44,6 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private BooleanBuilder logCondition(User user) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.or(isMyCourse(user));
-        builder.and(hasReview(user));
         builder.and(isPlanetNotDeleted());
         builder.and(isCourseNotDeleted());
         return builder;
@@ -56,11 +52,6 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     // 내 행성의 모든 코스 조건
     private BooleanExpression isMyCourse(User user) {
         return course.planet.eq(user.getPlanet());
-    }
-
-    // 리뷰가 존재하는지
-    private BooleanExpression hasReview(User user) {
-        return review.writer.eq(user).or(review.writer.eq(user.getMate()));
     }
 
     // 행성이 삭제 X
