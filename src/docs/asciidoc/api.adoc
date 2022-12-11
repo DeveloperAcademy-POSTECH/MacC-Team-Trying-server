@@ -528,7 +528,7 @@ include::{snippets}/review-test/find-by-id/path-parameters.adoc[]
 include::{snippets}/review-test/find-by-id/http-response.adoc[]
 include::{snippets}/review-test/find-by-id/response-fields.adoc[]
 
-=== 4. 코스로 리뷰 조회
+=== 5. 코스로 리뷰 조회
 .Overview
 * 코스로 리뷰 조회
 * writer 파라미터에 따라 내 리뷰와 메이트 리뷰 조회
