@@ -14,11 +14,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewResponse {
 
+    private Long reviewId;
     private String writerName;
     private String content;
     private List<String> images;
 
     public ReviewResponse(Review review, String baseurl) {
+        this.reviewId = review.getId();
         this.writerName = review.getWriter().getName();
         this.content = review.getContent();
         this.images = review.getImages().stream()

@@ -313,6 +313,9 @@ public class ReviewTest {
                                 .description("인증 토큰")
                 ),
                 responseFields(
+                        fieldWithPath("myReview.reviewId")
+                                .type(NUMBER)
+                                .description("내 리뷰 id"),
                         fieldWithPath("myReview.writerName")
                                 .type(STRING)
                                 .description("리뷰 작성자 닉네임"),
@@ -322,6 +325,9 @@ public class ReviewTest {
                         fieldWithPath("myReview.images[]")
                                 .type(ARRAY)
                                 .description("리뷰 이미지 경로"),
+                        fieldWithPath("mateReview.reviewId")
+                                .type(NUMBER)
+                                .description("메이트 리뷰 id"),
                         fieldWithPath("mateReview.writerName")
                                 .type(STRING)
                                 .description("리뷰 작성자 닉네임"),
@@ -372,6 +378,9 @@ public class ReviewTest {
                                 .description("인증 토큰")
                 ),
                 responseFields(
+                        fieldWithPath("reviewId")
+                                .type(NUMBER)
+                                .description("리뷰 id"),
                         fieldWithPath("writerName")
                                 .type(STRING)
                                 .description("리뷰 작성자 닉네임"),

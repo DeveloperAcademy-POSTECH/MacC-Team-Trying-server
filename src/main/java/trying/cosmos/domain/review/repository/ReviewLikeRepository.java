@@ -16,6 +16,10 @@ public interface ReviewLikeRepository extends JpaRepository<CourseLike, Long> {
 
     Optional<CourseLike> findByUserAndCourse(User user, Course course);
 
+    @Query("select count(cl.course) " +
+            "from CourseLike cl " +
+            "where cl.user = :user " +
+            "and cl.course.isDeleted = false")
     int countByUser(User user);
 
     @Query("select cl.course from CourseLike cl " +
